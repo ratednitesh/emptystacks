@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contact</title>
+    <!-- font awesome cdn link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- custom css file link -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- header section starts -->
+    <header class="header">
+        <section class="flex">
+            <a href="home.html" class="logo">EmptyStacks</a>
+            <form action="" method="post" class="search-form">
+                <input type="text" name="search_box" placeholder="search courses..." required maxlength="100">
+                <button type="submit" class="fas fa-search" name="search_box"></button>
+            </form>
+            <div class="icons">
+                <div id="menu-btn" class="fas fa-bars"></div>
+                <div id="search-btn" class="fas fa-search"></div>
+                <div id="user-btn" class="fas fa-user"></div>
+                <div id="toggle-btn" class="fas fa-sun"></div>
+            </div>
+            <div class="profile">
+                <img src="images/profile/photo_1.png" alt="">
+                <h3>Nitesh Saxena</h3>
+                <span>student</span>
+                <a href="profile.html" class="btn">view profile</a>
+                <div class="flex-btn">
+                    <a href="login.html" class="option-btn">login</a>
+                    <a href="register.html" class="option-btn">register</a>
+                </div>
+            </div>
+        </section>
+    </header>
+
+    <!-- header section ends -->
+
+    <!-- side bar section starts -->
+    <div class="side-bar">
+        <div class="close-side-bar">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="profile">
+            <img src="images/profile/photo_1.png" alt="">
+            <h3>Nitesh Saxena</h3>
+            <span>student</span>
+            <a href="profile.html" class="btn">view profile</a>
+        </div>
+        <nav class="navbar">
+            <a href="home.html"><i class="fas fa-home"></i><span>home</span></i></a>
+            <a href="about.html"><i class="fas fa-question"></i><span>about us</span></i></a>
+            <a href="courses.html"><i class="fas fa-graduation-cap"></i><span>courses</span></i></a>
+            <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>teachers</span></i></a>
+            <a href="contact.html"><i class="fas fa-headset"></i><span>contact us</span></i></a>
+
+
+
+        </nav>
+    </div>
+    <!-- side bar section ends -->
+ <!-- contact section starts -->
+ <section class="contact">
+
+    <div class="row">
+        <div class="image">
+            <img src="images/illustrations/contact-us.svg" alt="">
+        </div>
+        <form action="" method="post">
+            <h3>Get in touch</h3>
+            <input type="text" placeholder="Enter your name" class="box" required maxlength="100" name="name">
+            <input type="email" placeholder="Enter your email" class="box" required maxlength="100" name="email">
+            <input type="number" placeholder="Enter your number" class="box" required maxlength="20" name="number">
+            <textarea name="msg" class="box" placeholder="enter your message" cols="30" rows="10"></textarea>
+            <input type="submit" value="send message" class="inline-btn" name="submit">
+
+        </form>
+    </div>
+    <div class="box-container">
+        <div class="box">
+            <i class="fas fa-phone"></i>
+            <h3>Phone Number</h3>
+            <a href="tel:123434356">123-3232-5343</a>
+            <a href="tel:123434356">123-3232-5343</a>
+        </div>
+        <div class="box">
+            <i class="fas fa-envelope"></i>
+            <h3>email Address</h3>
+            <a href="mailto:contact@emptystacks.com">contact@emptystacks.com</a>
+            <a href="mailto:contact@emptystacks.com">contact@emptystacks.com</a>
+        </div>
+        <div class="box">
+            <i class="fas fa-map-marker-alt"></i>
+            <h3>Office Address</h3>
+            <a href="#">A 401 Test Location, opp 34, Tongalus India - 4300023</a>
+        </div>
+    </div>
+ </section>
+ <!-- contact section ends  -->
+
+    <!-- footer section starts  -->
+    <footer class="footer">
+        &copy; copyright @ 2024 by <span>wwww.emptyStacks.com</span> | all rights reserved!
+    </footer>
+    <!-- footer section ends -->
+    <!-- custom js file link -->
+    <script src="js/script.js"></script>
+</body>
+
+</html>

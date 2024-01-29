@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>profile</title>
+    <!-- font awesome cdn link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- custom css file link -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- header section starts -->
+    <header class="header">
+        <section class="flex">
+            <a href="home.html" class="logo">EmptyStacks</a>
+            <form action="" method="post" class="search-form">
+                <input type="text" name="search_box" placeholder="search courses..." required maxlength="100">
+                <button type="submit" class="fas fa-search" name="search_box"></button>
+            </form>
+            <div class="icons">
+                <div id="menu-btn" class="fas fa-bars"></div>
+                <div id="search-btn" class="fas fa-search"></div>
+                <div id="user-btn" class="fas fa-user"></div>
+                <div id="toggle-btn" class="fas fa-sun"></div>
+            </div>
+            <div class="profile">
+                <img src="images/profile/photo_1.png" alt="">
+                <h3>Nitesh Saxena</h3>
+                <span>student</span>
+                <a href="profile.html" class="btn">view profile</a>
+                <div class="flex-btn">
+                    <a href="login.html" class="option-btn">login</a>
+                    <a href="register.html" class="option-btn">register</a>
+                </div>
+            </div>
+        </section>
+    </header>
+
+    <!-- header section ends -->
+
+    <!-- side bar section starts -->
+    <div class="side-bar">
+        <div class="close-side-bar">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="profile">
+            <img src="images/profile/photo_1.png" alt="">
+            <h3>Nitesh Saxena</h3>
+            <span>student</span>
+            <a href="profile.html" class="btn">view profile</a>
+        </div>
+        <nav class="navbar">
+            <a href="home.html"><i class="fas fa-home"></i><span>home</span></i></a>
+            <a href="about.html"><i class="fas fa-question"></i><span>about us</span></i></a>
+            <a href="courses.html"><i class="fas fa-graduation-cap"></i><span>courses</span></i></a>
+            <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>teachers</span></i></a>
+            <a href="contact.html"><i class="fas fa-headset"></i><span>contact us</span></i></a>
+
+
+
+        </nav>
+    </div>
+    <!-- side bar section ends -->
+    <!-- profile section starts  -->
+    <section class="profile">
+        <h1 class="heading">Profile Details</h1>
+       <div class="details">
+        <div class="user">
+            <img src="images/profile/avataaars (2).png" alt="">
+            <h3>Nitesh Saxena</h3>
+            <p>student</p>
+            <a href="update.html" class="inline-btn">Update Profile</a>
+        </div>
+        <div class="box-container">
+            <div class="box">
+                <div class="flex">
+                    <i class="fas fa-bookmark"></i>
+                    <div>
+                        <h3>3</h3>
+                        <span>Saved Courses</span>
+                    </div>
+                </div>
+                <a href="#" class="inline-btn">View Courses</a>
+            </div>
+            <div class="box">
+                <div class="flex">
+                    <i class="fas fa-heart"></i>
+                    <div>
+                        <h3>55</h3>
+                        <span>liked tutorials</span>
+                    </div>
+                </div>
+                <a href="#" class="inline-btn">View Likes</a>
+            </div>
+            <div class="box">
+                <div class="flex">
+                    <i class="fas fa-comment"></i>
+                    <div>
+                        <h3>22</h3>
+                        <span>Comments</span>
+                    </div>
+                </div>
+                <a href="#" class="inline-btn">View Comments</a>
+            </div>
+        </div>
+       </div>
+    </section>
+    <!-- profile section ends  -->
+    <!-- footer section starts  -->
+    <footer class="footer">
+        &copy; copyright @ 2024 by <span>wwww.emptyStacks.com</span> | all rights reserved!
+    </footer>
+    <!-- footer section ends -->
+    <!-- custom js file link -->
+    <script src="js/script.js"></script>
+</body>
+
+</html>
