@@ -83,7 +83,7 @@ const handleLocation = async () => {
         }
         if (selectedSidebar != currentSidebar) {
             selectedSidebar = currentSidebar;
-            if (currentSidebar == "NO-SIDEBAR" || currentSidebar == undefined) {
+            if (currentSidebar == "NO-SIDEBAR" ){
                 unloadSideBar();
             } else {
                 const sidebarRoute = SIDE_BAR_OPTIONS[currentSidebar];

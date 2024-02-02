@@ -10,10 +10,10 @@
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- custom css file link -->
-    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="css/style.css">
 
     <!-- favicon  -->
-    <link href="/images/Logo/logonew.png" type="image/x-icon" rel="icon" />
+    <link href="/images/Logo/favicon.png" type="image/x-icon" rel="icon" />
 </head>
 
 <body>
@@ -21,12 +21,12 @@
     <header class="header">
         <section class="flex">
             <div class="logo">
-                <a href="/" onclick="route()" >
-                    <img class="logo-img" src="images/Logo/logo.svg" alt="">
+                <a href="/" onclick="route()">
+                    <img class="logo-img" src="images/Logo/logo_light.svg" alt="">
                     Empty<span class="logo-S">S</span>tacks</a>
             </div>
             <form action="" method="post" class="search-form">
-                <input type="text" id="search_box" placeholder="search courses..."  maxlength="100">
+                <input type="text" id="search_box" placeholder="search courses..." maxlength="100">
                 <label for="search_box" class="fas fa-search" name="search_box"></label>
             </form>
             <div class="icons">
@@ -39,27 +39,31 @@
                 <div class="profile only-public">
                     <img src="images/profile/guest-user.svg" alt="">
                     <h3>Hello Guest!</h3>
-                    <span>Explore exclusive Courses and  lot more</span>
-                   <button class="btn" id="start-journey">Start Your Journey</button>
-                   
-                    
+                    <span>Explore exclusive Courses and lot more</span>
+                    <button class="btn" id="start-journey">Start Your Journey</button>
+
+
                 </div>
                 <div class="profile private">
-                <img src="images/profile/photo_1.png" alt="">
-                <h3>Nitesh Saxena</h3>
-                <span>nitesh_91@outlook.com</span>
-               
-                
+                    <img src="images/profile/photo_1.png" alt="">
+                    <h3>Nitesh Saxena</h3>
+                    <span>nitesh_91@outlook.com</span>
+
+
                 </div>
-                
+
                 <div class="menu private">
-                        <a href="/profile" onclick="route()"><i class="fas fa-user"></i><span>Profile</span></a>
-                        <a href="/courses" onclick="route()"><i class="fas fa-book-open-reader"></i><span>Continue Learnings</span></i></a>
+                    <a href="/profile" onclick="route()"><i class="fas fa-user"></i><span>Profile</span></a>
+                    <a href="/courses" onclick="route()"><i class="fas fa-book-open-reader"></i><span>Continue
+                            Learnings</span></i></a>
                 </div>
                 <div class="menu public">
-                    <a id="toggle-btn" ><i id="mode-icon" class="fas fa-moon"></i><span id="mode-text">Enable Dark Mode</span></a>
-                    <a href="/courses" onclick="route()"><i class="fas fa-graduation-cap"></i><span>All Courses</span></i></a>
-                    <a href="/courses" onclick="route()"><i class="fas fa-book-open"></i><span>All Streams</span></i></a>
+                    <a id="toggle-btn"><i id="mode-icon" class="fas fa-moon"></i><span id="mode-text">Enable Dark
+                            Mode</span></a>
+                    <a href="/courses" onclick="route()"><i class="fas fa-graduation-cap"></i><span>All
+                            Courses</span></i></a>
+                    <a href="/courses" onclick="route()"><i class="fas fa-book-open"></i><span>All
+                            Streams</span></i></a>
                     <a href="/about" onclick="route()"><i class="fas fa-circle-info"></i><span>About Us</span></i></a>
                 </div>
                 <div class="menu private">
@@ -145,7 +149,8 @@
 
                     <p class="fieldset">
                         <input type="checkbox" id="accept-terms">
-                        <label class="checkbox" for="accept-terms">I agree to the <a href="#0">Terms & Conditions</a></label>
+                        <label class="checkbox" for="accept-terms">I agree to the <a href="#0">Terms &
+                                Conditions</a></label>
                     </p>
 
                     <p class="fieldset">

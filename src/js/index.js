@@ -57,7 +57,7 @@ const disableDarkMode = () => {
     toggleBtn.classList.replace('fa-moon', 'fa-sun');
     toggleModeIcon.classList.replace('fa-sun','fa-moon');
     toggleModeText.innerHTML="Enable Dark Mode";
-    logoImg[0].src="images/Logo/logo.svg"
+    logoImg[0].src="images/Logo/logo_light.svg"
     body.classList.remove('dark');
     localStorage.setItem('dark-mode', 'disabled');
 }
