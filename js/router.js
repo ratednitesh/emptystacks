@@ -1,19 +1,22 @@
 // sidebar routing 
 let selectedSidebar = "";
 let previousLocation = "";
-let loggedInUser = true; // temp variable
+const mainSideBarVisible = false; 
 
 const routes = {
     404: "pages/not-found.html",
     "/": "pages/home.html",
-    "/index.html": "pages/home.html",
     "/home": "pages/home.html",
     "/about": "pages/about.html",
     "/profile": "pages/profile.html",
     "/courses": "pages/courses.html",
     "/contact": "pages/contact.html",
     "/content": "pages/course-content.html",
-    "/course": "pages/text-course.html"
+    "/course": "pages/text-course.html",
+    "/playlist": "pages/playlist.html",
+    "/register": "pages/register.html",
+    "/watch-video": "pages/watch-video.html",
+    "/profile-update": "pages/update.html"
 
 
 };
@@ -39,6 +42,7 @@ const route = (event) => {
 
 function loadSideBarScripts(sidebarSelect) {
     if (sidebarSelect == "MAIN-SIDEBAR") {
+      
         loadMainSidebar();
     } else if (sidebarSelect == "TEXT-SIDEBAR") {
         loadContentSidebar();
@@ -47,12 +51,16 @@ function loadSideBarScripts(sidebarSelect) {
 
 function loadMainScripts(path) {
     if (path == "/content") {
+        unloadHome();
         loadContentMainSection();
     }
     else if (path == "/course") {
+        unloadHome();
         loadCourseDetails();
-    } else {
+    } else if(path=="/" || path =="/home"){
         loadHome();
+    }else{
+        unloadHome();
     }
 }
 
@@ -68,7 +76,7 @@ const handleLocation = async () => {
         if (path == "/content") {
             currentSidebar = "TEXT-SIDEBAR";
         } else {
-            if (loggedInUser)
+            if (mainSideBarVisible)
                 currentSidebar = "MAIN-SIDEBAR";
             else
                 currentSidebar = "NO-SIDEBAR";

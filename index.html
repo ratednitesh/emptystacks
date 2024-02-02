@@ -4,44 +4,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>home</title>
+    <title>emptyStacks</title>
     <!-- font awesome cdn link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- custom css file link -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css"> 
+
     <!-- favicon  -->
-    <link href="/images/Logo/favicon.png" type="image/x-icon" rel="icon" />
+    <link href="/images/Logo/logonew.png" type="image/x-icon" rel="icon" />
 </head>
 
 <body>
     <!-- header section starts -->
     <header class="header">
         <section class="flex">
-            <a href="/" onclick="route()" class="logo">
-                <img class="logo-img" src="images/Logo/logo.svg" alt="">
-                Empty<span class="logo-S">S</span>tacks</a>
+            <div class="logo">
+                <a href="/" onclick="route()" >
+                    <img class="logo-img" src="images/Logo/logo.svg" alt="">
+                    Empty<span class="logo-S">S</span>tacks</a>
+            </div>
             <form action="" method="post" class="search-form">
-                <input type="text" name="search_box" placeholder="search courses..." required maxlength="100">
-                <button type="submit" class="fas fa-search" name="search_box"></button>
+                <input type="text" id="search_box" placeholder="search courses..."  maxlength="100">
+                <label for="search_box" class="fas fa-search" name="search_box"></label>
             </form>
             <div class="icons">
                 <div id="menu-btn" class="fas fa-bars"></div>
                 <div id="search-btn" class="fas fa-search"></div>
-                <div id="user-btn" class="fas fa-user"></div>
-                <div id="toggle-btn" class="fas fa-sun"></div>
+                <div id="user-btn" class="fa-solid fa-grip"></div>
+                <!-- <img id="logged-in-user" src="images/profile/photo_1.png" alt=""> -->
             </div>
-            <div class="profile">
+            <div class="menus">
+                <div class="profile only-public">
+                    <img src="images/profile/guest-user.svg" alt="">
+                    <h3>Hello Guest!</h3>
+                    <span>Explore exclusive Courses and  lot more</span>
+                   <button class="btn" id="start-journey">Start Your Journey</button>
+                   
+                    
+                </div>
+                <div class="profile private">
                 <img src="images/profile/photo_1.png" alt="">
                 <h3>Nitesh Saxena</h3>
-                <span>student</span>
-                <a href="/profile" onclick="route()" class="btn">view profile</a>
-                <div class="flex-btn">
-                    <a href="login.html" class="option-btn">login</a>
-                    <a href="register.html" class="option-btn">register</a>
+                <span>nitesh_91@outlook.com</span>
+               
+                
+                </div>
+                
+                <div class="menu private">
+                        <a href="/profile" onclick="route()"><i class="fas fa-user"></i><span>Profile</span></a>
+                        <a href="/courses" onclick="route()"><i class="fas fa-book-open-reader"></i><span>Continue Learnings</span></i></a>
+                </div>
+                <div class="menu public">
+                    <a id="toggle-btn" ><i id="mode-icon" class="fas fa-moon"></i><span id="mode-text">Enable Dark Mode</span></a>
+                    <a href="/courses" onclick="route()"><i class="fas fa-graduation-cap"></i><span>All Courses</span></i></a>
+                    <a href="/courses" onclick="route()"><i class="fas fa-book-open"></i><span>All Streams</span></i></a>
+                    <a href="/about" onclick="route()"><i class="fas fa-circle-info"></i><span>About Us</span></i></a>
+                </div>
+                <div class="menu private">
+                    <a onclick="signOut()"><i class="fas fa-right-from-bracket"></i><span>Sign Out</span></i></a>
+                </div>
+                <div id="sign-up" class="menu only-public">
+                    <a href="#0" class="cd-signin"><i class="fas fa-right-to-bracket"></i>Sign In</a>
+                    <a href="#0" class="cd-signup"><i class="fa-solid fa-user-plus"></i>Sign Up</a>
                 </div>
             </div>
+            </div>
+
+
         </section>
     </header>
     <!-- header section ends -->
@@ -49,11 +80,107 @@
     <!-- side-bar section starts  -->
     <nav id="side-bar"></nav>
     <!-- side-bar section ends  -->
+    <!-- user modal section starts  -->
+    <div class="cd-user-modal"> <!-- this is the entire modal form, including the background -->
+        <div class="cd-user-modal-container"> <!-- this is the container wrapper -->
+            <ul class="cd-switcher">
+                <li><a href="#0">Sign in</a></li>
+                <li><a href="#0">New account</a></li>
+            </ul>
 
+            <div id="cd-login"> <!-- log in form -->
+                <form class="cd-form">
+                    <p class="fieldset">
+                        <label class="image-replace cd-email" for="signin-email">E-mail</label>
+                        <input class="full-width has-padding has-border" id="signin-email" type="email"
+                            placeholder="E-mail">
+                        <span class="cd-error-message">Error message here!</span>
+                    </p>
+
+                    <p class="fieldset">
+                        <label class="image-replace cd-password" for="signin-password">Password</label>
+                        <input class="full-width has-padding has-border" id="signin-password" type="text"
+                            placeholder="Password">
+                        <a href="#0" class="hide-password">Hide</a>
+                        <span class="cd-error-message">Error message here!</span>
+                    </p>
+
+                    <p class="fieldset">
+                        <input type="checkbox" id="remember-me" checked>
+                        <label class="checkbox" for="remember-me">Remember me ?</label>
+                    </p>
+
+                    <p class="fieldset">
+                        <input class="full-width" type="submit" value="Login">
+                    </p>
+                </form>
+
+                <p class="cd-form-bottom-message"><a href="#0">Forgot your password?</a></p>
+                <!-- <a href="#0" class="cd-close-form">Close</a> -->
+            </div> <!-- cd-login -->
+
+            <div id="cd-signup"> <!-- sign up form -->
+                <form class="cd-form">
+                    <p class="fieldset">
+                        <label class="image-replace cd-username" for="signup-username">Username</label>
+                        <input class="full-width has-padding has-border" id="signup-username" type="text"
+                            placeholder="Username">
+                        <span class="cd-error-message">Error message here!</span>
+                    </p>
+
+                    <p class="fieldset">
+                        <label class="image-replace cd-email" for="signup-email">E-mail</label>
+                        <input class="full-width has-padding has-border" id="signup-email" type="email"
+                            placeholder="E-mail">
+                        <span class="cd-error-message">Error message here!</span>
+                    </p>
+
+                    <p class="fieldset">
+                        <label class="image-replace cd-password" for="signup-password">Password</label>
+                        <input class="full-width has-padding has-border" id="signup-password" type="text"
+                            placeholder="Password">
+                        <a href="#0" class="hide-password">Hide</a>
+                        <span class="cd-error-message">Error message here!</span>
+                    </p>
+
+                    <p class="fieldset">
+                        <input type="checkbox" id="accept-terms">
+                        <label class="checkbox" for="accept-terms">I agree to the <a href="#0">Terms & Conditions</a></label>
+                    </p>
+
+                    <p class="fieldset">
+                        <input class="full-width has-padding" type="submit" value="Create account">
+                    </p>
+                </form>
+            </div> <!-- cd-signup -->
+            <div id="cd-reset-password"> <!-- reset password form -->
+                <p class="cd-form-message">Lost your password? Please enter your email address. You will receive a link
+                    to create a new password.</p>
+
+                <form class="cd-form">
+                    <p class="fieldset">
+                        <label class="image-replace cd-email" for="reset-email">E-mail</label>
+                        <input class="full-width has-padding has-border" id="reset-email" type="email"
+                            placeholder="E-mail">
+                        <span class="cd-error-message">Error message here!</span>
+                    </p>
+
+                    <p class="fieldset">
+                        <input class="full-width has-padding" type="submit" value="Reset password">
+                    </p>
+                </form>
+
+                <p class="cd-form-bottom-message"><a href="#0">Back to log-in</a></p>
+            </div> <!-- cd-reset-password -->
+            <a href="#0" class="cd-close-form">Close</a>
+        </div> <!-- cd-user-modal-container -->
+    </div>
+    <!-- user modal section ends -->
     <!-- main content section starts  -->
     <main id="main-page">
     </main>
     <!-- main content section ends  -->
+
     <!-- footer section starts  -->
     <footer class="footer">
         &copy; copyright @ 2024 by <span>www.emptyStacks.com</span> | all rights reserved!
@@ -63,6 +190,8 @@
     <script src="js/script.js"></script>
     <script src="js/index.js"></script>
     <script src="js/router.js"></script>
+    <script src="js/usermodal.js"></script>
+
 </body>
 
 </html>
