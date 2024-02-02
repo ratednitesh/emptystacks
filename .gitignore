@@ -1,0 +1,5 @@
+# Ignore minified or build files
+dist/
+*.min.js
+*.min.css
+*.min.html
