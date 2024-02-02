@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-uglify": "^3.0.2"
+  },
+  "dependencies": {
+    "graceful-fs": "^4.2.11",
+    "gulp-util": "^3.0.8",
+    "minimatch": "^9.0.3",
+    "resolve-url": "^0.2.1"
+  }
+}

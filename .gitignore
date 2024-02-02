@@ -3,3 +3,5 @@ dist/
 *.min.js
 *.min.css
 *.min.html
+# Ignore Node.js dependencies
+node_modules/
