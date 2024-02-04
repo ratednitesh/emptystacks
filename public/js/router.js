@@ -1,7 +1,9 @@
+import { publish } from "./event-bus";
+
 // sidebar routing 
-let selectedSidebar = "";
-let previousLocation = "";
-const mainSideBarVisible = false; 
+let previousSideBarPath;
+let previousMainBodyPath;
+let mainSideBarVisible;
 
 const routes = {
     404: "pages/not-found.html",
@@ -17,8 +19,6 @@ const routes = {
     "/register": "pages/register.html",
     "/watch-video": "pages/watch-video.html",
     "/profile-update": "pages/update.html"
-
-
 };
 
 const SIDE_BAR_OPTIONS = {
@@ -42,32 +42,31 @@ const route = (event) => {
 
 function loadSideBarScripts(sidebarSelect) {
     if (sidebarSelect == "MAIN-SIDEBAR") {
-      
-        loadMainSidebar();
+        publish('loadMainSidebar');
     } else if (sidebarSelect == "TEXT-SIDEBAR") {
-        loadContentSidebar();
+        publish('loadContentSidebar');
     }
 }
 
 function loadMainScripts(path) {
     if (path == "/content") {
-        unloadHome();
-        loadContentMainSection();
+        publish('unloadHome');
+        publish('loadContentMainSection');
     }
     else if (path == "/course") {
-        unloadHome();
-        loadCourseDetails();
-    } else if(path=="/" || path =="/home"){
-        loadHome();
-    }else{
-        unloadHome();
+        publish('unloadHome');
+        publish('loadCourseDetails');
+    } else if (path == "/" || path == "/home") {
+        publish('loadHome');
+    } else {
+        publish('unloadHome');
     }
 }
 
 const handleLocation = async () => {
     const path = window.location.pathname;
-    if (previousLocation != path) {
-        previousLocation = path;
+    if (previousMainBodyPath != path) {
+        previousMainBodyPath = path;
         const route = routes[path] || routes[404];
         const mainBody = await fetch(route).then((data) => data.text());
         document.getElementById("main-page").innerHTML = mainBody;
@@ -81,10 +80,10 @@ const handleLocation = async () => {
             else
                 currentSidebar = "NO-SIDEBAR";
         }
-        if (selectedSidebar != currentSidebar) {
-            selectedSidebar = currentSidebar;
-            if (currentSidebar == "NO-SIDEBAR" ){
-                unloadSideBar();
+        if (previousSideBarPath != currentSidebar) {
+            previousSideBarPath = currentSidebar;
+            if (currentSidebar == "NO-SIDEBAR") {
+                publish('unloadSideBar');
             } else {
                 const sidebarRoute = SIDE_BAR_OPTIONS[currentSidebar];
                 const sidebarBody = await fetch(sidebarRoute).then((data) => data.text());
@@ -94,8 +93,14 @@ const handleLocation = async () => {
         }
     }
 };
+export function initRouter() {
+    previousSideBarPath = "";
+    previousMainBodyPath = "";
+    mainSideBarVisible = false;
 
-window.onpopstate = handleLocation;
-window.route = route;
+    window.onpopstate = handleLocation;
+    window.route = route;
 
-handleLocation();
+    handleLocation();
+
+}

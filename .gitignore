@@ -1,7 +1,11 @@
 # Ignore minified or build files
-dist/
+public/dist/
 *.min.js
 *.min.css
 *.min.html
 # Ignore Node.js dependencies
 node_modules/
+.DS_Store
+.firebase/
+*.env
+.github/

@@ -14,6 +14,8 @@
 
     <!-- favicon  -->
     <link href="/images/Logo/favicon.png" type="image/x-icon" rel="icon" />
+  <script src="/dist/bundle.js"></script>
+
 </head>
 
 <body>
@@ -67,7 +69,7 @@
                     <a href="/about" onclick="route()"><i class="fas fa-circle-info"></i><span>About Us</span></i></a>
                 </div>
                 <div class="menu private">
-                    <a onclick="signOut()"><i class="fas fa-right-from-bracket"></i><span>Sign Out</span></i></a>
+                    <a id="signOutButton" ><i class="fas fa-right-from-bracket"></i><span>Sign Out</span></i></a>
                 </div>
                 <div id="sign-up" class="menu only-public">
                     <a href="#0" class="cd-signin"><i class="fas fa-right-to-bracket"></i>Sign In</a>
@@ -103,9 +105,9 @@
 
                     <p class="fieldset">
                         <label class="image-replace cd-password" for="signin-password">Password</label>
-                        <input class="full-width has-padding has-border" id="signin-password" type="text"
+                        <input class="full-width has-padding has-border" id="signin-password" type="password"
                             placeholder="Password">
-                        <a href="#0" class="hide-password">Hide</a>
+                        <a href="#0" class="hide-password">Show</a>
                         <span class="cd-error-message">Error message here!</span>
                     </p>
 
@@ -120,7 +122,7 @@
                 </form>
 
                 <p class="cd-form-bottom-message"><a href="#0">Forgot your password?</a></p>
-                <!-- <a href="#0" class="cd-close-form">Close</a> -->
+                <a href="#0" class="cd-close-form">Close</a>
             </div> <!-- cd-login -->
 
             <div id="cd-signup"> <!-- sign up form -->
@@ -141,9 +143,9 @@
 
                     <p class="fieldset">
                         <label class="image-replace cd-password" for="signup-password">Password</label>
-                        <input class="full-width has-padding has-border" id="signup-password" type="text"
+                        <input class="full-width has-padding has-border" id="signup-password" type="password"
                             placeholder="Password">
-                        <a href="#0" class="hide-password">Hide</a>
+                        <a href="#0" class="hide-password">Show</a>
                         <span class="cd-error-message">Error message here!</span>
                     </p>
 
@@ -192,10 +194,11 @@
     </footer>
     <!-- footer section ends -->
     <!-- custom js file link -->
-    <script src="js/script.js"></script>
+    <!-- <script src="js/script.js"></script>
     <script src="js/index.js"></script>
     <script src="js/router.js"></script>
-    <script src="js/usermodal.js"></script>
+    <script src="js/usermodal.js"></script> -->
+      <!-- Include the bundled script -->
 
 </body>
 
