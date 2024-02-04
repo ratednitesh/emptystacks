@@ -4,11 +4,13 @@
   "description": "This is a Web Based project to Host my study material related to Software Engg. This is an Open Source Project. #########################",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --open",
+    "start": "firebase serve",
     "build": "webpack",
     "build:prod": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
-    "deploy": "firebase deploy"
+    "deploy": "firebase deploy",
+    "release":"npm run build:prod && firebase deploy",
+    "launch":"npm run build:prod && firebase serve"
   },
   "keywords": [],
   "author": "Nitesh Saxena",

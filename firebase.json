@@ -4,6 +4,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
+    "site": "my-emptystacks",
     "public": "public",
     "ignore": [
       "firebase.json",
