@@ -1,34 +1,33 @@
 
 import { initEventBus } from "./event-bus";
+import { initFirebase } from "./firebase-config";
+import { initGlobalEvents } from "./global-events";
 import { initHeaders } from "./header";
 import { initAuthentication } from "./manage-auth";
 import { initRouter } from "./router";
 import { initUserModal } from "./user-auth-modal";
-import { initializeApp } from 'firebase/app';
-import { getFirestore} from 'firebase/firestore/lite';
+
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Initialize App
+
+  // Initialize App
+  initFirebase().then(() => {
     initEventBus();
+    initGlobalEvents();
     initHeaders();
     initAuthentication();
     initRouter();
     initUserModal();
+    // setTimeout(() =>
+    //   document.querySelector('.preloader').classList.add('active')
+    //   ,1000);
+  });
 
-      const firebaseConfig = {
-        apiKey: process.env.FIREBASE_API_KEY,
-        authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-        appId: process.env.FIREBASE_APP_ID,
-        measurementId: process.env.FIREBASE_MEASUREMENT_ID,
-      };
-    const firebaseApp = initializeApp( firebaseConfig );
-    const db = getFirestore(firebaseApp);
+  // Check User Log In status
 
+});
 
-
-
-
+window.addEventListener('load', function() {
+  // All resources are loaded, hide the preloader
+  document.querySelector('.preloader').classList.add('inactive');
 });

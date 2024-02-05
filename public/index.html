@@ -14,11 +14,18 @@
 
     <!-- favicon  -->
     <link href="/images/Logo/favicon.png" type="image/x-icon" rel="icon" />
-  <script src="/dist/bundle.js"></script>
+    <script src="/dist/bundle.js"></script>
 
 </head>
 
 <body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader">
+            <img src="images/Logo/logo_dark.svg" alt="">
+            <p>Empty<span class="logo-S">S</span>tacks</p>
+        </div>
+    </div>
     <!-- header section starts -->
     <header class="header">
         <section class="flex">
@@ -27,58 +34,58 @@
                     <img class="logo-img" src="images/Logo/logo_light.svg" alt="">
                     Empty<span class="logo-S">S</span>tacks</a>
             </div>
-            <form action="" method="post" class="search-form">
-                <input type="text" id="search_box" placeholder="search courses..." maxlength="100">
-                <label for="search_box" class="fas fa-search" name="search_box"></label>
-            </form>
-            <div class="icons">
-                <div id="menu-btn" class="fas fa-bars"></div>
-                <div id="search-btn" class="fas fa-search"></div>
-                <div id="user-btn" class="fa-solid fa-grip"></div>
-                <!-- <img id="logged-in-user" src="images/profile/photo_1.png" alt=""> -->
+            <div class="right-header">
+                <form action="" method="post" class="search-form">
+                    <input type="text" id="search_box" placeholder="search courses..." maxlength="100">
+                    <label for="search_box" class="fas fa-search" name="search_box"></label>
+                </form>
+
+                <div class="icons">
+                    <div id="menu-btn" class="fas fa-bars"></div>
+                    <div id="search-btn" class="fas fa-search"></div>
+                    <div id="user-btn" class="fa-solid fa-user"></div>
+                    <!-- <div class="icon-container" ><img src="images/profile/guest-user.svg" alt=""></div> -->
+                    <!-- <img id="logged-in-user" src="images/profile/photo_1.png" alt=""> -->
+                </div>
+                <div class="menus-modal">
+                    <div class="menus">
+                        <div class="profile only-public">
+                            <img src="images/profile/guest-user.svg" alt="">
+                            <h3>Hello Guest!</h3>
+                            <span>Explore exclusive Courses and lot more</span>
+                            <button class="btn" id="start-journey">Start Your Journey</button>
+                        </div>
+                        <div class="profile private">
+                            <img src="images/profile/photo_1.png" alt="">
+                            <h3>Nitesh Saxena</h3>
+                            <span>nitesh_91@outlook.com</span>
+                        </div>
+                        <div class="menu private">
+                            <a href="/profile" onclick="route()"><i class="fas fa-user"></i><span>Profile</span></a>
+                            <a href="/courses" onclick="route()"><i class="fas fa-book-open-reader"></i><span>Continue
+                                    Learnings</span></i></a>
+                        </div>
+                        <div class="menu public">
+                            <a id="toggle-btn"><i id="mode-icon" class="fas fa-moon"></i><span id="mode-text">Enable
+                                    Dark
+                                    Mode</span></a>
+                            <a href="/courses" onclick="route()"><i class="fas fa-graduation-cap"></i><span>All
+                                    Courses</span></i></a>
+                            <a href="/courses" onclick="route()"><i class="fas fa-book-open"></i><span>All
+                                    Streams</span></i></a>
+                            <a href="/about" onclick="route()"><i class="fas fa-circle-info"></i><span>About
+                                    Us</span></i></a>
+                        </div>
+                        <div class="menu private">
+                            <a id="signOutButton"><i class="fas fa-right-from-bracket"></i><span>Sign Out</span></i></a>
+                        </div>
+                        <div id="sign-up" class="menu only-public">
+                            <a href="#0" class="cd-signin"><i class="fas fa-right-to-bracket"></i>Sign In</a>
+                            <a href="#0" class="cd-signup"><i class="fa-solid fa-user-plus"></i>Sign Up</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="menus">
-                <div class="profile only-public">
-                    <img src="images/profile/guest-user.svg" alt="">
-                    <h3>Hello Guest!</h3>
-                    <span>Explore exclusive Courses and lot more</span>
-                    <button class="btn" id="start-journey">Start Your Journey</button>
-
-
-                </div>
-                <div class="profile private">
-                    <img src="images/profile/photo_1.png" alt="">
-                    <h3>Nitesh Saxena</h3>
-                    <span>nitesh_91@outlook.com</span>
-
-
-                </div>
-
-                <div class="menu private">
-                    <a href="/profile" onclick="route()"><i class="fas fa-user"></i><span>Profile</span></a>
-                    <a href="/courses" onclick="route()"><i class="fas fa-book-open-reader"></i><span>Continue
-                            Learnings</span></i></a>
-                </div>
-                <div class="menu public">
-                    <a id="toggle-btn"><i id="mode-icon" class="fas fa-moon"></i><span id="mode-text">Enable Dark
-                            Mode</span></a>
-                    <a href="/courses" onclick="route()"><i class="fas fa-graduation-cap"></i><span>All
-                            Courses</span></i></a>
-                    <a href="/courses" onclick="route()"><i class="fas fa-book-open"></i><span>All
-                            Streams</span></i></a>
-                    <a href="/about" onclick="route()"><i class="fas fa-circle-info"></i><span>About Us</span></i></a>
-                </div>
-                <div class="menu private">
-                    <a id="signOutButton" ><i class="fas fa-right-from-bracket"></i><span>Sign Out</span></i></a>
-                </div>
-                <div id="sign-up" class="menu only-public">
-                    <a href="#0" class="cd-signin"><i class="fas fa-right-to-bracket"></i>Sign In</a>
-                    <a href="#0" class="cd-signup"><i class="fa-solid fa-user-plus"></i>Sign Up</a>
-                </div>
-            </div>
-            </div>
-
-
         </section>
     </header>
     <!-- header section ends -->
@@ -99,22 +106,28 @@
                     <p class="fieldset">
                         <label class="image-replace cd-email" for="signin-email">E-mail</label>
                         <input class="full-width has-padding has-border" id="signin-email" type="email"
-                            placeholder="E-mail">
-                        <span class="cd-error-message">Error message here!</span>
+                            autocomplete="username" placeholder="E-mail">
+                        <!-- <span class="cd-error-message">Error message here!</span> -->
                     </p>
 
                     <p class="fieldset">
                         <label class="image-replace cd-password" for="signin-password">Password</label>
                         <input class="full-width has-padding has-border" id="signin-password" type="password"
-                            placeholder="Password">
+                            autocomplete="current-password" placeholder="Password">
                         <a href="#0" class="hide-password">Show</a>
-                        <span class="cd-error-message">Error message here!</span>
+                        <!-- <span class="cd-error-message">Error message here!</span> -->
                     </p>
-
+                    <div class="icons">
+                        <i class="google-btn fa-brands fa-google"></i>
+                        <i class="facebook-btn fa-brands fa-facebook-f"></i>
+                        <i class="github-btn fa-brands fa-github"></i>
+                        <i class="apple-btn fa-brands fa-apple"></i>
+                    </div>
                     <p class="fieldset">
-                        <input type="checkbox" id="remember-me" checked>
+                        <input type="checkbox" id="remember-me">
                         <label class="checkbox" for="remember-me">Remember me ?</label>
                     </p>
+
 
                     <p class="fieldset">
                         <input class="full-width" type="submit" value="Login">
@@ -130,25 +143,30 @@
                     <p class="fieldset">
                         <label class="image-replace cd-username" for="signup-username">Username</label>
                         <input class="full-width has-padding has-border" id="signup-username" type="text"
-                            placeholder="Username">
-                        <span class="cd-error-message">Error message here!</span>
+                            autocomplete="username" placeholder="Username">
+                        <!-- <span class="cd-error-message">Error message here!</span> -->
                     </p>
 
                     <p class="fieldset">
                         <label class="image-replace cd-email" for="signup-email">E-mail</label>
                         <input class="full-width has-padding has-border" id="signup-email" type="email"
                             placeholder="E-mail">
-                        <span class="cd-error-message">Error message here!</span>
+                        <!-- <span class="cd-error-message">Error message here!</span> -->
                     </p>
 
                     <p class="fieldset">
                         <label class="image-replace cd-password" for="signup-password">Password</label>
                         <input class="full-width has-padding has-border" id="signup-password" type="password"
-                            placeholder="Password">
+                            autocomplete="current-password" placeholder="Password">
                         <a href="#0" class="hide-password">Show</a>
-                        <span class="cd-error-message">Error message here!</span>
+                        <!-- <span class="cd-error-message">Error message here!</span> -->
                     </p>
-
+                    <div class="icons">
+                        <i class="google-btn fa-brands fa-google"></i>
+                        <i class="facebook-btn fa-brands fa-facebook-f"></i>
+                        <i class="github-btn fa-brands fa-github"></i>
+                        <i class="apple-btn fa-brands fa-apple"></i>
+                    </div>
                     <p class="fieldset">
                         <input type="checkbox" id="accept-terms">
                         <label class="checkbox" for="accept-terms">I agree to the <a href="#0">Terms &
@@ -169,7 +187,7 @@
                         <label class="image-replace cd-email" for="reset-email">E-mail</label>
                         <input class="full-width has-padding has-border" id="reset-email" type="email"
                             placeholder="E-mail">
-                        <span class="cd-error-message">Error message here!</span>
+                        <!-- <span class="cd-error-message">Error message here!</span> -->
                     </p>
 
                     <p class="fieldset">
@@ -193,13 +211,6 @@
         &copy; copyright @ 2024 by <span>www.emptyStacks.com</span> | all rights reserved!
     </footer>
     <!-- footer section ends -->
-    <!-- custom js file link -->
-    <!-- <script src="js/script.js"></script>
-    <script src="js/index.js"></script>
-    <script src="js/router.js"></script>
-    <script src="js/usermodal.js"></script> -->
-      <!-- Include the bundled script -->
-
 </body>
 
 </html>

@@ -96,7 +96,7 @@ const handleLocation = async () => {
 export function initRouter() {
     previousSideBarPath = "";
     previousMainBodyPath = "";
-    mainSideBarVisible = false;
+    mainSideBarVisible = true;
 
     window.onpopstate = handleLocation;
     window.route = route;

@@ -4,12 +4,22 @@ let toggleBtn;
 let toggleModeIcon;
 let toggleModeText;
 let logoImg;
+let menusModal;
+let profile;
+let searchForm;
+let searchFBox;
+let userButton;
 
 export function initHeaders() {
     toggleBtn = document.querySelector('#toggle-btn');
     toggleModeIcon = document.querySelector('#mode-icon');
     toggleModeText = document.querySelector('#mode-text');
+    userButton = document.querySelector('#user-btn');
     logoImg = document.getElementsByClassName("logo-img");
+     menusModal = document.querySelector('.header .flex .menus-modal');
+     profile = document.querySelector('.header .flex .menus-modal .menus');
+     searchForm = document.querySelector('.header .flex .search-form');
+     searchFBox = document.getElementById('search_box');
     headerListeners();
     let darkMode = localStorage.getItem('dark-mode');
     if (darkMode === 'enabled') {
@@ -29,35 +39,33 @@ function headerListeners() {
     profileButtonListeners();
     darkModeListeners();
     //trigger events
-    document.getElementById('signOutButton').addEventListener('click', () => { publish('signOut') });
+    document.getElementById('signOutButton').addEventListener('click', () => {removeMenuOptions(); publish('signOut'); });
 }
 
 function profileButtonListeners() {
-    let profile = document.querySelector('.header .flex .menus');
-    let searchForm = document.querySelector('.header .flex .search-form');
-    let searchFBox = document.getElementById('search_box');
+
 
     document.querySelector('#search-btn').onclick = () => {
         searchForm.classList.toggle('active');
         searchFBox.focus();
-        profile.classList.remove('active');
+      removeMenuOptions();
     }
 
 
-    document.querySelector('#user-btn').onclick = () => {
-        profile.classList.toggle('active');
+    userButton.onclick = () => {
+        toggleMenuOptions();
         searchForm.classList.remove('active');
     }
 
-    window.onscroll = () => {
-        profile.classList.remove('active');
-        searchForm.classList.remove('active');
-        if (window.innerWidth < 1200) {
-            // sideBar.classList.remove('active');
-            document.body.classList.remove('active');
+    // window.onscroll = () => {
+    // searchForm.classList.remove('active');
+    //     removeMenuOptions();
+    //     if (window.innerWidth < 1200) {
+    //         // sideBar.classList.remove('active');
+    //         document.body.classList.remove('active');
 
-        }
-    }
+    //     }
+    // }
 }
 
 function darkModeListeners() {
@@ -85,4 +93,22 @@ function disableDarkMode() {
     logoImg[0].src = "images/Logo/logo_light.svg"
     document.body.classList.remove('dark');
     localStorage.setItem('dark-mode', 'disabled');
+}
+
+function toggleMenuOptions(){
+    profile.classList.toggle('active');
+    // userButton.classList.toggle('fa-rotate-270');
+        menusModal.classList.toggle('is-visible');
+}
+
+export function removeMenuOptions(){
+    menusModal.classList.remove('is-visible');
+    profile.classList.remove('active');
+
+}
+
+export function closeMenuOptions(event){
+    if (event.target === menusModal ) {
+        removeMenuOptions();
+    }
 }

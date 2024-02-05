@@ -10,7 +10,8 @@
     "build:dev": "webpack --mode=development",
     "deploy": "firebase deploy",
     "release":"npm run build:prod && firebase deploy",
-    "launch":"npm run build:prod && firebase serve"
+    "launch":"npm run build:prod && firebase serve",
+    "dev": "webpack-dev-server --open"
   },
   "keywords": [],
   "author": "Nitesh Saxena",

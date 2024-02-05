@@ -1,8 +1,10 @@
 import { loadContentMainSection, loadContentSidebar } from "./content-loader";
 import { loadCourseDetails } from "./course-details-loader";
-import { updateProfileMenu } from "./header";
+import { closeMenuOptions, removeMenuOptions, updateProfileMenu } from "./header";
 import { loadHome, loadMainSidebar, unloadHome, unloadSideBar } from "./home-loader";
-import { signOut } from "./manage-auth";
+import { signIn, signOut } from "./manage-auth";
+import { pushPopupMessage } from "./popup-message";
+import { closeModal, escModal, loginSuccess } from "./user-auth-modal";
 
 const eventListeners = {};
 export function initEventBus() {
@@ -15,6 +17,13 @@ export function initEventBus() {
     subscribe('loadMainSidebar', loadMainSidebar);
     subscribe('unloadSideBar', unloadSideBar);
     subscribe('loadCourseDetails', loadCourseDetails);
+    // subscribe('signIn',signIn);
+    subscribe('globalClickEvent',closeModal);
+    subscribe('loginSuccess',loginSuccess);
+    subscribe('globalKeyEvent',escModal);
+    subscribe('globalClickEvent',closeMenuOptions);
+    subscribe('removeMenuOptions',removeMenuOptions);
+    subscribe('pushPopupMessage',pushPopupMessage);
 }
 export function subscribe(eventName, callback) {
     if (!eventListeners[eventName]) {

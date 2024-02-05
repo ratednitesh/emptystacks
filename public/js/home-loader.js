@@ -1,6 +1,24 @@
 let bannerInterval;
 export function loadHome() {
-
+    // document.querySelectorAll('.banner-slide').forEach((event)=>{event.addEventListener('load',()=>{console.log('image loaded')})});
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const targetImage = entry.target;
+            document.querySelector('.image-loader').style.display = "none";
+            targetImage.style.opacity = 1;
+              observer.unobserve(targetImage);
+            
+          }
+        });
+      });
+      
+      const bannerSlides = document.querySelectorAll('.banner-slide');
+      bannerSlides.forEach(bannerSlide => {
+        bannerSlide.style.opacity = 0; // Initially hide the images
+        observer.observe(bannerSlide);
+      });
+      
     const enrolledCourses = document.querySelectorAll(".book .cover");
     // enrolledCourses.forEach((enrolledCourse, i=0)=>{console.log(enrolledCourse.style);console.log(i);enrolledCourse.style.zIndex=i++;});
     let index = 0;
@@ -30,7 +48,7 @@ export function loadHome() {
         });
 
     let i = 1;
-    bannerInterval = setInterval(() => { showSlide(i++); if (i > 3) i = 1; }, 2500);
+    bannerInterval = setInterval(() => { showSlide(i++); if (i > 3) i = 1; }, 3500);
     document.getElementById('slide-1').addEventListener('click', () => { showSlide(1); });
     document.getElementById('slide-2').addEventListener('click', () => { showSlide(2); });
     document.getElementById('slide-3').addEventListener('click', () => { showSlide(3); });
