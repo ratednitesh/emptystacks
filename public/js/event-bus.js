@@ -1,8 +1,8 @@
 import { loadContentMainSection, loadContentSidebar } from "./content-loader";
 import { loadCourseDetails } from "./course-details-loader";
 import { closeMenuOptions, removeMenuOptions, updateProfileMenu } from "./header";
-import { loadHome, loadMainSidebar, unloadHome, unloadSideBar } from "./home-loader";
-import { signIn, signOut } from "./manage-auth";
+import { loadHome, loadMainSidebar, unloadHome, unloadSideBar, updateQuickSelectOptions } from "./home-loader";
+import { signOut } from "./manage-auth";
 import { pushPopupMessage } from "./popup-message";
 import { closeModal, escModal, loginSuccess } from "./user-auth-modal";
 
@@ -10,6 +10,7 @@ const eventListeners = {};
 export function initEventBus() {
     subscribe('signOut', signOut);
     subscribe('updateProfileMenu', updateProfileMenu);
+    subscribe('updateQuickSelectOptions', updateQuickSelectOptions);
     subscribe('loadHome', loadHome);
     subscribe('unloadHome', unloadHome);
     subscribe('loadContentSidebar', loadContentSidebar);

@@ -29,10 +29,12 @@ const SIDE_BAR_OPTIONS = {
 const route = (event) => {
     event = event || window.event;
     event.preventDefault();
-    var newRoute = event.target.href;
+    var element = event.target;
+    var newRoute = element.href;
     var MAX_TRY = 10;
     while (newRoute == undefined && MAX_TRY > 0) {
-        newRoute = event.target.parentElement.href;
+        newRoute = element.parentElement.href;
+        element = element.parentElement;
         MAX_TRY--;
     }
     window.history.pushState({}, "", newRoute);

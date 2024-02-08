@@ -154,7 +154,26 @@
  header section {
      max-width: none;
  }
+ .account-settings{
+    padding-top: 2rem;
+    margin-top: 5rem;
+    border-top: var(--border);
+    text-align: end;
 
+ }
+.transparent-btn{
+    border-radius: .5rem;
+    padding: 1rem 1rem;
+    font-size: 1.4rem;
+    color: var(--black);
+    cursor: pointer;
+    text-align: center;
+    border: var(--border);
+}
+.transparent-btn:hover {
+    background-color: var(--black);
+    color: var(--white);
+}
  .btn,
  .option-btn,
  .delete-btn,
@@ -271,10 +290,10 @@
     justify-content: flex-end;
  }
  /* .header .flex .logo{
-    display: inline-block;
+    
  } */
  .header .flex .logo a {
-     font-size: 3rem;
+     font-size: 2.8rem;
      color: var(--black);
      font-weight: bolder;
      letter-spacing: .1rem;
@@ -290,8 +309,8 @@
  .header .flex .logo img {
      margin: 0;
      padding: 0;
-     height: 4.2rem;
-     vertical-align: sub;
+     height: 2.8rem;
+     /* vertical-align:middle; */
  }
 
  .header .flex .search-form {
@@ -680,7 +699,17 @@
  .quick-select .box-container .tutor p {
      padding-bottom: 1rem;
  }
+ .quick-select .box-container .signup{
+    text-align: center;
+ }
+ .quick-select .box-container .signup img {
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: .5rem;
 
+}
  .quick-select .box-container .box .flex {
      display: flex;
      flex-wrap: wrap;
@@ -1837,9 +1866,14 @@
      margin: .5rem 0;
      color: var(--black);
  }
-
+ .profile .details .user h3 .edit-field{
+    font-size: 1rem;
+    color: var(--light-color);
+    margin-left: 1rem;
+    cursor: pointer;
+}
  .profile .details .user p {
-     font-size: 1.7rem;
+     font-size: 1.2rem;
      color: var(--light-color);
  }
 
@@ -1848,15 +1882,46 @@
      flex-wrap: wrap;
      align-items: flex-end;
      gap: 1.5rem;
+     margin: 1.5rem;
+
  }
 
  .profile .details .box-container .box {
+    flex-grow: .5;
      background-color: var(--light-bg);
      border-radius: .5rem;
      padding: 2rem;
      flex: 1 1 30rem;
+     width: fit-content;
  }
+ .profile .details .box-container .box .profile-fields{
+    padding: inherit;
+    color: var(--black);
+    font-size: 1.5rem;
+ }
+ .profile .details .box-container .box .profile-fields .social-info{
+   
+    padding: 1rem;
+ }
+ .profile .details .box-container .box .profile-fields .social-info i{
+    padding-right: 2.5rem;
+    font-size: 2.2rem;
+    
+}
+.profile .details .box-container .box .profile-fields .social-info .edit-field{
+    font-size: 1rem;
+    color: var(--light-color);
+    margin-left: 1rem;
+    cursor: pointer;
+}
+.profile .details .box-container .box .profile-fields .social-link{
 
+cursor: pointer;
+}
+ .profile .details .box-container .box .profile-fields .social-link:hover{
+    text-decoration: underline;
+    color: var(--main-color);
+ }
  .profile .details .box-container .box .flex {
      display: flex;
      align-items: center;
@@ -1885,6 +1950,39 @@
      font-size: 1.5rem;
      color: var(--light-color);
  }
+.profile-pic{
+    display: inline-block;
+}
+ .upload-profile-photo {
+    position: relative;
+    left: 7rem;
+    z-index: 100;
+    top: 2rem;
+  }
+  .upload-profile-photo input {
+    display: none;
+  }
+  .upload-profile-photo span {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    border: var(--border);
+    background-color: var(--light-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s;
+    padding: 1.5rem;
+    color: var(--black);
+  }
+  .upload-profile-photo span i {
+    position: absolute;
+    font-size: 1.5rem;
+  }
+  .upload-profile-photo span:hover {
+    transform: scale(1.2);
+  }
 
  .form-container {
      display: flex;
@@ -2314,7 +2412,7 @@
 
  .cd-form-message {
      padding: 1.4em 1.4em 0;
-     font-size: 1.2rem;
+     font-size: 1.4rem;
      line-height: 1.4;
      text-align: center;
  }
@@ -2440,6 +2538,9 @@
   /* transition: opacity 3s ease;  */
  }
  
+
+
+  
  .footer {
      bottom: 0;
      right: 0;
@@ -2489,7 +2590,13 @@
      #search-btn {
          display: inline-block;
      }
-
+     .header .flex {
+        padding: .5rem 1rem;
+    }
+  
+    .logo img{
+        display: none;
+    }
      .header .flex .search-form {
          position: absolute;
          top: 99%;
@@ -2584,6 +2691,9 @@
      .cd-form-message {
          padding: 2em 2em 0;
      }
+ }
+ @media(max-width:380px) {
+   
  }
 /* 
  @media only screen and (min-width: 1170px) {

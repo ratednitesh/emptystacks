@@ -1,5 +1,5 @@
 import { publish } from "./event-bus";
-import { signIn, signUp } from "./manage-auth";
+import { forgotPassword, signIn, signUp } from "./manage-auth";
 
 var form_modal;
 var form_login;
@@ -37,8 +37,7 @@ function modalListeners() {
     // start journey
     startJourney.addEventListener("click", function () {
         publish('removeMenuOptions');
-        form_modal.classList.add("is-visible");
-        signup_selected();
+        loadSignUpForm();
     });
     // open modal
     main_nav.addEventListener("click", function (event) {
@@ -148,6 +147,17 @@ function modalListeners() {
         }
     });
 
+    form_forgot_password.querySelector('input[type="submit"]').addEventListener("click", function (event) {
+        event.preventDefault();
+        let email = form_forgot_password.querySelector('#reset-email').value;
+        if (!validateEmail(email))
+        form_forgot_password.querySelector('#reset-email').classList.add("has-error");
+            else {
+                form_forgot_password.querySelector('#reset-email').classList.add("has-no-error");
+                publish('pushPopupMessage', ['SUCCESS', 'Processing request...']);
+                forgotPassword(email);
+            }
+    });
     // IE9 placeholder fallback
     if (!("placeholder" in document.createElement("input"))) {
         var placeholders = document.querySelectorAll("[placeholder]");
@@ -294,4 +304,9 @@ function createUserToken(username, email, password) {
     };
 
     return userToken;
+}
+
+export function loadSignUpForm(){
+    form_modal.classList.add("is-visible");
+    signup_selected();
 }

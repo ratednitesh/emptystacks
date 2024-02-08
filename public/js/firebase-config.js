@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore/lite';
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail ,sendEmailVerification} from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -24,6 +24,7 @@ export function initFirebase() {
         auth.onAuthStateChanged(function (user) {
             if (user) {
                 console.log('User Logged In');
+                console.log(user);
                 // user = auth.currentUser;
             }
             else
@@ -86,12 +87,19 @@ export function createNewUser(userToken) {
                 const user = userCredential.user;
                 // ...
                 console.log('Registration Successful.');
-
-                resolve();
+                sendEmailVerification(auth.currentUser)
+                .then(() => {
+                    console.log('Pwd vrf link Successful.');
+                    resolve();
+                  // Email verification sent!
+                  // ...
+                });
+              
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+                console.log(errorCode+ " "+errorMessage);
                 // ..
                 console.log('Error in Registration.');
                 reject();
@@ -115,4 +123,20 @@ export function emailPasswordSignIn(userToken) {
                 reject();
             });
     });
+}
+
+export function tryPasswordResetEmail(email){
+    return new Promise((resolve, reject) => {
+    sendPasswordResetEmail(auth, email)
+    .then(() => {
+        console.log("Password reset link has been sent!")
+        resolve();
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log('Your email id is not found in our systems.');
+      reject();
+    });
+});
 }

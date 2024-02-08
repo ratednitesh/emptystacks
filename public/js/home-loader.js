@@ -1,5 +1,13 @@
+import { loginStatus } from "./manage-auth";
+import { loadSignUpForm } from "./user-auth-modal";
+
 let bannerInterval;
 export function loadHome() {
+    var startJourneyHome = document.querySelector('#start-journey-home');
+    startJourneyHome.addEventListener("click", function () {
+       loadSignUpForm();
+    });
+    updateQuickSelectOptions(loginStatus());
     // document.querySelectorAll('.banner-slide').forEach((event)=>{event.addEventListener('load',()=>{console.log('image loaded')})});
     const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
@@ -97,4 +105,10 @@ export function unloadSideBar() {
     let menuBtn = document.querySelector('#menu-btn');
     menuBtn.style.display = "none";
 
+}
+export function updateQuickSelectOptions(isUserLoggedIn){
+        let homeOptionPrivate = document.querySelectorAll('.quick-select .box-container .private');
+        homeOptionPrivate.forEach((node) => { if (!isUserLoggedIn) node.style.display = "none"; else node.style.display = "block" });
+        let homeOptionOnlyPublic = document.querySelectorAll('.quick-select .box-container .only-public');
+        homeOptionOnlyPublic.forEach((node) => { if (isUserLoggedIn) node.style.display = "none"; else node.style.display = "block" });
 }
