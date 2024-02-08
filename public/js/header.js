@@ -32,6 +32,9 @@ export function updateProfileMenu(userLoggedIn) {
     profileMenuPrivate.forEach((node) => { if (!userLoggedIn) node.style.display = "none"; else node.style.display = "block" });
     let profileMenuOnlyPublic = document.querySelectorAll('.header .flex .menus .only-public');
     profileMenuOnlyPublic.forEach((node) => { if (userLoggedIn) node.style.display = "none"; else node.style.display = "block" });
+     document.getElementById('user-photo-header').style.display= userLoggedIn? "block":"none";
+     document.getElementById('guest-photo-header').style.display= userLoggedIn? "none":"block";
+
 }
 
 function headerListeners() {

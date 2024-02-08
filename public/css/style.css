@@ -319,19 +319,19 @@
      width: 70%;
      border-radius: .5rem;
      display: flex;
-     align-items: right;
+     /* align-items: right; */
 
  }
 
  .header .flex .search-form input {
      width: 0;
      background: var(--light-bg);
-     font-size: 2rem;
+     font-size: 1.8rem;
      color: var(--black);
-     padding-top: 0.9rem;
-     padding-bottom: 0.9rem;
-    border-top-right-radius: .5rem;
-    border-bottom-right-radius: .5rem;
+     /* padding-top: 0.9rem; */
+     /* padding-bottom: 0.9rem; */
+    border-top-right-radius: 2.25rem;
+    border-bottom-right-radius: 2.25rem;
 
      /* margin-left: .5rem; */
      transition-duration: 0.3s;
@@ -345,14 +345,16 @@
  .header .flex .search-form input:focus {
      /* padding-left: 1rem; */
      width: 100%;
+height: 4.5rem;
+
  }
 
  .header .flex .search-form input:focus+label {
      color: var(--main-color);
      background-color: var(--light-bg);
      border-radius: 0%;
-     border-top-left-radius: .5rem;
-     border-bottom-left-radius: .5rem;
+     border-top-left-radius:50%;
+     border-bottom-left-radius: 50%;
  
  }
 
@@ -364,17 +366,16 @@
      padding-top: 1.5rem;
      padding-right: 1rem;
      padding-left: 1rem; */
-
+height: 4.5rem;
      font-size: 2rem;
      color: var(--black);
-     border-radius: .5rem;
-     height: 4.5rem;
+     border-radius: 50%;
      cursor: pointer;
      width: 4.5rem;
      line-height: 4.4rem;
      background-color: var(--light-bg);
      text-align: center;
-     margin-left: .5rem;
+     /* margin-left: .5rem; */
      /* z-index: 3000; */
  }
 
@@ -391,10 +392,10 @@
      display: flex;
  }
 
- .header .flex .icons div {
+ .header .flex .icons .header-icon{
      font-size: 2rem;
      color: var(--black);
-     border-radius: .5rem;
+     border-radius: 50%;
      height: 4.5rem;
      cursor: pointer;
      width: 4.5rem;
@@ -405,11 +406,23 @@
      /* padding: 1rem; */
  }
 
- .header .flex .icons div:hover {
+ .header .flex .icons img {
+    height: 4.5rem;
+    width: 4.5rem;
+    border-radius: 50%;
+    object-fit:cover;
+    margin-left: .5rem;
+    cursor: pointer;
+    background-color: var(--light-bg);
+}
+
+ .header .flex .icons .header-icon:hover {
      background-color: var(--black);
      color: var(--white);
  }
-
+#user-photo-header{
+    display: none;
+}
  #search-btn {
      display: none;
  }
@@ -1851,6 +1864,7 @@
  .profile .details .user {
      text-align: center;
      margin-bottom: 2rem;
+     background-color: transparent;
  }
 
  .profile .details .user img {

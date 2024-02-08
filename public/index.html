@@ -41,11 +41,12 @@
                 </form>
 
                 <div class="icons">
-                    <div id="menu-btn" class="fas fa-bars"></div>
-                    <div id="search-btn" class="fas fa-search"></div>
-                    <div id="user-btn" class="fa-solid fa-user"></div>
-                    <!-- <div class="icon-container" ><img src="images/profile/guest-user.svg" alt=""></div> -->
-                    <!-- <img id="logged-in-user" src="images/profile/photo_1.png" alt=""> -->
+                    <div id="menu-btn" class="header-icon fas fa-bars"></div>
+                    <div id="search-btn" class="header-icon fas fa-search"></div>
+                    <div id="user-btn">
+                        <div id="guest-photo-header" class="header-icon fa-solid fa-user"></div>
+                        <img id="user-photo-header" src="images/profile/user.jpg" alt="">
+                    </div>
                 </div>
                 <div class="menus-modal">
                     <div class="menus">
@@ -88,11 +89,9 @@
             </div>
         </section>
     </header>
-    <!-- header section ends -->
 
     <!-- side-bar section starts  -->
     <nav id="side-bar"></nav>
-    <!-- side-bar section ends  -->
     <!-- user modal section starts  -->
     <div class="cd-user-modal"> <!-- this is the entire modal form, including the background -->
         <div class="cd-user-modal-container"> <!-- this is the container wrapper -->
@@ -200,17 +199,14 @@
             <a href="#0" class="cd-close-form">Close</a>
         </div> <!-- cd-user-modal-container -->
     </div>
-    <!-- user modal section ends -->
     <!-- main content section starts  -->
     <main id="main-page">
     </main>
-    <!-- main content section ends  -->
 
     <!-- footer section starts  -->
     <footer class="footer">
         &copy; copyright @ 2024 by <span>www.emptyStacks.com</span> | all rights reserved!
     </footer>
-    <!-- footer section ends -->
 </body>
 
 </html>
