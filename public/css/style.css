@@ -1332,7 +1332,12 @@ header section {
     font-size: 1.7rem;
     padding-top: .5rem;
 }
-
+.data-field.editable{
+    background-color: var(--light-bg);
+    color: var(--black);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+}
 .playlist .row .col .details .date i {
     color: var(--main-color);
     margin-right: 1rem;

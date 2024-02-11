@@ -38,7 +38,9 @@ function editFieldDataListeners(fieldId){
     var dataField = field.querySelector('.data-field');
     editButton.addEventListener("click",()=>{
         dataField.contentEditable = true;
-        dataField.style.backgroundColor = "#eee"; 
+        dataField.classList.add("editable");
+        // dataField.style.backgroundColor = "#eee"; 
+        // dataField.style.color= "#000";
         editButton.classList.toggle('inactive');
         confirmButton.classList.toggle('inactive');
         cancelButton.classList.toggle('inactive');
@@ -47,7 +49,9 @@ function editFieldDataListeners(fieldId){
         //add validations.
         fieldCurrentValues[fieldId]=dataField.innerHTML; // TODO: Backend call
         dataField.contentEditable = false;
-        dataField.style.backgroundColor = "transparent"; 
+        // dataField.style.backgroundColor = "transparent"; 
+        dataField.classList.remove("editable");
+
         editButton.classList.toggle('inactive');
         confirmButton.classList.toggle('inactive');
         cancelButton.classList.toggle('inactive');
@@ -55,7 +59,9 @@ function editFieldDataListeners(fieldId){
     cancelButton.addEventListener("click",()=>{
         dataField.innerHTML =fieldCurrentValues[fieldId];
         dataField.contentEditable = false;
-        dataField.style.backgroundColor = "transparent"; 
+        // dataField.style.backgroundColor = "transparent"; 
+        dataField.classList.remove("editable");
+
         editButton.classList.toggle('inactive');
         confirmButton.classList.toggle('inactive');
         cancelButton.classList.toggle('inactive');
