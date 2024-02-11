@@ -9,8 +9,8 @@
     "build:prod": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
     "deploy": "firebase deploy",
-    "release":"npm run build:prod && firebase deploy",
-    "launch":"npm run build:prod && firebase serve",
+    "release": "npm run build:prod && firebase deploy",
+    "launch": "npm run build:prod && firebase serve",
     "dev": "webpack-dev-server --open"
   },
   "keywords": [],
@@ -20,7 +20,9 @@
     "firebase": "^10.8.0"
   },
   "devDependencies": {
+    "css-minimizer-webpack-plugin": "^6.0.0",
     "dotenv-webpack": "^8.0.1",
+    "terser": "^5.27.0",
     "webpack": "^5.90.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"

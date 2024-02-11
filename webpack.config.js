@@ -1,5 +1,7 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
+const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = ( argv) => {
   return {
@@ -12,6 +14,23 @@ module.exports = ( argv) => {
     },
     plugins: [
       new Dotenv()
-    ]
+    ],
+    optimization: {
+      minimize: true,
+      minimizer: [new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: true,
+            reduce_funcs: true,
+            reduce_vars: true,
+            booleans_as_integers: true
+          },
+          mangle: true,
+          output: {
+            comments: false 
+          },
+        },
+      }),],
+    },
   };
 };

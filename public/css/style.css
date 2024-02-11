@@ -9,6 +9,14 @@
     --light-color: #888;
     --light-bg: #eee;
     --border: .1rem solid rgba(0, 0, 0, .2);
+    --small-font: 1.5rem;
+    --medium-font: 2rem;
+    --heading-font: 2.5rem;
+    --logo-font: 2.8rem;
+    --small-gap: 1rem;
+    --medium-gap: 2rem;
+    --tiny-border: .5rem;
+    --small-padding: 1rem 2rem;
 }
 
 * {
@@ -26,19 +34,6 @@
     color: #fff;
 }
 
-/* *::-webkit-scrollbar {
-     height: .5rem;
-     width: 1rem;
- } */
-
-/* *::-webkit-scrollbar-track {
-     background-color: transparent;
- }
-
- *::-webkit-scrollbar-thumb {
-     background-color: var(--main-color);
- } */
-
 html {
     font-size: 62.5%;
     overflow-x: hidden;
@@ -55,6 +50,7 @@ body.dark {
     --light-color: #aaa;
     --light-bg: #333;
     --border: .1rem solid rgba(255, 255, 255, .2);
+   
 }
 
 body.active {
@@ -64,7 +60,7 @@ body.active {
 
 .preloader {
     position: fixed;
-    font-size: 17px;
+    font-size: var(--medium-font);
     top: 0;
     left: 0;
     width: 100%;
@@ -78,7 +74,7 @@ body.active {
 
 .loader {
     color: #fff;
-    height: 60px;
+    /* height: 60px; */
     animation: fadeloader 2s ease-in-out infinite;
 }
 
@@ -87,7 +83,7 @@ body.active {
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding-top: 25%;
+    /* padding-top: 2rem; */
     /* margin-bottom: 2rem; */
 }
 
@@ -105,111 +101,15 @@ body.active {
     display: none;
 }
 
-.animated-background {
-    border-radius: .5rem;
-    animation-duration: 2s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: infinite;
-    animation-name: placeHolderShimmer;
-    animation-timing-function: linear;
-    background: black;
-    background: linear-gradient(to right, var(--white) 8%, var(--light-bg) 30%, var(--white) 52%);
-    position: relative;
-}
-
-@keyframes placeHolderShimmer {
-    0% {
-        background-position: -20px 0
-    }
-
-    100% {
-        background-position: 468px 0
-    }
-}
-
-.btn,
-.option-btn,
-.delete-btn,
-.inline-btn,
-.inline-option-btn,
-.inline-delete-btn {
-    border-radius: .5rem;
-    padding: 1rem 3rem;
-    font-size: 1.8rem;
-    color: #fff;
-    margin-top: 1rem;
-    text-transform: capitalize;
-    cursor: pointer;
-    text-align: center;
-}
-
-.btn,
-.option-btn,
-.delete-btn {
-    display: block;
-    width: 100%;
-}
-
-.inline-btn,
-.inline-option-btn,
-.inline-delete-btn {
-    display: inline-block;
-}
-
-.btn,
-.inline-btn {
-    background-color: var(--main-color);
-}
-
-.option-btn,
-.inline-option-btn {
-    background-color: var(--orange);
-}
-
-.delete-btn,
-.inline-delete-btn {
-    background-color: var(--red);
-}
-
-.flex-btn {
-    display: flex;
-    gap: 1rem;
-}
-
-.transparent-btn {
-    border-radius: .5rem;
-    padding: 1rem 1rem;
-    font-size: 1.4rem;
-    color: var(--black);
-    cursor: pointer;
-    text-align: center;
-    border: var(--border);
-}
-
-.transparent-btn:hover {
-    background-color: var(--black);
-    color: var(--white);
-}
-
-.btn:hover,
-.option-btn:hover,
-.delete-btn:hover,
-.inline-btn:hover,
-.inline-option-btn:hover,
-.inline-delete-btn:hover {
-    background-color: var(--black);
-    color: var(--white);
-}
 
 .popup {
     position: fixed;
     bottom: -60px;
     right: 10px;
-    padding: 15px 40px;
-    font-size: 18px;
-    font-family: sans-serif;
-    color: #ffffff;
-    border-radius: 30px;
+    padding: var(--small-padding);
+    font-size: var(--small-font);
+    color: #fff;
+    border-radius: var(--medium-gap);
     animation: popup 5s ease-in-out;
     z-index: 5000;
 }
@@ -224,25 +124,22 @@ body.active {
     }
 }
 
+.heading {
+    padding-bottom: 1.8rem;
+    border-bottom: var(--border);
+    font-size: var(--heading-font);
+    color: var(--black);
+    text-transform:capitalize;
+    margin-bottom: var(--medium-gap);
+}
+
 section {
-    padding: 2rem 2rem;
+    padding:var(--small-padding);
     max-width: 1440px;
     margin: 0 auto;
 }
 
-header section {
-    max-width: none;
-}
-
-.heading {
-    padding-bottom: 1.8rem;
-    border-bottom: var(--border);
-    font-size: 2.5rem;
-    color: var(--black);
-    text-transform: capitalize;
-    margin-bottom: 2rem;
-}
-
+/* header css starts  */
 .header {
     background-color: var(--white);
     border-bottom: var(--border);
@@ -254,24 +151,23 @@ header section {
 }
 
 .header .flex {
-    padding: 1.5rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-
-.header .flex .right-header {
-    display: flex;
-    justify-content: flex-end;
-    flex-grow: 20;
+    max-width: none;
 }
 
 .header .flex .logo {
     flex-grow: 1;
 }
 
+.header .flex .right-header {
+    flex-grow: 20;
+    display: flex;
+    justify-content: flex-end;
+}
 .header .flex .logo a {
-    font-size: 2.8rem;
+    font-size: var(--logo-font);
     color: var(--black);
     font-weight: bolder;
     letter-spacing: .1rem;
@@ -281,25 +177,25 @@ header section {
     color: var(--main-color);
     letter-spacing: .1rem;
 }
-
 .header .flex .logo img {
     margin: 0;
     padding: 0;
-    height: 2.8rem;
+    height: var(--logo-font);
 }
+
 
 .header .flex .search-form {
     flex-direction: row-reverse;
-    margin-left: 1rem;
+    margin-left: var(--small-gap);
     width: 100%;
-    border-radius: .5rem;
+    border-radius: var(--tiny-border);
     display: flex;
 }
 
 .header .flex .search-form input {
     width: 0;
     background: var(--light-bg);
-    font-size: 1.8rem;
+    font-size: var(--small-font);
     color: var(--black);
     border-top-right-radius: 2.25rem;
     border-bottom-right-radius: 2.25rem;
@@ -325,7 +221,7 @@ header section {
 
 .header .flex .search-form label {
     height: 4.5rem;
-    font-size: 2rem;
+    font-size: var(--medium-font);
     color: var(--black);
     border-radius: 50%;
     cursor: pointer;
@@ -342,6 +238,7 @@ header section {
 .header .flex .search-form label:active {
     background-color: var(--light-bg);
 }
+
 
 .header .flex .icons {
     display: flex;
@@ -476,6 +373,121 @@ header section {
     color: var(--main-color);
     margin-right: 1.5rem;
 }
+ 
+/* unfiltered css  */
+
+
+/* *::-webkit-scrollbar {
+     height: .5rem;
+     width: 1rem;
+ } */
+
+/* *::-webkit-scrollbar-track {
+     background-color: transparent;
+ }
+
+ *::-webkit-scrollbar-thumb {
+     background-color: var(--main-color);
+ } */
+
+
+
+
+ .animated-background {
+    border-radius: .5rem;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: black;
+    background: linear-gradient(to right, var(--white) 8%, var(--light-bg) 30%, var(--white) 52%);
+    position: relative;
+}
+
+@keyframes placeHolderShimmer {
+    0% {
+        background-position: -20px 0
+    }
+
+    100% {
+        background-position: 468px 0
+    }
+}
+
+.btn,
+.option-btn,
+.delete-btn,
+.inline-btn,
+.inline-option-btn,
+.inline-delete-btn {
+    border-radius: .5rem;
+    padding: 1rem 3rem;
+    font-size: 1.8rem;
+    color: #fff;
+    margin-top: 1rem;
+    text-transform: capitalize;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn,
+.option-btn,
+.delete-btn {
+    display: block;
+    width: 100%;
+}
+
+.inline-btn,
+.inline-option-btn,
+.inline-delete-btn {
+    display: inline-block;
+}
+
+.btn,
+.inline-btn {
+    background-color: var(--main-color);
+}
+
+.option-btn,
+.inline-option-btn {
+    background-color: var(--orange);
+}
+
+.delete-btn,
+.inline-delete-btn {
+    background-color: var(--red);
+}
+
+.flex-btn {
+    display: flex;
+    gap: 1rem;
+}
+
+.transparent-btn {
+    border-radius: .5rem;
+    padding: 1rem 1rem;
+    font-size: 1.4rem;
+    color: var(--black);
+    cursor: pointer;
+    text-align: center;
+    border: var(--border);
+}
+
+.transparent-btn:hover {
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.btn:hover,
+.option-btn:hover,
+.delete-btn:hover,
+.inline-btn:hover,
+.inline-option-btn:hover,
+.inline-delete-btn:hover {
+    background-color: var(--black);
+    color: var(--white);
+}
 
 .side-bar {
     position: fixed;
@@ -583,7 +595,6 @@ header section {
     color: var(--main-color);
     margin-right: 1.5rem;
     transition: .2s linear;
-
 }
 
 .side-bar .navbar a i.arrow {
