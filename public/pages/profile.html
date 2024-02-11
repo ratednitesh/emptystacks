@@ -15,8 +15,13 @@
                         </label>
                         <img src="images/profile/user.jpg" alt="">
                     </div>
+                    <div id="username" class="username">
+                        <h3 class="data-field"></h3>
+                        <span class="edit edit-field fa-solid fa-pen"></span>
+                        <span class="check inactive edit-field fa-solid fa-check"></span>
+                        <span class="cross inactive edit-field fa-solid fa-xmark"></span>
+                    </div>
 
-                    <h3>Nitesh Saxena<i class="edit-field fa-solid fa-pen"></i></h3>
                     <p>Stack Explorer</p>
                     <!-- <a href="/profile-update" onclick="route()" class="inline-btn">Update Profile</a> -->
 
@@ -26,20 +31,41 @@
             <div class="box">
                 <div class="profile-fields">
                     <div class="social-info">
-                        <i class="fa-regular fa-note-sticky"></i>
-                        <span>I am curious little kid.</span><i class="edit-field fa-solid fa-pen"></i>
+
+                        <div id="about-me">
+                            <i class="fa-regular fa-note-sticky"></i>
+                            <span class="data-field"></span>
+                            <i class="edit edit-field fa-solid fa-pen"></i>
+                            <i class="check inactive edit-field fa-solid fa-check"></i>
+                            <i class="cross inactive edit-field fa-solid fa-xmark"></i>
+                        </div>
                     </div>
                     <div class="social-info">
-                        <i class="fa-solid fa-briefcase"></i>
-                        <span>Engineer</span><i class="edit-field fa-solid fa-pen"></i>
+                        <div id="work">
+                            <i class="fa-solid fa-briefcase"></i>
+                            <span class="data-field"></span>
+                            <i class="edit edit-field fa-solid fa-pen"></i>
+                            <i class="check inactive edit-field fa-solid fa-check"></i>
+                            <i class="cross inactive edit-field fa-solid fa-xmark"></i>
+                        </div>
                     </div>
                     <div class="social-info">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <span></span><i class="edit-field fa-solid fa-pen"></i>
+                        <div id="location">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span class="data-field"></span>
+                            <i class="edit edit-field fa-solid fa-pen"></i>
+                            <i class="check inactive edit-field fa-solid fa-check"></i>
+                            <i class="cross inactive edit-field fa-solid fa-xmark"></i>
+                        </div>
                     </div>
                     <div class="social-info">
-                        <i class="fa-solid fa-chalkboard-user"></i>
-                        <span>Full Stack Developer</span><i class="edit-field fa-solid fa-pen"></i>
+                        <div id="tech-stack">
+                            <i class="fa-solid fa-chalkboard-user"></i>
+                            <span class="data-field"></span>
+                            <i class="edit edit-field fa-solid fa-pen"></i>
+                            <i class="check inactive edit-field fa-solid fa-check"></i>
+                            <i class="cross inactive edit-field fa-solid fa-xmark"></i>
+                        </div>
                     </div>
                 </div>
                 <!-- <a href="#" class="inline-btn">View Courses</a> -->
@@ -47,65 +73,46 @@
             <div class="box">
                 <div class="profile-fields">
                     <div class="social-info">
-                        <i class="fa-brands fa-facebook"></i>
-
-                        <span class="social-link">facebook.com/ratednitesh</span><i
-                            class="edit-field fa-solid fa-pen"></i>
+                        <div id="facebook">
+                            <i class="fa-brands fa-facebook"></i>
+                            <span class="data-field"></span>
+                            <i class="edit edit-field fa-solid fa-pen"></i>
+                            <i class="check inactive edit-field fa-solid fa-check"></i>
+                            <i class="cross inactive edit-field fa-solid fa-xmark"></i>
+                        </div>
                     </div>
                     <div class="social-info">
-                        <i class="fa-brands fa-instagram"></i>
-
-                        <span class="social-link">instagram.com/ratednitesh</span><i
-                            class="edit-field fa-solid fa-pen"></i>
+                        <div id="instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                            <span class="data-field"></span>
+                            <i class="edit edit-field fa-solid fa-pen"></i>
+                            <i class="check inactive edit-field fa-solid fa-check"></i>
+                            <i class="cross inactive edit-field fa-solid fa-xmark"></i>
+                        </div>
                     </div>
                     <div class="social-info">
-                        <i class="fa-brands fa-linkedin"></i>
-
-                        <span class="social-link">linkedin.com/ratednitesh</span><i
-                            class="edit-field fa-solid fa-pen"></i>
+                        <div id="linkedin">
+                            <i class="fa-brands fa-linkedin"></i>
+                            <span class="data-field"></span>
+                            <i class="edit edit-field fa-solid fa-pen"></i>
+                            <i class="check inactive edit-field fa-solid fa-check"></i>
+                            <i class="cross inactive edit-field fa-solid fa-xmark"></i>
+                        </div>
                     </div>
                     <div class="social-info">
-                        <i class="fa-brands fa-github"></i>
-
-                        <span class="social-link">github.com/ratednitesh</span><i
-                            class="edit-field fa-solid fa-pen"></i>
+                        <div id="github">
+                            <i class="fa-brands fa-github"></i>
+                            <span class="data-field"></span>
+                            <i class="edit edit-field fa-solid fa-pen"></i>
+                            <i class="check inactive edit-field fa-solid fa-check"></i>
+                            <i class="cross inactive edit-field fa-solid fa-xmark"></i>
+                        </div>
                     </div>
                 </div>
                 <!-- <a href="#" class="inline-btn">View Courses</a> -->
             </div>
         </div>
-        <h1 class="heading">Enrolled Courses</h1>
-        <section class="courses">
 
-            <div class="box-container">
-                <div class="box">
-
-                    <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
-                    <h3 class="title">Solving LeetCode Questions</h3>
-                    <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
-                </div>
-                <div class="box">
-
-                    <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
-                    <h3 class="title">Solving LeetCode Questions</h3>
-                    <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
-                </div>
-                <div class="box">
-
-                    <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
-                    <h3 class="title">Solving LeetCode Questions</h3>
-                    <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
-                </div>
-                <div class="box">
-
-                    <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
-                    <h3 class="title">Solving LeetCode Questions</h3>
-                    <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
-                </div>
-            
-            </div>
-            <button class="inline-btn">View More</button>
-        </section>
         <h1 class="heading">My Activities</h1>
         <div class="box-container">
             <div class="box">
@@ -116,7 +123,6 @@
                         <span>Saved Courses</span>
                     </div>
                 </div>
-                <a href="#" class="inline-btn">View Courses</a>
             </div>
             <div class="box">
                 <div class="flex">
@@ -126,7 +132,6 @@
                         <span>liked tutorials</span>
                     </div>
                 </div>
-                <a href="#" class="inline-btn">View Likes</a>
             </div>
             <div class="box">
                 <div class="flex">
@@ -136,15 +141,43 @@
                         <span>Comments</span>
                     </div>
                 </div>
-                <a href="#" class="inline-btn">View Comments</a>
             </div>
         </div>
-        <div class="account-settings">
-            <a href="/profile-update" onclick="route()" class="transparent-btn">Account Settings</a>
 
-        </div>
 
     </div>
 
 </section>
 <!-- profile section ends  -->
+<section class="courses">
+    <h1 class="heading">Enrolled Courses</h1>
+    <div class="box-container">
+        <div class="box">
+
+            <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
+            <h3 class="title">Solving LeetCode Questions</h3>
+            <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
+        </div>
+        <div class="box">
+
+            <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
+            <h3 class="title">Solving LeetCode Questions</h3>
+            <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
+        </div>
+        <div class="box">
+
+            <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
+            <h3 class="title">Solving LeetCode Questions</h3>
+            <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
+        </div>
+
+
+    </div>
+    <div class="more-btn">
+        <a href="/courses" onclick="route()" class="inline-btn">View More</a>
+    </div>
+    <div class="account-settings">
+        <a href="/profile-update" onclick="route()" class="transparent-btn">Account Settings</a>
+
+    </div>
+</section>

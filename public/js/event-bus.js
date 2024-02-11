@@ -4,6 +4,7 @@ import { closeMenuOptions, removeMenuOptions, updateProfileMenu } from "./header
 import { loadHome, loadMainSidebar, unloadHome, unloadSideBar, updateQuickSelectOptions } from "./home-loader";
 import { signOut } from "./manage-auth";
 import { pushPopupMessage } from "./popup-message";
+import { initProfile } from "./profile";
 import { closeModal, escModal, loginSuccess } from "./user-auth-modal";
 
 const eventListeners = {};
@@ -18,7 +19,7 @@ export function initEventBus() {
     subscribe('loadMainSidebar', loadMainSidebar);
     subscribe('unloadSideBar', unloadSideBar);
     subscribe('loadCourseDetails', loadCourseDetails);
-    // subscribe('signIn',signIn);
+    subscribe('loadProfile',initProfile);
     subscribe('globalClickEvent',closeModal);
     subscribe('loginSuccess',loginSuccess);
     subscribe('globalKeyEvent',escModal);

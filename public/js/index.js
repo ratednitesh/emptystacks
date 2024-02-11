@@ -18,16 +18,11 @@ document.addEventListener('DOMContentLoaded', function () {
     initAuthentication();
     initRouter();
     initUserModal();
-    // setTimeout(() =>
-    //   document.querySelector('.preloader').classList.add('active')
-    //   ,1000);
   });
-
   // Check User Log In status
-
 });
 
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
   // All resources are loaded, hide the preloader
   document.querySelector('.preloader').classList.add('inactive');
 });

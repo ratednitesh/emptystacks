@@ -58,7 +58,10 @@ function loadMainScripts(path) {
     else if (path == "/course") {
         publish('unloadHome');
         publish('loadCourseDetails');
-    } else if (path == "/" || path == "/home") {
+    } else if (path == "/profile") {
+        publish('unloadHome');
+        publish('loadProfile');
+    }else if (path == "/" || path == "/home") {
         publish('loadHome');
     } else {
         publish('unloadHome');
