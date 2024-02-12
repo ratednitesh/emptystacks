@@ -11,24 +11,11 @@ var fieldCurrentValues = {
 };
 
 export function initProfile(){
-    initFieldData("username");
-    editFieldDataListeners("username");
-    initFieldData("about-me");
-    editFieldDataListeners("about-me");
-    initFieldData("work");
-    editFieldDataListeners("work");
-    initFieldData("location");
-    editFieldDataListeners("location");
-    initFieldData("tech-stack");
-    editFieldDataListeners("tech-stack");
-    initFieldData("facebook");
-    editFieldDataListeners("facebook");
-    initFieldData("instagram");
-    editFieldDataListeners("instagram");
-    initFieldData("linkedin");
-    editFieldDataListeners("linkedin");
-    initFieldData("github");
-    editFieldDataListeners("github");
+    for (const property in fieldCurrentValues) {
+        initFieldData(property);
+    editFieldDataListeners(property);
+      }
+      
 }
 function editFieldDataListeners(fieldId){
     var  field = document.getElementById(fieldId);

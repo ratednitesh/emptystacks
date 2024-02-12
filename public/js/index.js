@@ -6,7 +6,7 @@ import { initHeaders } from "./header";
 import { initAuthentication } from "./manage-auth";
 import { initRouter } from "./router";
 import { initUserModal } from "./user-auth-modal";
-
+import "../css/style.css";
 
 document.addEventListener('DOMContentLoaded', function () {
 

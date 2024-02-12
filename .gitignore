@@ -1,5 +1,5 @@
 # Ignore minified or build files
-public/dist/
+dist/
 *.min.js
 *.min.css
 *.min.html
