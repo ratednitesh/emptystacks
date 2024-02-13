@@ -14,23 +14,26 @@ var main_nav;
 var startJourney;
 
 export function initUserModal() {
-    form_modal = document.querySelector(".cd-user-modal");
-    form_login = document.querySelector("#cd-login");
-    form_signup = document.querySelector("#cd-signup");
-    form_forgot_password = document.querySelector("#cd-reset-password");
-    form_modal_tab = document.querySelector(".cd-switcher");
-    tab_login = form_modal_tab.children[0].children[0];
-    tab_signup = form_modal_tab.children[1].children[0];
-    forgot_password_link = form_login.querySelector(".cd-form-bottom-message a");
-    back_to_login_link = form_forgot_password.querySelector(".cd-form-bottom-message a");
-    main_nav = document.querySelector("#sign-up");
-    startJourney = document.querySelector('#start-journey');
-    var rememberedEmail = localStorage.getItem('rememberedEmail');
-    if (rememberedEmail) {
-        document.getElementById('signin-email').value = rememberedEmail;
-        document.getElementById('remember-me').checked = true;
-    }
-    modalListeners();
+    createUserAuthForm(function(){
+        form_modal = document.querySelector(".cd-user-modal");
+        form_login = document.querySelector("#cd-login");
+        form_signup = document.querySelector("#cd-signup");
+        form_forgot_password = document.querySelector("#cd-reset-password");
+        form_modal_tab = document.querySelector(".cd-switcher");
+        tab_login = form_modal_tab.children[0].children[0];
+        tab_signup = form_modal_tab.children[1].children[0];
+        forgot_password_link = form_login.querySelector(".cd-form-bottom-message a");
+        back_to_login_link = form_forgot_password.querySelector(".cd-form-bottom-message a");
+        main_nav = document.querySelector("#sign-up");
+        startJourney = document.querySelector('#start-journey');
+        var rememberedEmail = localStorage.getItem('rememberedEmail');
+        if (rememberedEmail) {
+            document.getElementById('signin-email').value = rememberedEmail;
+            document.getElementById('remember-me').checked = true;
+        }
+        modalListeners();
+    });
+    
 }
 
 function modalListeners() {
@@ -108,7 +111,7 @@ function modalListeners() {
                 form_login.querySelector('#signin-password').classList.add("has-no-error");
                 publish('pushPopupMessage', ['SUCCESS', 'Processing request...']);
                 let userToken = createUserToken('', email, password);
-                signIn('emailAddress',userToken);
+                signIn('emailAddress', userToken);
             }
         }
         form_login.querySelector('input[type="email"]').classList.toggle("has-error");
@@ -151,12 +154,12 @@ function modalListeners() {
         event.preventDefault();
         let email = form_forgot_password.querySelector('#reset-email').value;
         if (!validateEmail(email))
-        form_forgot_password.querySelector('#reset-email').classList.add("has-error");
-            else {
-                form_forgot_password.querySelector('#reset-email').classList.add("has-no-error");
-                publish('pushPopupMessage', ['SUCCESS', 'Processing request...']);
-                forgotPassword(email);
-            }
+            form_forgot_password.querySelector('#reset-email').classList.add("has-error");
+        else {
+            form_forgot_password.querySelector('#reset-email').classList.add("has-no-error");
+            publish('pushPopupMessage', ['SUCCESS', 'Processing request...']);
+            forgotPassword(email);
+        }
     });
     // IE9 placeholder fallback
     if (!("placeholder" in document.createElement("input"))) {
@@ -306,7 +309,18 @@ function createUserToken(username, email, password) {
     return userToken;
 }
 
-export function loadSignUpForm(){
+export function loadSignUpForm() {
     form_modal.classList.add("is-visible");
     signup_selected();
+}
+
+async function createUserAuthForm(callback) {
+    var userAuthRoute = "pages/user-auth-modal.html";
+    const userAuthModal = await fetch(userAuthRoute).then((data) => data.text());
+    const modalContainer = document.createElement('div');
+    modalContainer.classList.add('cd-user-modal');
+    modalContainer.innerHTML = userAuthModal;
+    document.body.insertBefore(modalContainer,document.getElementById('main-page'));
+    
+    callback();
 }

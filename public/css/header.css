@@ -1,0 +1,236 @@
+
+/* header css starts  */
+.header {
+    background-color: var(--white);
+    border-bottom: var(--border);
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header .flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: none;
+}
+
+.header .flex .logo {
+    flex-grow: 1;
+}
+
+.header .flex .right-header {
+    flex-grow: 20;
+    display: flex;
+    justify-content: flex-end;
+}
+.header .flex .logo a {
+    font-size: var(--logo-font);
+    color: var(--black);
+    font-weight: bolder;
+    letter-spacing: .1rem;
+}
+
+.header .flex .logo-S {
+    color: var(--main-color);
+    letter-spacing: .1rem;
+}
+.header .flex .logo img {
+    margin: 0;
+    padding: 0;
+    height: var(--logo-font);
+}
+
+
+.header .flex .search-form {
+    flex-direction: row-reverse;
+    margin-left: var(--small-gap);
+    width: 100%;
+    border-radius: var(--tiny-border);
+    display: flex;
+}
+
+.header .flex .search-form input {
+    width: 0;
+    background: var(--light-bg);
+    font-size: var(--small-font);
+    color: var(--black);
+    border-top-right-radius: 2.25rem;
+    border-bottom-right-radius: 2.25rem;
+    transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -webkit-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+}
+
+.header .flex .search-form input:focus {
+    width: 100%;
+    height: 4.5rem;
+}
+
+.header .flex .search-form input:focus+label {
+    color: var(--main-color);
+    background-color: var(--light-bg);
+    border-radius: 0%;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+
+}
+
+.header .flex .search-form label {
+    height: 4.5rem;
+    font-size: var(--medium-font);
+    color: var(--black);
+    border-radius: 50%;
+    cursor: pointer;
+    width: 4.5rem;
+    line-height: 4.4rem;
+    background-color: var(--light-bg);
+    text-align: center;
+}
+
+.header .flex .search-form label:hover {
+    color: var(--main-color);
+}
+
+.header .flex .search-form label:active {
+    background-color: var(--light-bg);
+}
+
+
+.header .flex .icons {
+    display: flex;
+}
+
+.header .flex .icons .header-icon {
+    font-size: 2rem;
+    color: var(--black);
+    border-radius: 50%;
+    height: 4.5rem;
+    cursor: pointer;
+    width: 4.5rem;
+    line-height: 4.4rem;
+    background-color: var(--light-bg);
+    text-align: center;
+    margin-left: .5rem;
+}
+
+.header .flex .icons img {
+    height: 4.5rem;
+    width: 4.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: .5rem;
+    cursor: pointer;
+    background-color: var(--light-bg);
+}
+
+.header .flex .icons .header-icon:hover {
+    background-color: var(--black);
+    color: var(--white);
+}
+
+#user-photo-header {
+    display: none;
+}
+
+#search-btn {
+    display: none;
+}
+
+.header .flex .menus.active {
+    transform: scale(1);
+}
+
+.header .flex .menus {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    background-color: var(--white);
+    border-radius: .5rem;
+    transform: scale(0);
+    transform-origin: top right;
+    transition: .2s linear;
+    width: 30rem;
+    border: var(--border);
+}
+
+.header .flex .menus-modal {
+    position: fixed;
+    top: 7.8rem;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(80, 80, 80, 0.9);
+    z-index: 2000;
+    overflow-y: auto;
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: opacity 0.3s 0, visibility 0 0.3s;
+    -moz-transition: opacity 0.3s 0, visibility 0 0.3s;
+    transition: opacity 0.3s 0, visibility 0 0.3s;
+}
+
+.header .flex .menus-modal.is-visible {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transition: opacity 0.3s 0, visibility 0 0;
+    -moz-transition: opacity 0.3s 0, visibility 0 0;
+    transition: opacity 0.3s 0, visibility 0 0;
+}
+
+.header .flex .menus .profile {
+    padding: 1rem 2rem;
+    text-align: center;
+    border-bottom: var(--border);
+}
+
+.header .flex .menus .profile img {
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: .5rem;
+
+}
+
+.header .flex .menus .profile h3 {
+    font-size: 2rem;
+    color: var(--black);
+}
+
+.header .flex .menus .profile span {
+    color: var(--light-color);
+    font-size: 1.6rem;
+}
+
+.header .flex .menus .menu {
+    font-size: 1.8rem;
+    text-align: left;
+    border-bottom: var(--border);
+}
+
+.header .flex .menus .menu a {
+    padding-left: 1rem;
+    display: block;
+    line-height: 6rem;
+    list-style: none;
+    justify-content: space-evenly;
+    color: var(--black);
+    cursor: pointer;
+}
+
+.header .flex .menus .menu a:hover {
+    background-color: var(--light-bg);
+}
+
+.header .flex .menus .menu a i {
+    width: 2rem;
+    text-align: center;
+    color: var(--main-color);
+    margin-right: 1.5rem;
+}
+ 

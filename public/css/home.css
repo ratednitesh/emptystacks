@@ -1,0 +1,193 @@
+
+.quick-select .box-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(27.5rem, 1fr));
+    gap: 1.5rem;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.quick-select .box-container .box {
+    border-radius: .5rem;
+    background-color: var(--white);
+    padding: 2rem;
+    height: 100%;
+}
+
+.quick-select .box-container .box .title {
+    font-size: 2rem;
+    color: var(--black);
+}
+
+.quick-select .box-container .box p {
+    line-height: 1.5;
+    padding-top: 1.5rem;
+    color: var(--light-color);
+    font-size: 1.5rem;
+}
+
+.quick-select .box-container .box p span {
+    color: var(--main-color);
+}
+
+.quick-select .box-container .tutor {
+    text-align: center;
+
+}
+
+.quick-select .box-container .tutor p {
+    padding-bottom: 1rem;
+}
+
+.quick-select .box-container .signup {
+    text-align: center;
+}
+
+.quick-select .box-container .signup img {
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: .5rem;
+
+}
+
+.quick-select .box-container .box .flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 2rem;
+}
+
+.quick-select .box-container .box .flex a {
+    padding: 1rem 1.5rem;
+    border-radius: .5rem;
+    font-size: 1.6rem;
+    background-color: var(--light-bg);
+}
+
+.quick-select .box-container .box .flex a i {
+    margin-right: 1rem;
+    color: var(--black);
+}
+
+.quick-select .box-container .box .flex a span {
+    color: var(--light-color);
+}
+
+.quick-select .box-container .box .flex a:hover {
+    background-color: var(--black);
+}
+
+.quick-select .box-container .box .flex a:hover i {
+    color: var(--white);
+}
+
+.quick-select .box-container .box .flex a:hover span {
+    color: var(--white);
+}
+
+.quick-select .box-container .box .book {
+    gap: 1rem;
+    padding-top: 2rem;
+    top: 0;
+}
+
+
+.quick-select .box-container .box .book .cover {
+    padding: 1rem 1.5rem;
+    border-radius: .5rem;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    background-color: var(--light-bg);
+    top: 0;
+    display: none;
+}
+
+.quick-select .box-container .box .book .hidden {
+    display: none;
+}
+
+.quick-select .box-container .box .book .visible {
+    animation-name: fade-in;
+    animation-duration: .5s;
+    display: block;
+}
+
+.quick-select .box-container .box .book img {
+    width: 100%;
+    border-radius: .5rem;
+}
+
+.quick-select .box-container .box .book p {
+    font-size: 1.6rem;
+}
+
+.quick-select .box-container .box .book .cover:hover {
+    border: var(--border);
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0.4;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slide-in {
+    from {
+        opacity: 0.4;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.slideshow {
+    text-align: center;
+    padding-top: 1rem;
+}
+
+.prev, .next {
+    cursor: pointer;
+    width: auto;
+    font-weight: bold;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    margin: 1rem;
+    border-radius: .5rem;
+    padding: .5rem 1.5rem;
+    font-size: 2rem;
+    color: var(--black);
+}
+
+.prev:hover, .next:hover {
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.highlight-section .box-container .slider {
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--black);
+}
+
+.highlight-section .box-container .slider i {
+    cursor: pointer;
+    padding: .5rem;
+}
+
+.highlight-section .box-container .banner-slide {
+    display: none;
+    width: 100%;
+    animation-name: fade-in;
+    animation-duration: 3s;
+    margin-bottom: 2rem;
+    opacity: 0;
+    border-radius: .5rem;
+    /* transition: opacity 3s ease;  */
+}

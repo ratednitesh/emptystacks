@@ -22,7 +22,7 @@ const routes = {
 };
 
 const SIDE_BAR_OPTIONS = {
-    "NO-SIDEBAR": "", "MAIN-SIDEBAR": "pages/main-sidebar.html", "TEXT-SIDEBAR": "pages/text-sidebar.html"
+    "NO-SIDEBAR": "", "MAIN-SIDEBAR": "pages/main-sidebar.html", "TEXT-SIDEBAR": "pages/course-content-sidebar.html"
 };
 
 // main page routing

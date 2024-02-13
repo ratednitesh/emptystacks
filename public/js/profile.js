@@ -46,7 +46,6 @@ export function initProfile() {
 function setUserProfilePhoto() {
     var userPhoto = document.getElementById('user-photo');
     userPhoto.src = userProfileSrc;
-    console.log(userPhoto);
 }
 function initUserPublicProfile(fieldId) {
     var field = document.getElementById(fieldId);

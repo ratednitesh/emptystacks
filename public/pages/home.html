@@ -4,10 +4,9 @@
     <div class="box-container">
         <div class="image-loader animated-background"></div>
         <div class="slide-section">
-            <a href="/content"><img onclick="route()" class="banner-slide" src="/images/banners/1.jpg" alt=""></a>
-            <a href="/content"> <img onclick="route()" class="banner-slide" src="/images/banners/2.jpg" alt=""></a>
-            <a href="/content"></a><img onclick="route()" class="banner-slide" src="/images/banners/3.jpg" alt=""></a>
-
+            <a href="/content"><img id="slide-img-1" onclick="route()" class="banner-slide" alt=""></a>
+            <a href="/content"><img id="slide-img-2" onclick="route()" class="banner-slide" alt=""></a>
+            <a href="/content"><img id="slide-img-3" onclick="route()" class="banner-slide" alt=""></a>
             <div class="slider">
                 <i id="slide-1" class="fa-regular fa-circle"></i>
                 <i id="slide-2" class="fa-regular fa-circle"></i>
@@ -22,7 +21,6 @@
     <h1 class="heading">
         quick options
     </h1>
-
     <div class="box-container">
         <div class="box signup only-public">
             <img src="images/profile/guest-user.svg" alt="">
@@ -33,70 +31,22 @@
         <div class="box private">
             <h3 class="title">Enrolled Courses</h3>
             <div class="book">
-                <div class="cover hidden fade">
-                    <a href="/content" onclick="route()"><img src="images/thumbnails/thumbnail sample.jpg" class="thumb"
-                            alt="">
-                        <p>1 Solving LeetCode Questions</p>
-                    </a>
-                </div>
-                <div class="cover hidden fade">
-                    <a href="#"><img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
-                        <p>2 Solving LeetCode Questions</p>
-                    </a>
-                </div>
-                <div class="cover hidden fade">
-                    <a href="#"><img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
-                        <p>3 Solving LeetCode Questions</p>
-                    </a>
-                </div>
                 <div class="slideshow">
                     <a class="prev">&#10094;</a>
                     <a class="next">&#10095;</a>
                 </div>
             </div>
         </div>
-        <!-- <div class="box">
-                    <h3 class="title">likes and comments</h3>
-                    <p>total likes: <span>14</span></p>
-                    <a href="" class="inline-btn">view likes</a>
-                    <p>total comments: <span>32</span></p>
-                    <a href="" class="inline-btn">view comments</a>
-                    <p>saved courses: <span>3</span></p>
-                    <a href="" class="inline-btn">view courses</a>
-                </div> -->
         <div class="box">
             <h3 class="title">popular streams</h3>
-            <div class="flex">
-                <a href="#"><i class="fas fa-code"></i><span>development</span></a>
-                <a href="#"><i class="fas fa-chart-simple"></i><span>business</a>
-                <a href="#"><i class="fas fa-pen"></i><span>design</span></a>
-                <a href="#"><i class="fas fa-chart-line"></i><span>marketing</span></a>
-                <a href="#"><i class="fas fa-music"></i><span>music</span></a>
-                <a href="#"><i class="fas fa-camera"></i><span>photography</span></a>
-                <a href="#"><i class="fas fa-cog"></i><span>software</span></a>
-                <a href="#"><i class="fas fa-vial"></i><span>science</span></a>
-                <a href="#"><i class="fas fa-cog"></i><span>space</span></a>
-                <a href="#"><i class="fas fa-vial"></i><span>backend</span></a>
+            <div id="stream-options" class="flex">
             </div>
         </div>
-        <!-- <div class="box">
-                    <h3 class="title">popular courses</h3>
-                    <div class="flex">
-                        <a href="#"><i class="fab fa-html5"></i><span>HTML</span></a>
-                        <a href="#"><i class="fab fa-css3"></i><span>CSS</a>
-                        <a href="#"><i class="fab fa-js"></i><span>javascript</span></a>
-                        <a href="#"><i class="fab fa-react"></i><span>react</span></a>
-                        <a href="#"><i class="fab fa-php"></i><span>PHP</span></a>
-                        <a href="#"><i class="fab fa-bootstrap"></i><span>bootstrap</span></a>
-                    </div>
-                </div> -->
-
         <div class="box tutor">
             <h3 class="title">Become a Tutor</h3>
             <p>Empower minds, share knowledge, and inspire future generations through tailored guidance and support!</p>
             <a href="/register" onclick="route()" class="inline-btn">get started</a>
         </div>
-
     </div>
 </section>
 <!-- quick select section ends  -->
@@ -105,81 +55,9 @@
 <section class="courses">
     <h1 class="heading">our courses</h1>
     <div class="box-container">
-        <div class="box">
-            <div class="tutor">
-                <img src="images/profile/photo_1.png" alt="">
-                <div>
-                    <h3>Nitesh Saxena</h3>
-                    <span>01-24-2023</span>
-                </div>
-            </div>
-            <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
-            <h3 class="title">Solving LeetCode Questions</h3>
-            <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
-        </div>
-        <div class="box">
-            <div class="tutor">
-                <img src="images/profile/photo_1.png" alt="">
-                <div>
-                    <h3>Nitesh Saxena</h3>
-                    <span>01-24-2023</span>
-                </div>
-            </div>
-            <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
-            <h3 class="title">Solving LeetCode Questions</h3>
-            <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
-        </div>
-        <div class="box">
-            <div class="tutor">
-                <img src="images/profile/photo_1.png" alt="">
-                <div>
-                    <h3>Nitesh Saxena</h3>
-                    <span>01-24-2023</span>
-                </div>
-            </div>
-            <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
-            <h3 class="title">Solving LeetCode Questions</h3>
-            <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
-        </div>
-        <div class="box">
-            <div class="tutor">
-                <img src="images/profile/photo_1.png" alt="">
-                <div>
-                    <h3>Nitesh Saxena</h3>
-                    <span>01-24-2023</span>
-                </div>
-            </div>
-            <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
-            <h3 class="title">Solving LeetCode Questions</h3>
-            <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
-        </div>
-        <div class="box">
-            <div class="tutor">
-                <img src="images/profile/photo_1.png" alt="">
-                <div>
-                    <h3>Nitesh Saxena</h3>
-                    <span>01-24-2023</span>
-                </div>
-            </div>
-            <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
-            <h3 class="title">Solving LeetCode Questions</h3>
-            <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
-        </div>
-        <div class="box">
-            <div class="tutor">
-                <img src="images/profile/photo_1.png" alt="">
-                <div>
-                    <h3>Nitesh Saxena</h3>
-                    <span>01-24-2023</span>
-                </div>
-            </div>
-            <img src="images/thumbnails/thumbnail sample.jpg" class="thumb" alt="">
-            <h3 class="title">Solving LeetCode Questions</h3>
-            <a href="/playlist" onclick="route()" class="inline-btn">View Playlist</a>
-        </div>
     </div>
     <div class="more-btn">
-        <a href="/courses"  onclick="route()" class="inline-btn">View More</a>
+        <a href="/courses" onclick="route()" class="inline-btn">View More</a>
     </div>
 </section>
 <!-- courses section ends  -->

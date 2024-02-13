@@ -1,0 +1,124 @@
+
+
+.text-section .chapter-details {
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    background-color: var(--white);
+    border-radius: .5rem;
+    padding: 2rem;
+    text-align: center;
+}
+
+.text-section .chapter-details .heading {
+    margin-bottom: 0;
+    padding-bottom: 0.5rem;
+    font-size: 2.5rem;
+    color: var(--black);
+    text-transform: capitalize;
+    margin-bottom: 0.5rem;
+}
+
+
+.text-section .chapter-details .info {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 2rem;
+    padding-bottom: 1.5rem;
+}
+
+.text-section .chapter-details .info p {
+    font-size: 1.5rem;
+
+}
+
+.text-section .chapter-details .info p i {
+    margin-right: 1rem;
+    color: var(--main-color);
+
+}
+
+.text-section .chapter-details .info p span {
+    color: var(--light-color);
+}
+
+.text-section .chapter-details .chapter-content {
+    padding-top: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    letter-spacing: .02rem;
+    text-align: justify;
+    font-size: 1.6rem;
+    color: var(--black);
+    border-bottom: var(--border);
+}
+
+.text-section .chapter-details .chapter-content a {
+    text-decoration: none;
+    color: var(--main-color);
+}
+
+.text-section .chapter-details .chapter-content p {
+    padding-bottom: 2rem;
+}
+
+.text-section .chapter-details .chapter-content h4 {
+    padding-bottom: .5rem;
+    font-size: 2.2rem;
+    color: var(--light-color);
+}
+
+.text-section .chapter-details .chapter-content h5 {
+    padding-bottom: .5rem;
+    font-size: 2rem;
+    color: var(--light-color);
+}
+
+.text-section .chapter-details .chapter-content ul {
+    margin: 1rem 4rem;
+}
+
+.text-section .chapter-details .chapter-content .chapter-footer {
+    text-align: center;
+    padding-top: 2rem;
+    color: var(--light-color);
+    font-size: 1.3rem;
+
+}
+
+.text-section .chapter-details .chapter-content .chapter-footer p {
+    padding: 0;
+}
+
+.text-section .chapter-details .chapter-content .chapter-footer i {
+    padding: 0 .5rem;
+    padding-bottom: 1rem;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.text-section .chapter-details .chapter-content .chapter-footer i:hover {
+    color: var(--main-color);
+}
+
+.text-section .chapter-navigation {
+    display: flex;
+    flex-direction: row;
+}
+
+.text-section .chapter-navigation .left-group {
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.text-section .chapter-navigation .left-group {
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.text-section .chapter-navigation .right-group {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+}
