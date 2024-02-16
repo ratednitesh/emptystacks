@@ -1,29 +1,36 @@
 import { publish } from "./event-bus";
 
-// sidebar routing 
-let previousSideBarPath;
-let previousMainBodyPath;
-let mainSideBarVisible;
 
 const routes = {
-    404: "pages/not-found.html",
-    "/": "pages/home.html",
-    "/home": "pages/home.html",
-    "/about": "pages/about.html",
-    "/profile": "pages/profile.html",
-    "/courses": "pages/courses.html",
-    "/contact": "pages/contact.html",
-    "/content": "pages/course-content.html",
-    "/course": "pages/text-course.html",
-    "/playlist": "pages/playlist.html",
-    "/register": "pages/register.html",
-    "/watch-video": "pages/watch-video.html",
-    "/profile-update": "pages/update.html"
+    "/": "/pages/home.html",
+    "/home": "/pages/home.html",
+    "/about": "/pages/about.html",
+    "/about/*": "/pages/about.html",
+    "/profile": "/pages/profile.html",
+    "/courses": "/pages/courses.html",
+    "/courses/*": "/pages/courses.html",
+    "/contact": "/pages/contact.html",
+    "/contact/*": "/pages/contact.html",
+    "/content": "/pages/course-content.html",
+    "/course": "/pages/text-course.html",
+    "/playlist": "/pages/playlist.html",
+    "/register": "/pages/register.html",
+    "/watch-video": "/pages/watch-video.html",
+    "/profile-update": "/pages/update.html",
+    "/profile-update/*": "/pages/update.html",
+    404: "/pages/not-found.html"
 };
 
 const SIDE_BAR_OPTIONS = {
-    "NO-SIDEBAR": "", "MAIN-SIDEBAR": "pages/main-sidebar.html", "TEXT-SIDEBAR": "pages/course-content-sidebar.html"
+    "NO-SIDEBAR": "",
+    "MAIN-SIDEBAR": "/pages/main-sidebar.html",
+    "TEXT-SIDEBAR": "/pages/course-content-sidebar.html"
 };
+let previousSideBarPath = "";
+let previousMainBodyPath = "";
+let mainSideBarVisible = true;
+
+
 
 // main page routing
 const route = (event) => {
@@ -77,7 +84,7 @@ const handleLocation = async () => {
         previousMainBodyPath = path;
         console.log(path);
         console.log(routes[path]);
-        const route = routes[path] || routes[404];
+        const route = findMatchingRoute(path);
         const mainBody = await fetch(route).then((data) => data.text());
         document.getElementById("main-page").innerHTML = mainBody;
         loadMainScripts(path);
@@ -104,13 +111,24 @@ const handleLocation = async () => {
     }
 };
 export function initRouter() {
-    previousSideBarPath = "";
-    previousMainBodyPath = "";
-    mainSideBarVisible = true;
-
     window.onpopstate = handleLocation;
     window.route = route;
-
     handleLocation();
+}
 
+function findMatchingRoute(path) {
+    // Check if the path matches any route in the routes object
+    const matchingRoute = Object.keys(routes).find(route => {
+        if (route.endsWith("*")) {
+            // Handle routes with additional segments
+            const prefix = route.slice(0, -1); // Remove the wildcard '*'
+            return path.startsWith(prefix);
+        } else {
+            // Handle exact match routes
+            return route === path;
+        }
+    });
+
+    // Return the matching route or the default 404 route
+    return routes[matchingRoute] || routes[404];
 }

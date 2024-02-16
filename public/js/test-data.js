@@ -1,6 +1,6 @@
 var userPrivateProfile = {
     "username": "Nitesh S.",
-    "userProfileSrc": "images/profile/user.jpg",
+    "userProfileSrc": "/images/profile/user.jpg",
     "mailId": "nitesh_91@outlook.com",
     "role": "Stack Explorer"
 }
@@ -14,7 +14,7 @@ var userPublicProfile = {
     "instagram": "ratednitesh",
     "linkedin": "ratednitesh",
     "github": "",
-    "userProfileSrc": "images/profile/user.jpg",
+    "userProfileSrc": "/images/profile/user.jpg",
     "role":"Stack Explorer"
 };
 var actvities = {
@@ -24,16 +24,16 @@ var actvities = {
 };
 var enrolledCourses = [
     {
-        "thumbnail": "images/thumbnails/thumbnail sample.jpg",
+        "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
         "title": "Solving LeetCode Questions",
         "href": "/playlist"
     },
     {
-        "thumbnail": "images/thumbnails/thumbnail sample.jpg",
+        "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
         "title": "Solving LeetCode Questions",
         "href": "/playlist"
     }, {
-        "thumbnail": "images/thumbnails/thumbnail sample.jpg",
+        "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
         "title": "Solving LeetCode Questions",
         "href": "/playlist"
     }
@@ -53,32 +53,32 @@ var topStreams = [
 
 var topCourses = [
     {
-        thumbnail: "images/thumbnails/thumbnail sample.jpg",
+        thumbnail: "/images/thumbnails/thumbnail sample.jpg",
         title: "Some Random Text course",
         href: "/content"
     },
     {
-        thumbnail: "images/thumbnails/thumbnail sample.jpg",
+        thumbnail: "/images/thumbnails/thumbnail sample.jpg",
         title: "Solving LeetCode Questions",
         href: "/playlist"
     },
     {
-        thumbnail: "images/thumbnails/thumbnail sample.jpg",
+        thumbnail: "/images/thumbnails/thumbnail sample.jpg",
         title: "Solving LeetCode Questions",
         href: "/playlist"
     },
     {
-        thumbnail: "images/thumbnails/thumbnail sample.jpg",
+        thumbnail: "/images/thumbnails/thumbnail sample.jpg",
         title: "Solving LeetCode Questions",
         href: "/playlist"
     },
     {
-        thumbnail: "images/thumbnails/thumbnail sample.jpg",
+        thumbnail: "/images/thumbnails/thumbnail sample.jpg",
         title: "Solving LeetCode Questions",
         href: "/playlist"
     },
     {
-        thumbnail: "images/thumbnails/thumbnail sample.jpg",
+        thumbnail: "/images/thumbnails/thumbnail sample.jpg",
         title: "Solving LeetCode Questions",
         href: "/playlist"
     }

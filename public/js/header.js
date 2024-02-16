@@ -103,7 +103,7 @@ function enableDarkMode() {
     toggleBtn.classList.replace('fa-sun', 'fa-moon');
     toggleModeIcon.classList.replace('fa-moon', 'fa-sun');
     toggleModeText.innerHTML = "Enable Light Mode";
-    logoImg[0].src = "images/Logo/logo_dark.svg"
+    logoImg[0].src = "/images/Logo/logo_dark.svg"
     document.body.classList.add('dark');
     localStorage.setItem('dark-mode', 'enabled');
 }
@@ -111,7 +111,7 @@ function disableDarkMode() {
     toggleBtn.classList.replace('fa-moon', 'fa-sun');
     toggleModeIcon.classList.replace('fa-sun', 'fa-moon');
     toggleModeText.innerHTML = "Enable Dark Mode";
-    logoImg[0].src = "images/Logo/logo_light.svg"
+    logoImg[0].src = "/images/Logo/logo_light.svg"
     document.body.classList.remove('dark');
     localStorage.setItem('dark-mode', 'disabled');
 }
