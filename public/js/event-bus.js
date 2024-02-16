@@ -1,5 +1,6 @@
 import { loadContentMainSection, loadContentSidebar } from "./content-loader";
 import { loadCourseDetails } from "./course-details-loader";
+import { initCourses } from "./courses";
 import { closeMenuOptions, removeMenuOptions, updateProfileMenu } from "./header";
 import { loadHome, loadMainSidebar, unloadHome, unloadSideBar, updateQuickSelectOptions } from "./home-loader";
 import { signOut } from "./manage-auth";
@@ -20,6 +21,7 @@ export function initEventBus() {
     subscribe('unloadSideBar', unloadSideBar);
     subscribe('loadCourseDetails', loadCourseDetails);
     subscribe('loadProfile',initProfile);
+    subscribe('loadCourses',initCourses);
     subscribe('globalClickEvent',closeModal);
     subscribe('loginSuccess',loginSuccess);
     subscribe('globalKeyEvent',escModal);

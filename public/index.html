@@ -38,7 +38,7 @@
                     <div id="search-btn" class="header-icon fas fa-search"></div>
                     <div id="user-btn">
                         <div id="guest-photo-header" class="header-icon fa-solid fa-user"></div>
-                        <img id="user-photo-header" src="images/profile/user.jpg" alt="">
+                        <img id="user-photo-header" alt="">
                     </div>
                 </div>
                 <div class="menus-modal">
@@ -50,25 +50,20 @@
                             <button class="btn" id="start-journey">Start Your Journey</button>
                         </div>
                         <div class="profile private">
-                            <img src="images/profile/photo_1.png" alt="">
-                            <h3>Nitesh Saxena</h3>
-                            <span>nitesh_91@outlook.com</span>
+                            <img id="user-menu-photo" alt="">
+                            <h3 id="user-menu-name"></h3>
+                            <span id="user-menu-mail"></span>
                         </div>
                         <div class="menu private">
-                            <a href="/profile" onclick="route()"><i class="fas fa-user"></i><span>Profile</span></a>
-                            <a href="/courses" onclick="route()"><i class="fas fa-book-open-reader"></i><span>Continue
-                                    Learnings</span></i></a>
+                            <a href="/profile" onclick="route()"><i class="fas fa-user"></i><span>My Profile</span></a>
+                            <a href="/courses" onclick="route()"><i class="fas fa-book-open-reader"></i><span>My Courses</span></i></a>
+                            <a href="/profile-update" onclick="route()"><i class="fas fa-cog"></i><span>Account Settings</span></i></a>
                         </div>
                         <div class="menu public">
                             <a id="toggle-btn"><i id="mode-icon" class="fas fa-moon"></i><span id="mode-text">Enable
                                     Dark
                                     Mode</span></a>
-                            <a href="/courses" onclick="route()"><i class="fas fa-graduation-cap"></i><span>All
-                                    Courses</span></i></a>
-                            <a href="/courses" onclick="route()"><i class="fas fa-book-open"></i><span>All
-                                    Streams</span></i></a>
-                            <a href="/about" onclick="route()"><i class="fas fa-circle-info"></i><span>About
-                                    Us</span></i></a>
+                      
                         </div>
                         <div class="menu private">
                             <a id="signOutButton"><i class="fas fa-right-from-bracket"></i><span>Sign Out</span></i></a>

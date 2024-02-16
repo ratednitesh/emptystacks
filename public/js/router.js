@@ -61,6 +61,9 @@ function loadMainScripts(path) {
     } else if (path == "/profile") {
         publish('unloadHome');
         publish('loadProfile');
+    }else if (path == "/courses") {
+        publish('unloadHome');
+        publish('loadCourses');
     }else if (path == "/" || path == "/home") {
         publish('loadHome');
     } else {
@@ -72,6 +75,8 @@ const handleLocation = async () => {
     const path = window.location.pathname;
     if (previousMainBodyPath != path) {
         previousMainBodyPath = path;
+        console.log(path);
+        console.log(routes[path]);
         const route = routes[path] || routes[404];
         const mainBody = await fetch(route).then((data) => data.text());
         document.getElementById("main-page").innerHTML = mainBody;

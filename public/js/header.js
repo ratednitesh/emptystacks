@@ -1,4 +1,5 @@
 import { publish } from "./event-bus";
+import { getUserPrivateData } from "./test-data";
 
 let toggleBtn;
 let toggleModeIcon;
@@ -16,10 +17,10 @@ export function initHeaders() {
     toggleModeText = document.querySelector('#mode-text');
     userButton = document.querySelector('#user-btn');
     logoImg = document.getElementsByClassName("logo-img");
-     menusModal = document.querySelector('.header .flex .menus-modal');
-     profile = document.querySelector('.header .flex .menus-modal .menus');
-     searchForm = document.querySelector('.header .flex .search-form');
-     searchFBox = document.getElementById('search_box');
+    menusModal = document.querySelector('.header .flex .menus-modal');
+    profile = document.querySelector('.header .flex .menus-modal .menus');
+    searchForm = document.querySelector('.header .flex .search-form');
+    searchFBox = document.getElementById('search_box');
     headerListeners();
     let darkMode = localStorage.getItem('dark-mode');
     if (darkMode === 'enabled') {
@@ -29,11 +30,28 @@ export function initHeaders() {
 
 export function updateProfileMenu(userLoggedIn) {
     let profileMenuPrivate = document.querySelectorAll('.header .flex .menus .private');
-    profileMenuPrivate.forEach((node) => { if (!userLoggedIn) node.style.display = "none"; else node.style.display = "block" });
     let profileMenuOnlyPublic = document.querySelectorAll('.header .flex .menus .only-public');
-    profileMenuOnlyPublic.forEach((node) => { if (userLoggedIn) node.style.display = "none"; else node.style.display = "block" });
-     document.getElementById('user-photo-header').style.display= userLoggedIn? "block":"none";
-     document.getElementById('guest-photo-header').style.display= userLoggedIn? "none":"block";
+    if (userLoggedIn) {
+        console.log('user is logged in section');
+        getUserPrivateData().then((userData) => {
+            document.getElementById('user-photo-header').src = userData.userProfileSrc;
+            document.getElementById('user-menu-photo').src = userData.userProfileSrc;
+            document.getElementById('user-menu-name').innerHTML = userData.username;
+            document.getElementById('user-menu-mail').innerHTML = userData.mailId;
+            profileMenuPrivate.forEach((node) => { node.style.display = "block" });
+            profileMenuOnlyPublic.forEach((node) => { node.style.display = "none" });
+            document.getElementById('user-photo-header').style.display = "block";
+            document.getElementById('guest-photo-header').style.display = "none";
+        }).catch(() => { publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load user profile."]); })
+    } else {
+        profileMenuPrivate.forEach((node) => { node.style.display = "none" });
+        profileMenuOnlyPublic.forEach((node) => { node.style.display = "block" });
+        document.getElementById('user-photo-header').style.display = "none";
+        document.getElementById('guest-photo-header').style.display = "block";
+    }
+
+
+
 
 }
 
@@ -42,7 +60,7 @@ function headerListeners() {
     profileButtonListeners();
     darkModeListeners();
     //trigger events
-    document.getElementById('signOutButton').addEventListener('click', () => {removeMenuOptions(); publish('signOut'); });
+    document.getElementById('signOutButton').addEventListener('click', () => { removeMenuOptions(); publish('signOut'); });
 }
 
 function profileButtonListeners() {
@@ -51,7 +69,7 @@ function profileButtonListeners() {
     document.querySelector('#search-btn').onclick = () => {
         searchForm.classList.toggle('active');
         searchFBox.focus();
-      removeMenuOptions();
+        removeMenuOptions();
     }
 
 
@@ -81,7 +99,7 @@ function darkModeListeners() {
     }
 }
 
-function enableDarkMode () {
+function enableDarkMode() {
     toggleBtn.classList.replace('fa-sun', 'fa-moon');
     toggleModeIcon.classList.replace('fa-moon', 'fa-sun');
     toggleModeText.innerHTML = "Enable Light Mode";
@@ -98,20 +116,20 @@ function disableDarkMode() {
     localStorage.setItem('dark-mode', 'disabled');
 }
 
-function toggleMenuOptions(){
+function toggleMenuOptions() {
     profile.classList.toggle('active');
     // userButton.classList.toggle('fa-rotate-270');
-        menusModal.classList.toggle('is-visible');
+    menusModal.classList.toggle('is-visible');
 }
 
-export function removeMenuOptions(){
+export function removeMenuOptions() {
     menusModal.classList.remove('is-visible');
     profile.classList.remove('active');
 
 }
 
-export function closeMenuOptions(event){
-    if (event.target === menusModal ) {
+export function closeMenuOptions(event) {
+    if (event.target === menusModal) {
         removeMenuOptions();
     }
 }
