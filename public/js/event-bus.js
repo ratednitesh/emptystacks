@@ -2,10 +2,11 @@ import { loadContentMainSection, loadContentSidebar } from "./content-loader";
 import { loadCourseDetails } from "./course-details-loader";
 import { initCourses } from "./courses";
 import { closeMenuOptions, removeMenuOptions, updateProfileMenu } from "./header";
-import { loadHome, loadMainSidebar, unloadHome, unloadSideBar, updateQuickSelectOptions } from "./home-loader";
+import { loadHome, loadMainSidebar, unloadHome, unloadSideBar, updateQuickSelectOptions, updateUserInfoOnSideBar } from "./home-loader";
 import { signOut } from "./manage-auth";
 import { pushPopupMessage } from "./popup-message";
 import { initProfile } from "./profile";
+import { notFoundRoute } from "./router";
 import { closeModal, escModal, loginSuccess } from "./user-auth-modal";
 
 const eventListeners = {};
@@ -21,6 +22,7 @@ export function initEventBus() {
     subscribe('unloadSideBar', unloadSideBar);
     subscribe('loadCourseDetails', loadCourseDetails);
     subscribe('loadProfile',initProfile);
+    subscribe('notFoundRoute',notFoundRoute);
     subscribe('loadCourses',initCourses);
     subscribe('globalClickEvent',closeModal);
     subscribe('loginSuccess',loginSuccess);
@@ -28,6 +30,7 @@ export function initEventBus() {
     subscribe('globalClickEvent',closeMenuOptions);
     subscribe('removeMenuOptions',removeMenuOptions);
     subscribe('pushPopupMessage',pushPopupMessage);
+    subscribe('updateUserInfoOnSideBar',updateUserInfoOnSideBar);
 }
 export function subscribe(eventName, callback) {
     if (!eventListeners[eventName]) {

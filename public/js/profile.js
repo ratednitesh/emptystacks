@@ -1,5 +1,5 @@
 import { publish } from "./event-bus";
-import { getEnrolledCourses, getUserActivities, getUserPublicData, updateUserData } from "./test-data";
+import { getEnrolledCourses, getUserActivities, getUserPublicData, updateUserData } from "./fetch-data";
 
 var userPublicProfile = {};
 

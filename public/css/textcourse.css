@@ -147,9 +147,7 @@
     margin-right: .7rem;
 }
 
-.signal-bars>.bar:nth-last-child(n+2) {
-    background: var(--main-color);
-}
+
 
 .text-course .row .col .details .course-attributes span {
     color: var(--light-color);
@@ -183,6 +181,13 @@
     border-bottom: var(--border);
 }
 
+.course-details .accordion-header a{
+    text-decoration: none;
+    color: var(--black);
+}
+.course-details .accordion-header a:hover{
+    color: var(--light-color);
+}
 .course-details .accordion-header .bullet {
     margin-right: 2rem;
 }

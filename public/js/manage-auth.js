@@ -13,6 +13,7 @@ export function signOut() {
         if (!userLoggedIn) {
             publish('pushPopupMessage', ["SUCCESS", "Logout successful!"]);
             publish('updateProfileMenu', userLoggedIn);
+            publish('updateUserInfoOnSideBar', userLoggedIn);
             publish('updateQuickSelectOptions', userLoggedIn);
         } else {
             publish('pushPopupMessage', ["FAILURE", "Sign out Failed!"])
@@ -30,6 +31,7 @@ export function signIn(provider, userToken) {
                 console.log("User Logged In");
                 publish('loginSuccess');
                 publish('updateProfileMenu', userLoggedIn);
+                publish('updateUserInfoOnSideBar', userLoggedIn);
             publish('updateQuickSelectOptions', userLoggedIn);
                 publish('pushPopupMessage', ["SUCCESS", "Login successful!"])
             }
@@ -44,6 +46,7 @@ export function signIn(provider, userToken) {
                 console.log("User Logged In");
                 publish('loginSuccess');
                 publish('updateProfileMenu', userLoggedIn);
+                publish('updateUserInfoOnSideBar', userLoggedIn);
             publish('updateQuickSelectOptions', userLoggedIn);
                 publish('pushPopupMessage', ["SUCCESS", "Login successful!"])
             }
@@ -61,6 +64,7 @@ export function signUp(userToken) {
             console.log("User Logged In");
             publish('loginSuccess');
             publish('updateProfileMenu', userLoggedIn);
+            publish('updateUserInfoOnSideBar', userLoggedIn);
             publish('updateQuickSelectOptions', userLoggedIn);
             publish('pushPopupMessage', ["SUCCESS", "Registration successful!"]);
             setTimeout(()=>{publish('pushPopupMessage', ["SUCCESS", `A verification link is sent to ${userToken.email}`])},5000);

@@ -1,5 +1,5 @@
 import { publish } from "./event-bus";
-import { getUserPrivateData } from "./test-data";
+import { getUserPrivateData } from "./fetch-data";
 
 let toggleBtn;
 let toggleModeIcon;

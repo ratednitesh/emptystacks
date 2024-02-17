@@ -1,4 +1,5 @@
-import { getTopCourses } from "./test-data";
+import { publish } from "./event-bus";
+import { getTopCourses } from "./fetch-data";
 
 export function loadPopularCourses() {
     getTopCourses().then(
@@ -43,3 +44,4 @@ export function loadPopularCourses() {
     ).catch(() => { publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load top courses."]); });
 
 }
+

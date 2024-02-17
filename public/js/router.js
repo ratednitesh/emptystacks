@@ -1,23 +1,29 @@
 import { publish } from "./event-bus";
 
-
 const routes = {
     "/": "/pages/home.html",
     "/home": "/pages/home.html",
+    "/home/*": "/pages/home.html",
     "/about": "/pages/about.html",
     "/about/*": "/pages/about.html",
-    "/profile": "/pages/profile.html",
     "/courses": "/pages/courses.html",
     "/courses/*": "/pages/courses.html",
     "/contact": "/pages/contact.html",
     "/contact/*": "/pages/contact.html",
-    "/content": "/pages/course-content.html",
-    "/course": "/pages/text-course.html",
-    "/playlist": "/pages/playlist.html",
-    "/register": "/pages/register.html",
-    "/watch-video": "/pages/watch-video.html",
     "/profile-update": "/pages/update.html",
     "/profile-update/*": "/pages/update.html",
+    "/register": "/pages/register.html",
+    "/register/*": "/pages/register.html",
+
+    "/course": "/pages/not-found.html",
+    "/course/": "/pages/not-found.html",
+    "/course/*": "/pages/text-course.html",
+
+
+    "/content": "/pages/course-content.html",
+    "/playlist": "/pages/playlist.html",
+    "/watch-video": "/pages/watch-video.html",
+    "/profile": "/pages/profile.html",
     404: "/pages/not-found.html"
 };
 
@@ -48,7 +54,10 @@ const route = (event) => {
     handleLocation();
 };
 
-
+export function notFoundRoute(){
+    window.history.pushState({}, "", "/404");
+    handleLocation();
+}
 function loadSideBarScripts(sidebarSelect) {
     if (sidebarSelect == "MAIN-SIDEBAR") {
         publish('loadMainSidebar');
@@ -58,23 +67,32 @@ function loadSideBarScripts(sidebarSelect) {
 }
 
 function loadMainScripts(path) {
-    if (path == "/content") {
+    const matchCoursePath = path.match(/^\/course\/(\w+)$/);
+    if (matchCoursePath) {
         publish('unloadHome');
-        publish('loadContentMainSection');
-    }
-    else if (path == "/course") {
-        publish('unloadHome');
-        publish('loadCourseDetails');
-    } else if (path == "/profile") {
-        publish('unloadHome');
-        publish('loadProfile');
-    }else if (path == "/courses") {
-        publish('unloadHome');
-        publish('loadCourses');
-    }else if (path == "/" || path == "/home") {
-        publish('loadHome');
+        publish('loadCourseDetails', matchCoursePath[1]);
     } else {
-        publish('unloadHome');
+        switch (path) {
+            case "/content":
+                publish('unloadHome');
+                publish('loadContentMainSection');
+                break;
+            case "/profile":
+                publish('unloadHome');
+                publish('loadProfile');
+                break;
+            case "/courses":
+                publish('unloadHome');
+                publish('loadCourses');
+                break;
+            case "/":
+            case "/home":
+                publish('unloadHome');
+                publish('loadHome');
+                break;
+            default:
+                publish('unloadHome');
+        }
     }
 }
 
@@ -82,21 +100,12 @@ const handleLocation = async () => {
     const path = window.location.pathname;
     if (previousMainBodyPath != path) {
         previousMainBodyPath = path;
-        console.log(path);
-        console.log(routes[path]);
         const route = findMatchingRoute(path);
         const mainBody = await fetch(route).then((data) => data.text());
         document.getElementById("main-page").innerHTML = mainBody;
+        
         loadMainScripts(path);
-        var currentSidebar = ""; // TODO
-        if (path == "/content") {
-            currentSidebar = "TEXT-SIDEBAR";
-        } else {
-            if (mainSideBarVisible)
-                currentSidebar = "MAIN-SIDEBAR";
-            else
-                currentSidebar = "NO-SIDEBAR";
-        }
+        const currentSidebar = path === "/content" ? "TEXT-SIDEBAR" : (mainSideBarVisible ? "MAIN-SIDEBAR" : "NO-SIDEBAR");
         if (previousSideBarPath != currentSidebar) {
             previousSideBarPath = currentSidebar;
             if (currentSidebar == "NO-SIDEBAR") {
@@ -128,7 +137,7 @@ function findMatchingRoute(path) {
             return route === path;
         }
     });
-
+  
     // Return the matching route or the default 404 route
     return routes[matchingRoute] || routes[404];
 }

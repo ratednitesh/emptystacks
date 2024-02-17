@@ -1,11 +1,11 @@
 import { loadPopularCourses } from "./common";
 import { publish } from "./event-bus";
 import { loginStatus } from "./manage-auth";
-import { getEnrolledCourses, getTopStreams, getUserPrivateData } from "./test-data";
+import { getEnrolledCourses, getTopStreams, getUserPrivateData } from "./fetch-data";
 import { loadSignUpForm } from "./user-auth-modal";
 var slideImagesSrc = ['/images/banners/1.jpg', '/images/banners/2.jpg', '/images/banners/3.jpg'];
 let bannerInterval;
-
+let sideBar;
 export function loadHome() {
     var startJourneyHome = document.querySelector('#start-journey-home');
     startJourneyHome.addEventListener("click", function () {
@@ -36,7 +36,7 @@ export function loadHome() {
     loadQuickCourses();
     loadStreams();
     loadPopularCourses();
- 
+
     let i = 1;
     bannerInterval = setInterval(() => { showSlide(i++); if (i > 3) i = 1; }, 3500);
     document.getElementById('slide-1').addEventListener('click', () => { showSlide(1); });
@@ -65,32 +65,23 @@ function setSlide(index) {
 }
 export function loadMainSidebar() {
     let menuBtn = document.querySelector('#menu-btn');
-            menuBtn.style.display = "inline-block";
-            let sideBar = document.querySelector('.side-bar');
-            sideBar.classList.remove('active');
-            document.body.classList.remove('active');
-            document.querySelector('#menu-btn').onclick = () => {
-                sideBar.classList.toggle('active');
-                document.body.classList.toggle('active');
-        
-            }
-            document.querySelector('.side-bar .close-side-bar').onclick = () => {
-                sideBar.classList.remove('active');
-                document.body.classList.remove('active');
-        
-            }
-    getUserPrivateData().then(
-        (userPrivateData)=>{
-            sideBar.querySelector('#user-photo-sb').src= userPrivateData.userProfileSrc;
-            sideBar.querySelector('#user-name-sb').innerHTML= userPrivateData.username;
-            sideBar.querySelector('#user-role-sb').innerHTML= userPrivateData.role;
-            
-        }
-    ).catch((e) => {
-        console.error(e);
-        publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load side-bar profile."]);
-    });
+    sideBar = document.querySelector('.side-bar');
+    menuBtn.style.display = "inline-block";
     
+    sideBar.classList.remove('active');
+    document.body.classList.remove('active');
+    document.querySelector('#menu-btn').onclick = () => {
+        sideBar.classList.toggle('active');
+        document.body.classList.toggle('active');
+
+    }
+    document.querySelector('.side-bar .close-side-bar').onclick = () => {
+        sideBar.classList.remove('active');
+        document.body.classList.remove('active');
+
+    }
+    updateUserInfoOnSideBar(loginStatus());
+
 }
 
 export function unloadSideBar() {
@@ -150,7 +141,7 @@ function loadQuickCourses() {
             if (enrolledCourses.length != 0)
                 enrolledCourses[index].classList.add("visible");
             // enrolledCourses[index].style.display="block";
-        
+
             const nextBtn = document.querySelector(".next");
             const prevBtn = document.querySelector(".prev");
             if (nextBtn != null)
@@ -163,15 +154,15 @@ function loadQuickCourses() {
                 });
             if (prevBtn != null)
                 prevBtn.addEventListener("click", (_) => {
-        
+
                     enrolledCourses[index].classList.replace('visible', 'hidden');
                     if (index == 0) {
                         index = enrolledCourses.length;
                     }
                     enrolledCourses[--index].classList.replace('hidden', 'visible');
-        
+
                 });
-        
+
         }
     ).catch(() => { publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load top courses."]); });
 }
@@ -210,3 +201,21 @@ function loadStreams() {
 
 }
 
+export function updateUserInfoOnSideBar(isUserLoggedIn){
+    if (isUserLoggedIn)
+    getUserPrivateData().then(
+        (userPrivateData) => {
+            sideBar.querySelector('#user-photo-sb').src = userPrivateData.userProfileSrc;
+            sideBar.querySelector('#user-name-sb').innerHTML = userPrivateData.username;
+            sideBar.querySelector('#user-role-sb').innerHTML = userPrivateData.role;
+
+        }
+    ).catch((e) => {
+        console.error(e);
+        publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load side-bar profile."]);
+    });
+    else{
+        sideBar.querySelector('#user-photo-sb').src = "/images/profile/guest-user.svg";
+            sideBar.querySelector('#user-name-sb').innerHTML = 'Hello Guest!';
+    }
+}
