@@ -173,54 +173,54 @@ export var courseContentDetails = `    <h1 class="heading">Course Details</h1>
     <div class="accordion">
         <div class="accordion-item">
             <div class=" expandable accordion-header">
-                <h3><i class="fa-solid fa-diamond bullet"></i> Introduction to HTML <i
-                        class=" expand fa-solid fa-angle-down"></i></h3>
+                <h3><i class="fas fa-diamond bullet"></i> Introduction to HTML <i
+                        class=" expand fas fa-angle-down"></i></h3>
             </div>
             <div class="accordion-content">
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fa-solid fa-caret-right"></i>What is HTML?</a></li>
+                            class="fas fa-caret-right"></i>What is HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fa-solid fa-caret-right"></i>Why HTML?</a></li>
+                            class="fas fa-caret-right"></i>Why HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fa-solid fa-caret-right"></i>Basics of HTML?</a></li>
+                            class="fas fa-caret-right"></i>Basics of HTML?</a></li>
 
             </div>
         </div>
         <div class="accordion-item">
             <div class=" expandable accordion-header">
-                <h3><i class="fa-solid fa-diamond bullet"></i> Section deep Learn to HTML<i
-                        class=" expand fa-solid fa-angle-down"></i></h3>
+                <h3><i class="fas fa-diamond bullet"></i> Section deep Learn to HTML<i
+                        class=" expand fas fa-angle-down"></i></h3>
             </div>
             <div class="accordion-content">
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fa-solid fa-caret-right"></i>What is HTML?</a></li>
+                            class="fas fa-caret-right"></i>What is HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fa-solid fa-caret-right"></i>Why HTML?</a></li>
+                            class="fas fa-caret-right"></i>Why HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fa-solid fa-caret-right"></i>Basics of HTML?</a></li>
+                            class="fas fa-caret-right"></i>Basics of HTML?</a></li>
 
 
             </div>
         </div>
         <div class="accordion-item">
             <div class=" expandable accordion-header">
-                <h3><i class="fa-solid fa-diamond bullet"></i> Section advanced to HTML<i
-                        class=" expand fa-solid fa-angle-down"></i></h3>
+                <h3><i class="fas fa-diamond bullet"></i> Section advanced to HTML<i
+                        class=" expand fas fa-angle-down"></i></h3>
             </div>
             <div class="accordion-content">
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fa-solid fa-caret-right"></i>What is HTML?</a></li>
+                            class="fas fa-caret-right"></i>What is HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fa-solid fa-caret-right"></i>Why HTML?</a></li>
+                            class="fas fa-caret-right"></i>Why HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fa-solid fa-caret-right"></i>Basics of HTML?</a></li>
+                            class="fas fa-caret-right"></i>Basics of HTML?</a></li>
 
 
             </div>
         </div>
         <div class="accordion-item">
             <div class="accordion-header"><a href="/content" onclick="route()">
-                <h3><i class="fa-solid fa-diamond bullet"></i> no sub section to HTML</h3></a>
+                <h3><i class="fas fa-diamond bullet"></i> no sub section to HTML</h3></a>
             </div>
         </div>
     </div>

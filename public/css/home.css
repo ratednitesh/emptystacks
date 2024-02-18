@@ -1,3 +1,24 @@
+.highlight-section .box-container .slider {
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--black);
+}
+
+.highlight-section .box-container .slider i {
+    cursor: pointer;
+    padding: .5rem;
+}
+
+.highlight-section .box-container .banner-slide {
+    display: none;
+    width: 100%;
+    animation-name: fade-in;
+    animation-duration: 3s;
+    margin-bottom: 2rem;
+    opacity: 0;
+    border-radius: .5rem;
+    /* transition: opacity 3s ease;  */
+}
 
 .quick-select .box-container {
     display: grid;
@@ -170,24 +191,3 @@
     color: var(--white);
 }
 
-.highlight-section .box-container .slider {
-    text-align: center;
-    font-size: 1.5rem;
-    color: var(--black);
-}
-
-.highlight-section .box-container .slider i {
-    cursor: pointer;
-    padding: .5rem;
-}
-
-.highlight-section .box-container .banner-slide {
-    display: none;
-    width: 100%;
-    animation-name: fade-in;
-    animation-duration: 3s;
-    margin-bottom: 2rem;
-    opacity: 0;
-    border-radius: .5rem;
-    /* transition: opacity 3s ease;  */
-}

@@ -95,23 +95,6 @@ section {
     margin: 0 auto;
 }
 
-/* unfiltered css  */
-
-
-/* *::-webkit-scrollbar {
-     height: .5rem;
-     width: 1rem;
- } */
-
-/* *::-webkit-scrollbar-track {
-     background-color: transparent;
- }
-
- *::-webkit-scrollbar-thumb {
-     background-color: var(--main-color);
- } */
-
-
 .image-loader {
     display: flex;
     justify-content: center;

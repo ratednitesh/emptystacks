@@ -43,7 +43,6 @@
     height: var(--logo-font);
 }
 
-
 .header .flex .search-form {
     flex-direction: row-reverse;
     margin-left: var(--small-gap);
