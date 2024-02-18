@@ -152,7 +152,9 @@
 .text-course .row .col .details .course-attributes span {
     color: var(--light-color);
 }
-
+.course-details{
+    display: none;
+}
 
 .course-details .container {
     display: flex;
@@ -248,4 +250,58 @@
 
 .course-details .container .course-list a i {
     margin-right: 2rem;
+}
+
+.video-container{
+    display: none;
+}
+.video-container .box-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+    gap: 1.5rem;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.video-container .box-container .box {
+    position: relative;
+    border-radius: .5rem;
+    padding: 2rem;
+    background-color: var(--white);
+}
+
+.video-container .box-container .box img {
+    height: 20rem;
+    width: 100%;
+    border-radius: .5rem;
+    object-fit: cover;
+}
+
+.video-container .box-container .box i {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    right: 2rem;
+    height: 20rem;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: #fff;
+    border-radius: .5rem;
+}
+
+.video-container .box-container .box:hover i {
+    display: flex;
+}
+
+.video-container .box-container .box h3 {
+    font-size: 2rem;
+    color: var(--black);
+    margin-top: 1rem;
+}
+
+.video-container .box-container .box:hover h3 {
+    color: var(--main-color);
 }

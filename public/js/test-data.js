@@ -26,16 +26,19 @@ export var enrolledCourses = [
     {
         "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
         "title": "Solving LeetCode Questions",
-        "href": "/playlist"
+        "href": "/course/course1"
+
     },
     {
         "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
         "title": "Solving LeetCode Questions",
-        "href": "/playlist"
+        "href": "/course/course2"
+
     }, {
         "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
         "title": "Solving LeetCode Questions",
-        "href": "/playlist"
+        "href": "/course/course2"
+
     }
 ];
 export var topStreams = [
@@ -55,42 +58,59 @@ export var topCourses = [
     {
         thumbnail: "/images/thumbnails/thumbnail sample.jpg",
         title: "Some Random Text course",
-        href: "/course"
+        href: "/course/course1"
     },
     {
         thumbnail: "/images/thumbnails/thumbnail sample.jpg",
         title: "Solving LeetCode Questions",
-        href: "/playlist"
+        href: "/course/course2"
     },
     {
         thumbnail: "/images/thumbnails/thumbnail sample.jpg",
         title: "Solving LeetCode Questions",
-        href: "/playlist"
+        href: "/course/course2"
     },
     {
         thumbnail: "/images/thumbnails/thumbnail sample.jpg",
         title: "Solving LeetCode Questions",
-        href: "/playlist"
+        href: "/course/course2"
     },
     {
         thumbnail: "/images/thumbnails/thumbnail sample.jpg",
         title: "Solving LeetCode Questions",
-        href: "/playlist"
+        href: "/course/course2"
     },
     {
         thumbnail: "/images/thumbnails/thumbnail sample.jpg",
         title: "Solving LeetCode Questions",
-        href: "/playlist"
+        href: "/course/course2"
     }
 ];
 
 export var courseDetails = {
     "course1": {
+        "type":"text",
         "courseName": "Complete HTML tutorial",
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 3,
         "href": "/content",
         "chapterCount": "14 Chapters",
+        "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
+        "author": {
+            "id":"12345",
+            "name": "John Doe",
+            "role": "Stack Builder",
+            "userProfileSrc": "/images/profile/photo_1.png",
+        },
+        "publishDate": "22-12-2023"
+    },
+    "course2": {
+        "type":"video",
+        "courseName": "Complete HTML tutorial",
+        "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
+        "level": 3,
+        "href": "/content",
+        "chapterCount": "6 Videos",
         "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
         "author": {
             "id":"12345",
@@ -205,3 +225,40 @@ export var courseContentDetails = `    <h1 class="heading">Course Details</h1>
         </div>
     </div>
 </div>`;
+
+
+export var courseVideoDetails={
+    "course2":[
+        {
+            "videoId": "course2v1",
+            "thumbnail":"/images/thumbnails/thumbnail sample.jpg" ,
+            "title":"Complete HTML Tutorial (part 01)",
+        },
+        {
+            "videoId": "course2v2",
+            "thumbnail":"/images/thumbnails/thumbnail sample.jpg" ,
+            "title":"Complete HTML Tutorial (part 02)",
+        },
+        {
+            "videoId": "course2v3",
+            "thumbnail":"/images/thumbnails/thumbnail sample.jpg" ,
+            "title":"Complete HTML Tutorial (part 03)",
+        },
+        {
+            "videoId": "course2v4",
+            "thumbnail":"/images/thumbnails/thumbnail sample.jpg" ,
+            "title":"Complete HTML Tutorial (part 04)",
+        },
+        {
+            "videoId": "course2v5",
+            "thumbnail":"/images/thumbnails/thumbnail sample.jpg" ,
+            "title":"Complete HTML Tutorial (part 05)",
+
+        },
+        {
+            "videoId": "course2v6",
+            "thumbnail":"/images/thumbnails/thumbnail sample.jpg" ,
+            "title":"Complete HTML Tutorial (part 06)",
+        }
+    ]
+}

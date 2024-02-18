@@ -1,4 +1,4 @@
-import { actvities, courseContentDetails, courseDetails, courseReviews, enrolledCourses, topCourses, topStreams, userPrivateProfile, userPublic, userPublicProfile } from "./test-data";
+import { actvities, courseContentDetails, courseDetails, courseReviews, courseVideoDetails, enrolledCourses, topCourses, topStreams, userPrivateProfile, userPublic, userPublicProfile } from "./test-data";
 
 export function mockgetUserPrivateDataAPICall() {
     return new Promise((resolve, reject) => {
@@ -121,6 +121,17 @@ export function mockgetCourseContentDetailsAPICall(courseId){
             // Simulate a successful response with dummy data
             console.log("Course Content Details read from the server.");
             resolve(courseContentDetails); // Resolve the Promise with the dummy data
+        }, 1000); // 1000 milliseconds delay (1 second)
+    });
+}
+
+export function mockgetCourseVideoDetailsAPICall(courseId){
+    return new Promise((resolve, reject) => {
+        // Simulate a delay of 1 second
+        setTimeout(() => {
+            // Simulate a successful response with dummy data
+            console.log("Course Content Details read from the server.");
+            resolve(courseVideoDetails[courseId]); // Resolve the Promise with the dummy data
         }, 1000); // 1000 milliseconds delay (1 second)
     });
 }

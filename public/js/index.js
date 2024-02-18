@@ -18,7 +18,6 @@ import "../css/contact.css";
 import "../css/courses.css";
 import "../css/form.css";
 import "../css/home.css";
-import "../css/playlist.css";
 import "../css/reviews.css";
 import "../css/textcourse.css";
 import "../css/textsection.css";

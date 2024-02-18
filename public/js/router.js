@@ -21,7 +21,6 @@ const routes = {
 
 
     "/content": "/pages/course-content.html",
-    "/playlist": "/pages/playlist.html",
     "/watch-video": "/pages/watch-video.html",
     "/profile": "/pages/profile.html",
     404: "/pages/not-found.html"

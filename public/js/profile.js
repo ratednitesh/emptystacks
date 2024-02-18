@@ -114,10 +114,9 @@ function createEnrolledCourses(enrolledCourses) {
         title.classList.add('title');
         title.textContent = course.title;
 
-        // Create a link element for the playlist
         const link = document.createElement('a');
         link.href = course.href;
-        link.textContent = 'View Playlist';
+        link.textContent = 'View Course';
         link.classList.add('inline-btn');
         // Add the onclick event for routing
         link.onclick = route;
