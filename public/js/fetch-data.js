@@ -1,14 +1,36 @@
-import { mockUpdateUserDataAPICall, mockgetCourseReviewAPICall, mockgetTopCoursesAPICall, mockgetTopStreamsAPICall, mockgetUserActivityDataAPICall, mockgetUserDataAPICall, mockgetUserEnrolledCoursesAPICall, mockgetUserPrivateDataAPICall } from "./mock-api";
+// import { mockUpdateUserDataAPICall, mockgetCourseContentDetailsAPICall, mockgetCourseReviewAPICall, mockgetCourseVideoDetailsAPICall, mockgetTextCourseAPICall, mockgetTopCoursesAPICall, mockgetTopStreamsAPICall, mockgetUserDataAPICall, mockgetUserPrivateDataAPICall } from "../test/mock-api";
 
+// Function to dynamically import mock-api.js
+async function importMockApi() {
+    try {
+        const { mockgetUserPrivateDataAPICall, mockgetUserDataAPICall, mockUpdateUserDataAPICall, mockgetTopStreamsAPICall, mockgetTopCoursesAPICall, mockgetCourseReviewAPICall, mockgetTextCourseAPICall, mockgetCourseVideoDetailsAPICall, mockgetCourseContentDetailsAPICall } = await import('/public/test/mock-api.js');
+        
+        return {
+            mockgetUserPrivateDataAPICall,
+            mockgetUserDataAPICall,
+            mockUpdateUserDataAPICall,
+            mockgetTopStreamsAPICall,
+            mockgetTopCoursesAPICall,
+            mockgetCourseReviewAPICall,
+            mockgetTextCourseAPICall,
+            mockgetCourseVideoDetailsAPICall,
+            mockgetCourseContentDetailsAPICall
+        };
+    } catch (error) {
+        console.error('Error importing mock API:', error);
+        throw error;
+    }
+}
 let cachedData = {
     userData: null,
-    userPrivateData: null,
+    userPrivateData: null, // TODO: Clear this if user log out
     activities: null,
     enrolledCourses: null,
     topStreams: null,
     topCourses: null
 }
-export function getUserPrivateData() {
+export async function getUserPrivateData(uid) {
+    const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
         // If data is already cached, resolve with the cached data
         if (cachedData.userPrivateData) {
@@ -16,7 +38,7 @@ export function getUserPrivateData() {
             resolve(cachedData.userPrivateData);
         } else {
             // Simulate an API call
-            mockgetUserPrivateDataAPICall()
+            mockApi.mockgetUserPrivateDataAPICall(uid)
                 .then(response => {
                     // Store the API response in the cachedData object
                     console.log('Resolved');
@@ -30,7 +52,8 @@ export function getUserPrivateData() {
     });
 }
 
-export function getUserPublicData() {
+export async function getUserPublicData(uid) {
+    const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
         // If data is already cached, resolve with the cached data
         if (cachedData.userData) {
@@ -38,7 +61,7 @@ export function getUserPublicData() {
             resolve(cachedData.userData);
         } else {
             // Simulate an API call
-            mockgetUserDataAPICall()
+            mockApi.mockgetUserDataAPICall(uid)
                 .then(response => {
                     // Store the API response in the cachedData object
                     console.log('Resolved');
@@ -52,12 +75,11 @@ export function getUserPublicData() {
     });
 }
 
-
-
-export function updateUserData(newData) {
+export async function updateUserData(uid, newData) {
+    const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
         // Simulate an asynchronous operation (e.g., updating data on the server)
-        mockUpdateUserDataAPICall(newData)
+        mockApi.mockUpdateUserDataAPICall(uid, newData)
             .then(() => {
                 cachedData.userData = { ...cachedData.userData, ...newData };
                 resolve(); // Resolve the Promise once the data is updated
@@ -68,58 +90,8 @@ export function updateUserData(newData) {
     });
 }
 
-
-export function getUserActivities() {
-    return new Promise((resolve, reject) => {
-        // If data is already cached, resolve with the cached data
-        if (cachedData.activities) {
-            console.log('Read activities from cache');
-            resolve(cachedData.activities);
-        } else {
-            // Simulate an API call
-            mockgetUserActivityDataAPICall()
-                .then(response => {
-                    // Store the API response in the cachedData object
-                    console.log('Activity Resolved');
-                    cachedData.activities = response;
-                    console.log(response);
-                    resolve(response); // Resolve with the API response
-                })
-                .catch(error => {
-                    reject(error); // Reject with the error from the API call
-                });
-        }
-    });
-}
-
-
-
-export function getEnrolledCourses() {
-    return new Promise((resolve, reject) => {
-        // If data is already cached, resolve with the cached data
-        if (cachedData.enrolledCourses) {
-            console.log('Read enrolled courses from cache');
-            resolve(cachedData.enrolledCourses);
-        } else {
-            // Simulate an API call
-            mockgetUserEnrolledCoursesAPICall()
-                .then(response => {
-                    // Store the API response in the cachedData object
-                    console.log('Enrolled Courses Resolved');
-                    cachedData.enrolledCourses = response;
-                    console.log(response);
-                    resolve(response); // Resolve with the API response
-                })
-                .catch(error => {
-                    reject(error); // Reject with the error from the API call
-                });
-        }
-    });
-}
-
-
-
-export function getTopStreams() {
+export async function getTopStreams() {
+    const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
         // If data is already cached, resolve with the cached data
         if (cachedData.topStreams) {
@@ -127,7 +99,7 @@ export function getTopStreams() {
             resolve(cachedData.topStreams);
         } else {
             // Simulate an API call
-            mockgetTopStreamsAPICall()
+            mockApi.mockgetTopStreamsAPICall()
                 .then(response => {
                     // Store the API response in the cachedData object
                     console.log('Top Streams Resolved');
@@ -142,9 +114,8 @@ export function getTopStreams() {
     });
 }
 
-
-
-export function getTopCourses() {
+export async function getTopCourses() {
+    const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
         // If data is already cached, resolve with the cached data
         if (cachedData.topCourses) {
@@ -152,7 +123,7 @@ export function getTopCourses() {
             resolve(cachedData.topCourses);
         } else {
             // Simulate an API call
-            mockgetTopCoursesAPICall()
+            mockApi.mockgetTopCoursesAPICall()
                 .then(response => {
                     // Store the API response in the cachedData object
                     console.log('Top Courses Resolved');
@@ -167,10 +138,10 @@ export function getTopCourses() {
     });
 }
 
-
-export function generateUserReview(courseId) {
+export async function generateUserReview(courseId) {
+    const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
-        mockgetCourseReviewAPICall(courseId).then(
+        mockApi.mockgetCourseReviewAPICall(courseId).then(
             (courseReview) => {
                 var reviewsHtml = '';
                 if(!courseReview)
@@ -200,6 +171,7 @@ export function generateUserReview(courseId) {
         );
     });
 }
+
 function generateStarRating(rating) {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating - fullStars >= 0.5;
@@ -224,4 +196,59 @@ function generateStarRating(rating) {
 
     // Wrap stars in a div
     return '<div class="stars">' + starsHTML + '</div>';
+}
+
+
+export async function getCourseDetailsAPICalls(courseId) {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        // If data is already cached, resolve with the cached data
+      
+            // Simulate an API call
+            mockApi.mockgetTextCourseAPICall(courseId)
+                .then(response => {
+                    // Store the API response in the cachedData object
+                    resolve(response); // Resolve with the API response
+                })
+                .catch(error => {
+                    reject(error); // Reject with the error from the API call
+                });
+        
+    });
+}
+
+export async function getCourseVideoDetailsAPICalls(courseId) {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        // If data is already cached, resolve with the cached data
+      
+            // Simulate an API call
+            mockApi.mockgetCourseVideoDetailsAPICall(courseId)
+                .then(response => {
+                    // Store the API response in the cachedData object
+                    resolve(response); // Resolve with the API response
+                })
+                .catch(error => {
+                    reject(error); // Reject with the error from the API call
+                });
+        
+    });
+}
+
+export async function getCourseContentDetailsAPICalls(courseId) {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        // If data is already cached, resolve with the cached data
+      
+            // Simulate an API call
+            mockApi.mockgetCourseContentDetailsAPICall(courseId)
+                .then(response => {
+                    // Store the API response in the cachedData object
+                    resolve(response); // Resolve with the API response
+                })
+                .catch(error => {
+                    reject(error); // Reject with the error from the API call
+                });
+        
+    });
 }

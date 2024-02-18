@@ -1,6 +1,5 @@
 import { publish } from "./event-bus";
-import { generateUserReview } from "./fetch-data";
-import { mockgetCourseContentDetailsAPICall, mockgetCourseVideoDetailsAPICall, mockgetTextCourseAPICall } from "./mock-api";
+import { generateUserReview, getCourseContentDetailsAPICalls, getCourseDetailsAPICalls, getCourseVideoDetailsAPICalls } from "./fetch-data";
 
 
 const levelNames = ['Beginner', 'Intermediate', 'Expert'];
@@ -25,7 +24,7 @@ export function loadCourseDetails(courseId) {
 }
 
 function getCourseData(courseId) {
-    mockgetTextCourseAPICall(courseId).then(
+    getCourseDetailsAPICalls(courseId).then(
         (courseData) => {
             if (courseData) {
 
@@ -76,7 +75,7 @@ function getCourseData(courseId) {
 
 
 function getCourseContentDetails(courseId) {
-    mockgetCourseContentDetailsAPICall(courseId).then(
+    getCourseContentDetailsAPICalls(courseId).then(
         (courseData) => {
             var courseDetails = document.querySelector(".course-details");
             courseDetails.innerHTML = courseData;
@@ -130,7 +129,7 @@ function getCourseContentDetails(courseId) {
 }
 
 function getCourseVideoDetails(courseId) {
-    mockgetCourseVideoDetailsAPICall(courseId).then(
+    getCourseVideoDetailsAPICalls(courseId).then(
         (courseVideoDetails) => {
             var playlistHtml = "";
             courseVideoDetails.forEach((cvd) => {

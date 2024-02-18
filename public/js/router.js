@@ -6,8 +6,8 @@ const routes = {
     "/home/*": "/pages/home.html",
     "/about": "/pages/about.html",
     "/about/*": "/pages/about.html",
-    "/courses": "/pages/courses.html",
-    "/courses/*": "/pages/courses.html",
+    "/courses": "/pages/home.html",
+    "/courses/*": "/pages/home.html",
     "/contact": "/pages/contact.html",
     "/contact/*": "/pages/contact.html",
     "/profile-update": "/pages/update.html",
@@ -16,7 +16,7 @@ const routes = {
     "/register/*": "/pages/register.html",
     "/course": "/pages/not-found.html",
     "/course/": "/pages/not-found.html",
-    "/course/*": "/pages/text-course.html",
+    "/course/*": "/pages/course.html",
     "/content": "/pages/course-content.html",
     "/watch-video": "/pages/watch-video.html",
     "/profile": "/pages/profile.html",
@@ -76,8 +76,7 @@ function loadMainScripts(path) {
                 publish('loadProfile');
                 break;
             case "/courses":
-                publish('unloadHome');
-                publish('loadCourses');
+                publish('loadHome','only-course');
                 break;
             case "/":
             case "/home":

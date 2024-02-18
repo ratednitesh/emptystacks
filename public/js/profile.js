@@ -1,10 +1,10 @@
 import { publish } from "./event-bus";
-import { getEnrolledCourses, getUserActivities, getUserPublicData, updateUserData } from "./fetch-data";
+import { getUserPrivateData, getUserPublicData, updateUserData } from "./fetch-data";
 
 var userPublicProfile = {};
 
 export function initProfile() {
-    getUserPublicData().then((data) => {
+    getUserPublicData("zhcyWRZpJKZohfqSt6Xihyo4Awq2").then((data) => {
         userPublicProfile = data;
         setUserProfilePhoto(data.userProfileSrc);
         setUserRole(data.role);
@@ -19,7 +19,8 @@ export function initProfile() {
     }).catch(() => {
         publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load profile."]);
     });
-    getUserActivities().then((data) => {
+    getUserPrivateData("zhcyWRZpJKZohfqSt6Xihyo4Awq2").then((data) => {
+        data = data.actvities;
         for (const property in data) {
             initUserActivities(property, data[property]);
         }
@@ -28,9 +29,10 @@ export function initProfile() {
     ).catch(() => {
         publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load activities."]);
     });
-    getEnrolledCourses().then(
-        (enrolledCourses) => {
-            createEnrolledCourses(enrolledCourses);
+    getUserPrivateData("zhcyWRZpJKZohfqSt6Xihyo4Awq2").then(
+        (data) => {
+            data = data.enrolledCourses;
+            createEnrolledCourses(data);
         }
     ).catch(() => {
         publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load courses."]);
@@ -65,7 +67,7 @@ function updateUserPublicProfile(fieldId) {
     confirmButton.addEventListener("click", () => {
         //TODO: add validations.
         userPublicProfile[fieldId] = dataField.innerHTML;
-        updateUserData(userPublicProfile).then(() => {
+        updateUserData("zhcyWRZpJKZohfqSt6Xihyo4Awq2",userPublicProfile).then(() => {
             publish('pushPopupMessage', ["SUCCESS", `${fieldId} successfully updated.`]);
         })
             .catch(() => { publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to save changes."]); });

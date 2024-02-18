@@ -33,7 +33,7 @@ export function updateProfileMenu(userLoggedIn) {
     let profileMenuOnlyPublic = document.querySelectorAll('.header .flex .menus .only-public');
     if (userLoggedIn) {
         console.log('user is logged in section');
-        getUserPrivateData().then((userData) => {
+        getUserPrivateData("zhcyWRZpJKZohfqSt6Xihyo4Awq2").then((userData) => {
             document.getElementById('user-photo-header').src = userData.userProfileSrc;
             document.getElementById('user-menu-photo').src = userData.userProfileSrc;
             document.getElementById('user-menu-name').innerHTML = userData.username;

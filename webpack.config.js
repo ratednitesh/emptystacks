@@ -27,7 +27,7 @@ module.exports = (argv) => {
         template: './public/index.html',
         filename: 'index.html',
         inject: 'body',
-      scriptLoading: 'blocking' 
+      // scriptLoading: 'blocking' // TODO: can we remove this?
 
       }),
       // Generate other HTML files under public/pages
@@ -59,7 +59,7 @@ module.exports = (argv) => {
         new TerserPlugin({
           terserOptions: {
             compress: {
-              drop_console:true,
+              // drop_console:true,
               reduce_funcs: true,
               reduce_vars: true,
             },

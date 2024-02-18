@@ -1,61 +1,41 @@
-import { actvities, courseContentDetails, courseDetails, courseReviews, courseVideoDetails, enrolledCourses, topCourses, topStreams, userPrivateProfile, userPublic, userPublicProfile } from "./test-data";
+import { courseContentDetails, courseDetails, courseReviews, courseVideoDetails, topCourses, topStreams, userPrivateProfile, userPublic, userPublicProfile } from "../test/test-data";
 
-export function mockgetUserPrivateDataAPICall() {
+export function mockgetUserPrivateDataAPICall(uid) {
     return new Promise((resolve, reject) => {
         // Simulate a delay of 1 second
         setTimeout(() => {
             // Simulate a successful response with dummy data
             console.log("User Private read from the server.");
-            resolve(userPrivateProfile); // Resolve the Promise with the dummy data
+            resolve(userPrivateProfile[uid]); // Resolve the Promise with the dummy data
         }, 1000); // 1000 milliseconds delay (1 second)
     });
 }
-export function mockgetUserDataAPICall() {
+export function mockgetUserDataAPICall(uid) {
     // Simulate some asynchronous operation (e.g., fetching data)
     return new Promise((resolve, reject) => {
         // Simulate a delay of 1 second
         setTimeout(() => {
             // Simulate a successful response with dummy data
             console.log("Data read from the server.");
-            resolve(userPublicProfile); // Resolve the Promise with the dummy data
+            resolve(userPublicProfile[uid]); // Resolve the Promise with the dummy data
         }, 1000); // 1000 milliseconds delay (1 second)
     });
 }
-export function mockUpdateUserDataAPICall(newData) {
+export function mockUpdateUserDataAPICall(uid, newData) {
     // Simulate some asynchronous operation (e.g., updating data on the server)
     return new Promise((resolve, reject) => {
         // Simulate a delay of 1 second
         setTimeout(() => {
             // Simulate a successful response
             // Update userPublicProfile after successful API call
-            userPublicProfile = { ...userPublicProfile, ...newData };
+            userPublicProfile[uid] = { ...userPublicProfile[uid], ...newData };
             console.log("Data updated on the server:", userPublicProfile);
             resolve(); // Resolve the Promise
         }, 1000); // 1000 milliseconds delay (1 second)
     });
 }
-export function mockgetUserActivityDataAPICall() {
-    // Simulate some asynchronous operation (e.g., fetching data)
-    return new Promise((resolve, reject) => {
-        // Simulate a delay of 1 second
-        setTimeout(() => {
-            // Simulate a successful response with dummy data
-            console.log("Activity read from the server.");
-            resolve(actvities); // Resolve the Promise with the dummy data
-        }, 1000); // 1000 milliseconds delay (1 second)
-    });
-}
-export function mockgetUserEnrolledCoursesAPICall() {
-    // Simulate some asynchronous operation (e.g., fetching data)
-    return new Promise((resolve, reject) => {
-        // Simulate a delay of 1 second
-        setTimeout(() => {
-            // Simulate a successful response with dummy data
-            console.log("Enrolled Courses read from the server.");
-            resolve(enrolledCourses); // Resolve the Promise with the dummy data
-        }, 1000); // 1000 milliseconds delay (1 second)
-    });
-}
+
+
 export function mockgetTopStreamsAPICall() {
     // Simulate some asynchronous operation (e.g., fetching data)
     return new Promise((resolve, reject) => {
