@@ -14,12 +14,9 @@ const routes = {
     "/profile-update/*": "/pages/update.html",
     "/register": "/pages/register.html",
     "/register/*": "/pages/register.html",
-
     "/course": "/pages/not-found.html",
     "/course/": "/pages/not-found.html",
     "/course/*": "/pages/text-course.html",
-
-
     "/content": "/pages/course-content.html",
     "/watch-video": "/pages/watch-video.html",
     "/profile": "/pages/profile.html",
@@ -34,8 +31,6 @@ const SIDE_BAR_OPTIONS = {
 let previousSideBarPath = "";
 let previousMainBodyPath = "";
 let mainSideBarVisible = true;
-
-
 
 // main page routing
 const route = (event) => {
@@ -102,7 +97,6 @@ const handleLocation = async () => {
         const route = findMatchingRoute(path);
         const mainBody = await fetch(route).then((data) => data.text());
         document.getElementById("main-page").innerHTML = mainBody;
-        
         loadMainScripts(path);
         const currentSidebar = path === "/content" ? "TEXT-SIDEBAR" : (mainSideBarVisible ? "MAIN-SIDEBAR" : "NO-SIDEBAR");
         if (previousSideBarPath != currentSidebar) {
@@ -136,7 +130,6 @@ function findMatchingRoute(path) {
             return route === path;
         }
     });
-  
     // Return the matching route or the default 404 route
     return routes[matchingRoute] || routes[404];
 }
