@@ -315,7 +315,7 @@ export function loadSignUpForm() {
 }
 
 async function createUserAuthForm(callback) {
-    var userAuthRoute = "/pages/user-auth-modal.html";
+    var userAuthRoute = "/pages/authModal.html";
     const userAuthModal = await fetch(userAuthRoute).then((data) => data.text());
     const modalContainer = document.createElement('div');
     modalContainer.classList.add('cd-user-modal');

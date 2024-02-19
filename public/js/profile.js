@@ -3,7 +3,7 @@ import { getUserPrivateData, getUserPublicData, updateUserData } from "./fetch-d
 
 var userPublicProfile = {};
 
-export function initProfile() {
+export function initProfile(uid) {
     getUserPublicData("zhcyWRZpJKZohfqSt6Xihyo4Awq2").then((data) => {
         userPublicProfile = data;
         setUserProfilePhoto(data.userProfileSrc);

@@ -1,5 +1,18 @@
 import { publish } from "./event-bus";
-
+var cachedPages = {
+    "home": null,
+    "about": null,
+    "contact": null,
+    "profileUpdate": null,
+    "register": null,
+    "course": null,
+    "content": null,
+    "watchVideo": null,
+    "profile": null,
+    "notFound": null,
+    // "mainSidebar": null,
+    // "contentSidebar": null
+};
 const routes = {
     "/": "/pages/home.html",
     "/home": "/pages/home.html",
@@ -10,23 +23,25 @@ const routes = {
     "/courses/*": "/pages/home.html",
     "/contact": "/pages/contact.html",
     "/contact/*": "/pages/contact.html",
-    "/profile-update": "/pages/update.html",
-    "/profile-update/*": "/pages/update.html",
+    "/profile-update": "/pages/profileUpdate.html",
+    "/profile-update/*": "/pages/profileUpdate.html",
     "/register": "/pages/register.html",
     "/register/*": "/pages/register.html",
-    "/course": "/pages/not-found.html",
-    "/course/": "/pages/not-found.html",
+    "/course": "/pages/notFound.html",
+    "/course/": "/pages/notFound.html",
     "/course/*": "/pages/course.html",
-    "/content": "/pages/course-content.html",
-    "/watch-video": "/pages/watch-video.html",
-    "/profile": "/pages/profile.html",
-    404: "/pages/not-found.html"
+    "/content": "/pages/content.html",
+    "/watch-video": "/pages/watchVideo.html",
+    "/profile": "/pages/notFound.html",
+    "/profile/": "/pages/notFound.html",
+    "/profile/*": "/pages/profile.html",
+    404: "/pages/notFound.html"
 };
 
 const SIDE_BAR_OPTIONS = {
     "NO-SIDEBAR": "",
-    "MAIN-SIDEBAR": "/pages/main-sidebar.html",
-    "TEXT-SIDEBAR": "/pages/course-content-sidebar.html"
+    "MAIN-SIDEBAR": "/pages/mainSidebar.html",
+    "TEXT-SIDEBAR": "/pages/contentSidebar.html"
 };
 let previousSideBarPath = "";
 let previousMainBodyPath = "";
@@ -48,7 +63,7 @@ const route = (event) => {
     handleLocation();
 };
 
-export function notFoundRoute(){
+export function notFoundRoute() {
     window.history.pushState({}, "", "/404");
     handleLocation();
 }
@@ -62,21 +77,22 @@ function loadSideBarScripts(sidebarSelect) {
 
 function loadMainScripts(path) {
     const matchCoursePath = path.match(/^\/course\/(\w+)$/);
+    const matchProfilepath = path.match(/^\/profile\/(\w+)$/);
+
     if (matchCoursePath) {
         publish('unloadHome');
         publish('loadCourseDetails', matchCoursePath[1]);
+    } else if (matchProfilepath) {
+        publish('unloadHome');
+        publish('loadProfile', matchProfilepath[1]);
     } else {
         switch (path) {
             case "/content":
                 publish('unloadHome');
                 publish('loadContentMainSection');
                 break;
-            case "/profile":
-                publish('unloadHome');
-                publish('loadProfile');
-                break;
             case "/courses":
-                publish('loadHome','only-course');
+                publish('loadHome', 'only-course');
                 break;
             case "/":
             case "/home":
@@ -94,9 +110,20 @@ const handleLocation = async () => {
     if (previousMainBodyPath != path) {
         previousMainBodyPath = path;
         const route = findMatchingRoute(path);
-        const mainBody = await fetch(route).then((data) => data.text());
-        document.getElementById("main-page").innerHTML = mainBody;
-        loadMainScripts(path);
+        var regex = /^\/pages\/([^\/]+)\.html$/;
+        var match = regex.exec(route)[1];
+        var mainBody;
+        if (cachedPages[match]) {
+            console.log("********* Loaded from cache ******\n" + match);
+        }
+        else {
+            mainBody = await fetch(route).then((data) => data.text());
+            cachedPages[match] = true;
+            document.getElementById(match).innerHTML = mainBody;
+            loadMainScripts(path);
+        }
+        for (let key in cachedPages) document.getElementById(key).style.display = (key === match) ? "block" : "none";
+
         const currentSidebar = path === "/content" ? "TEXT-SIDEBAR" : (mainSideBarVisible ? "MAIN-SIDEBAR" : "NO-SIDEBAR");
         if (previousSideBarPath != currentSidebar) {
             previousSideBarPath = currentSidebar;

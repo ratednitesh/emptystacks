@@ -48,6 +48,7 @@ export function updateProfileMenu(userLoggedIn) {
         profileMenuOnlyPublic.forEach((node) => { node.style.display = "block" });
         document.getElementById('user-photo-header').style.display = "none";
         document.getElementById('guest-photo-header').style.display = "block";
+        document.getElementById('guest-menu-photo').src  ="/images/profile/guest-user.svg";
     }
 
 
