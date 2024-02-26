@@ -7,11 +7,12 @@ var cachedPages = {
     "register": null,
     "course": null,
     "content": null,
-    "watchVideo": null,
     "profile": null,
     "notFound": null,
-    // "mainSidebar": null,
-    // "contentSidebar": null
+};
+var cachedSideBar = {
+    "mainSidebar": null,
+    "contentSidebar": null,
 };
 const routes = {
     "/": "/pages/home.html",
@@ -31,7 +32,7 @@ const routes = {
     "/course/": "/pages/notFound.html",
     "/course/*": "/pages/course.html",
     "/content": "/pages/content.html",
-    "/watch-video": "/pages/watchVideo.html",
+    "/content/*": "/pages/content.html",
     "/profile": "/pages/notFound.html",
     "/profile/": "/pages/notFound.html",
     "/profile/*": "/pages/profile.html",
@@ -39,10 +40,11 @@ const routes = {
 };
 
 const SIDE_BAR_OPTIONS = {
-    "NO-SIDEBAR": "",
-    "MAIN-SIDEBAR": "/pages/mainSidebar.html",
-    "TEXT-SIDEBAR": "/pages/contentSidebar.html"
+    "noSidebar": "",
+    "mainSidebar": "/pages/mainSidebar.html",
+    "contentSidebar": "/pages/contentSidebar.html"
 };
+
 let previousSideBarPath = "";
 let previousMainBodyPath = "";
 let mainSideBarVisible = true;
@@ -53,7 +55,7 @@ const route = (event) => {
     event.preventDefault();
     var element = event.target;
     var newRoute = element.href;
-    var MAX_TRY = 10;
+    var MAX_TRY = 5;
     while (newRoute == undefined && MAX_TRY > 0) {
         newRoute = element.parentElement.href;
         element = element.parentElement;
@@ -67,13 +69,7 @@ export function notFoundRoute() {
     window.history.pushState({}, "", "/404");
     handleLocation();
 }
-function loadSideBarScripts(sidebarSelect) {
-    if (sidebarSelect == "MAIN-SIDEBAR") {
-        publish('loadMainSidebar');
-    } else if (sidebarSelect == "TEXT-SIDEBAR") {
-        publish('loadContentSidebar');
-    }
-}
+
 
 function loadMainScripts(path) {
     const matchCoursePath = path.match(/^\/course\/(\w+)$/);
@@ -112,28 +108,27 @@ const handleLocation = async () => {
         const route = findMatchingRoute(path);
         var regex = /^\/pages\/([^\/]+)\.html$/;
         var match = regex.exec(route)[1];
-        var mainBody;
-        if (cachedPages[match]) {
-            console.log("********* Loaded from cache ******\n" + match);
-        }
-        else {
-            mainBody = await fetch(route).then((data) => data.text());
+        if (!cachedPages[match]) {
+            const mainBody = await fetch(route).then((data) => data.text());
             cachedPages[match] = true;
             document.getElementById(match).innerHTML = mainBody;
-            loadMainScripts(path);
         }
         for (let key in cachedPages) document.getElementById(key).style.display = (key === match) ? "block" : "none";
-
-        const currentSidebar = path === "/content" ? "TEXT-SIDEBAR" : (mainSideBarVisible ? "MAIN-SIDEBAR" : "NO-SIDEBAR");
+        loadMainScripts(path);
+        const currentSidebar = path === "/content" ? "contentSidebar" : (mainSideBarVisible ? "mainSidebar" : "noSidebar");
         if (previousSideBarPath != currentSidebar) {
             previousSideBarPath = currentSidebar;
-            if (currentSidebar == "NO-SIDEBAR") {
+            if (currentSidebar == "noSidebar") {
                 publish('unloadSideBar');
             } else {
-                const sidebarRoute = SIDE_BAR_OPTIONS[currentSidebar];
-                const sidebarBody = await fetch(sidebarRoute).then((data) => data.text());
-                document.getElementById("side-bar").innerHTML = sidebarBody;
-                loadSideBarScripts(currentSidebar);
+                if (!cachedSideBar[currentSidebar]) {
+                    const sidebarRoute = SIDE_BAR_OPTIONS[currentSidebar];
+                    const sidebarBody = await fetch(sidebarRoute).then((data) => data.text());
+                    document.getElementById(currentSidebar).innerHTML = sidebarBody;
+                    cachedSideBar[currentSidebar] = true;
+                }
+                for (let key in cachedSideBar) document.getElementById(key).style.display = (key === currentSidebar) ? "block" : "none";
+                publish(currentSidebar == "mainSidebar" ? "loadMainSidebar" : "loadContentSidebar");
             }
         }
     }
@@ -145,17 +140,13 @@ export function initRouter() {
 }
 
 function findMatchingRoute(path) {
-    // Check if the path matches any route in the routes object
     const matchingRoute = Object.keys(routes).find(route => {
         if (route.endsWith("*")) {
-            // Handle routes with additional segments
             const prefix = route.slice(0, -1); // Remove the wildcard '*'
             return path.startsWith(prefix);
         } else {
-            // Handle exact match routes
             return route === path;
         }
     });
-    // Return the matching route or the default 404 route
     return routes[matchingRoute] || routes[404];
 }

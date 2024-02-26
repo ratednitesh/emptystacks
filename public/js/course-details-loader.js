@@ -1,26 +1,26 @@
 import { publish } from "./event-bus";
 import { generateUserReview, getCourseContentDetailsAPICalls, getCourseDetailsAPICalls, getCourseVideoDetailsAPICalls } from "./fetch-data";
 
-
+let lastCourseId;
 const levelNames = ['Beginner', 'Intermediate', 'Expert'];
 
 export function loadCourseDetails(courseId) {
-    console.log("course ID: " + courseId);
-    getCourseData(courseId);
-
-
-    generateUserReview(courseId).then(
-        (reviewsHtml) => {
-            if (reviewsHtml) {
-                const boxContainer = document.querySelector('.reviews .box-container');
-                if (boxContainer) {
-                    boxContainer.innerHTML = reviewsHtml;
+    if(lastCourseId!=courseId){
+        lastCourseId = courseId;
+        getCourseData(courseId);
+        generateUserReview(courseId).then(
+            (reviewsHtml) => {
+                if (reviewsHtml) {
+                    const boxContainer = document.querySelector('.reviews .box-container');
+                    if (boxContainer) {
+                        boxContainer.innerHTML = reviewsHtml;
+                    }
                 }
             }
-        }
-    ).catch(
-        (e) => { console.log(e); publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load course reviews."]); }
-    );
+        ).catch(
+            (e) => { console.log(e); publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load course reviews."]); }
+        );   
+    }
 }
 
 function getCourseData(courseId) {
@@ -54,10 +54,12 @@ function getCourseData(courseId) {
                 textCourse.querySelector('#tutor-role').innerHTML = tutorData.role;
                 if (courseData.type == "text") {
                     document.querySelector(".course-details").style.display = "block";
+                    document.querySelector(".video-container").style.display = "none";
                     getCourseContentDetails(courseId);
                 }
                 else {
                     document.querySelector(".video-container").style.display = "block";
+                    document.querySelector(".course-details").style.display = "none";
                     getCourseVideoDetails(courseId);
                 }
             } else {
@@ -133,7 +135,7 @@ function getCourseVideoDetails(courseId) {
         (courseVideoDetails) => {
             var playlistHtml = "";
             courseVideoDetails.forEach((cvd) => {
-                var videoHtml = `<a href="/watch-video/${cvd.videoId}"  onclick="route()" class="box">
+                var videoHtml = `<a href="/content"  onclick="route()" class="box">
                 <i class="fas fa-play"></i>
                 <img src="${cvd.thumbnail}"alt="">
                 <h3>${cvd.title}</h3>

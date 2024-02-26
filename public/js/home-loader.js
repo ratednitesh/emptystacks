@@ -1,114 +1,64 @@
-import { loadPopularCourses } from "./common";
 import { publish } from "./event-bus";
 import { loginStatus } from "./manage-auth";
-import { getTopStreams, getUserPrivateData } from "./fetch-data";
+import { getTopCourses, getTopStreams, getUserPrivateData } from "./fetch-data";
 import { loadSignUpForm } from "./user-auth-modal";
 var slideImagesSrc = ['/images/banners/1.jpg', '/images/banners/2.jpg', '/images/banners/3.jpg'];
 let bannerInterval;
-let sideBar;
+let initHomeStatus = false, initCoursesStatus = false;
 export function loadHome(args) {
     if(args !='only-course'){
+        if(!initHomeStatus){
+            initHome();
+            initHomeStatus= true;
+        }
         document.querySelector('.quick-select').style.display="block";
         document.querySelector('.highlight-section').style.display="block";
         loadBanner();
-        loadQuickSelect();
     }else{
         document.querySelector('.quick-select').style.display="none";
         document.querySelector('.highlight-section').style.display="none";
     }
-    loadPopularCourses();
+    if(!initCoursesStatus){
+    initPopularCourses();
+    initCoursesStatus = true;
+    }
 }
 export function unloadHome() {
-    clearInterval(bannerInterval);
+    unloadBanner();
 }
-
-
-export function loadMainSidebar() {
-    let menuBtn = document.querySelector('#menu-btn');
-    sideBar = document.querySelector('.side-bar');
-    menuBtn.style.display = "inline-block";
-    
-    sideBar.classList.remove('active');
-    document.body.classList.remove('active');
-    document.querySelector('#menu-btn').onclick = () => {
-        sideBar.classList.toggle('active');
-        document.body.classList.toggle('active');
-
-    }
-    document.querySelector('.side-bar .close-side-bar').onclick = () => {
-        sideBar.classList.remove('active');
-        document.body.classList.remove('active');
-
-    }
-    updateUserInfoOnSideBar(loginStatus());
-
+function initHome(){
+    initBanner();
+    initQuickSelect();
 }
-
-export function unloadSideBar() {
-    document.getElementById("side-bar").innerHTML = "";
-    document.body.classList.remove('active');
-    let menuBtn = document.querySelector('#menu-btn');
-    menuBtn.style.display = "none";
-
-}
-
-export function updateUserInfoOnSideBar(isUserLoggedIn){
-    if (isUserLoggedIn)
-    getUserPrivateData("zhcyWRZpJKZohfqSt6Xihyo4Awq2").then(
-        (userPrivateData) => {
-            sideBar.querySelector('#user-photo-sb').src = userPrivateData.userProfileSrc;
-            sideBar.querySelector('#user-name-sb').innerHTML = userPrivateData.username;
-            sideBar.querySelector('#user-role-sb').innerHTML = userPrivateData.role;
-
-        }
-    ).catch((e) => {
-        console.error(e);
-        publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load side-bar profile."]);
-    });
-    else{
-        sideBar.querySelector('#user-photo-sb').src = "/images/profile/guest-user.svg";
-            sideBar.querySelector('#user-name-sb').innerHTML = 'Hello Guest!';
-    }
-}
-function loadBanner(){
-    // const observer = new IntersectionObserver((entries, observer) => {
-    //     entries.forEach(entry => {
-    //         if (entry.isIntersecting) {
-    //             const targetImage = entry.target;
-    //             document.querySelector('.image-loader').style.display = "none";
-    //             targetImage.style.opacity = 1;
-    //             observer.unobserve(targetImage);
-    //         }
-    //     });
-    // });
+function initBanner(){
     var j = 1;
     while (j <= 3) {
         document.getElementById('slide-img-' + j).src = slideImagesSrc[j - 1];
         j++;
-    }
-    // const bannerSlides = document.querySelectorAll('.banner-slide');
-    // bannerSlides.forEach(bannerSlide => {
-    //     bannerSlide.style.opacity = 0; // Initially hide the images
-    //     observer.observe(bannerSlide);
-    // });
-    let i = 1;
-    bannerInterval = setInterval(() => { showSlide(i++); if (i > 3) i = 1; }, 3500);
+    } 
     document.getElementById('slide-1').addEventListener('click', () => { showSlide(1); });
     document.getElementById('slide-2').addEventListener('click', () => { showSlide(2); });
     document.getElementById('slide-3').addEventListener('click', () => { showSlide(3); });
 }
-function loadQuickSelect(){
+function loadBanner(){
+    let i = 1;
+    bannerInterval = setInterval(() => { showSlide(i++); if (i > 3) i = 1; }, 3500);
+}
+function unloadBanner(){
+    clearInterval(bannerInterval);
+}
+function initQuickSelect(){
     var startJourneyHome = document.querySelector('#start-journey-home');
     startJourneyHome.addEventListener("click", function () {
         loadSignUpForm();
     });
     updateQuickSelectOptions(loginStatus());
-    loadQuickCourses();
-    loadStreams();
+    initQuickCourses();
+    initStreams();
 }
 
 
-function loadStreams() {
+function initStreams() {
     // Get the Stream container
 
     getTopStreams().then(
@@ -143,7 +93,7 @@ function loadStreams() {
 
 }
 
-function loadQuickCourses() {
+function initQuickCourses() {
     getUserPrivateData("zhcyWRZpJKZohfqSt6Xihyo4Awq2").then(
         (data) => {
             var quickCourses = data.enrolledCourses;
@@ -235,5 +185,49 @@ function setSlide(index) {
         index = slides.length;
     dots.forEach((node, i) => { if (index - 1 == i) node.classList.replace('fa-regular', 'fa-solid'); else node.classList.replace('fa-solid', 'fa-regular'); })
     slides.forEach((node, i) => { if (index - 1 == i) node.style.display = "block"; else node.style.display = "none"; })
+
+}
+
+function initPopularCourses() {
+    getTopCourses().then(
+        (coursesData) => {
+            // Select the box-container element
+            const boxContainer = document.querySelector('.courses .box-container');
+
+            // Iterate over coursesData and create HTML elements
+            coursesData.forEach(course => {
+                // Create box element
+                const box = document.createElement('div');
+                box.classList.add('box');
+
+                // Create thumbnail image
+                const thumbnailImg = document.createElement('img');
+                thumbnailImg.src = course.thumbnail;
+                thumbnailImg.alt = 'Course Thumbnail';
+                thumbnailImg.classList.add('thumb');
+
+                // Create title
+                const title = document.createElement('h3');
+                title.classList.add('title');
+                title.textContent = course.title;
+
+                // Create link
+                const link = document.createElement('a');
+                link.href = course.href;
+                link.textContent = 'View Course';
+                link.classList.add('inline-btn');
+                link.setAttribute('onclick', 'route()');
+
+                // Append elements to the box
+                box.appendChild(thumbnailImg);
+                box.appendChild(title);
+                box.appendChild(link);
+
+                // Append box to the box-container
+                boxContainer.appendChild(box);
+            });
+
+        }
+    ).catch(() => { publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load top courses."]); });
 
 }

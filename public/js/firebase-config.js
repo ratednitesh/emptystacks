@@ -27,8 +27,6 @@ export function initFirebase() {
                 console.log(user);
                 console.log(user.displayName);
                 console.log(user.photoURL);
-                
-
                 // user = auth.currentUser;
             }
             else

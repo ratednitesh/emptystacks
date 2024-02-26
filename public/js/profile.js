@@ -88,13 +88,11 @@ function updateUserPublicProfile(fieldId) {
         cancelButton.classList.toggle('inactive');
     });
 }
-
 function initUserActivities(fieldId, fieldValue) {
     var field = document.getElementById(fieldId);
     var dataField = field.querySelector('h3');
     dataField.innerHTML = fieldValue;
 }
-
 function createEnrolledCourses(enrolledCourses) {
     // Select the box-container element
     const container = document.querySelector('.box-container.enrolled-courses');

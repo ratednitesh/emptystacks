@@ -79,15 +79,6 @@ function profileButtonListeners() {
         searchForm.classList.remove('active');
     }
 
-    // window.onscroll = () => {
-    // searchForm.classList.remove('active');
-    //     removeMenuOptions();
-    //     if (window.innerWidth < 1200) {
-    //         // sideBar.classList.remove('active');
-    //         document.body.classList.remove('active');
-
-    //     }
-    // }
 }
 
 function darkModeListeners() {

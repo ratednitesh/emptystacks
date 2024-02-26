@@ -1,5 +1,5 @@
 
-.side-bar {
+#sideBar {
     position: fixed;
     top: 0;
     left: -31rem;
@@ -17,29 +17,6 @@
     font-size: 2rem;
     color: var(--black);
     border-bottom: var(--border);
-}
-
-.side-bar .close-side-bar {
-    text-align: right;
-    padding: 2rem;
-    padding-bottom: 0;
-    display: none;
-}
-
-.side-bar .close-side-bar i {
-    height: 4.5rem;
-    width: 4.5rem;
-    line-height: 4.4rem;
-    font-size: 2rem;
-    color: #fff;
-    cursor: pointer;
-    background-color: var(--red);
-    text-align: center;
-    border-radius: .5rem;
-}
-
-.side-bar .close-side-bar i:hover {
-    background-color: var(--black);
 }
 
 .side-bar .profile {
@@ -124,7 +101,7 @@
     margin-right: 2.5rem;
 }
 
-.side-bar.active {
+#sideBar.active {
     left: 0rem;
 }
 

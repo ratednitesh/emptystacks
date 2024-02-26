@@ -110,7 +110,7 @@ export var courseDetails = {
     },
     "course2": {
         "type": "video",
-        "courseName": "Complete HTML tutorial",
+        "courseName": "Complete Something Else tutorial",
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 3,
         "href": "/content",
