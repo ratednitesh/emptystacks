@@ -230,7 +230,6 @@ export var courseContentDetails = `    <h1 class="heading">Course Details</h1>
     </div>
 </div>`;
 
-
 export var courseVideoDetails = {
     "course2": [
         {

@@ -5,6 +5,7 @@ import { loadSignUpForm } from "./user-auth-modal";
 var slideImagesSrc = ['/images/banners/1.jpg', '/images/banners/2.jpg', '/images/banners/3.jpg'];
 let bannerInterval;
 let initHomeStatus = false, initCoursesStatus = false;
+//  Load and Unload Home 
 export function loadHome(args) {
     if(args !='only-course'){
         if(!initHomeStatus){
@@ -26,6 +27,13 @@ export function loadHome(args) {
 export function unloadHome() {
     unloadBanner();
 }
+function loadBanner(){
+    let i = 1;
+    bannerInterval = setInterval(() => { showSlide(i++); if (i > 3) i = 1; }, 3500);
+}
+function unloadBanner(){
+    clearInterval(bannerInterval);
+}
 function initHome(){
     initBanner();
     initQuickSelect();
@@ -40,13 +48,7 @@ function initBanner(){
     document.getElementById('slide-2').addEventListener('click', () => { showSlide(2); });
     document.getElementById('slide-3').addEventListener('click', () => { showSlide(3); });
 }
-function loadBanner(){
-    let i = 1;
-    bannerInterval = setInterval(() => { showSlide(i++); if (i > 3) i = 1; }, 3500);
-}
-function unloadBanner(){
-    clearInterval(bannerInterval);
-}
+
 function initQuickSelect(){
     var startJourneyHome = document.querySelector('#start-journey-home');
     startJourneyHome.addEventListener("click", function () {

@@ -1,4 +1,6 @@
 import { loginStatus } from "./manage-auth";
+import { getUserPrivateData } from "./fetch-data";
+
 let sideBar; 
 let menuBtn;
 let initSidebarStatus = false;

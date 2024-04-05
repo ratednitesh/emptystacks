@@ -5,7 +5,7 @@ let lastCourseId;
 const levelNames = ['Beginner', 'Intermediate', 'Expert'];
 
 export function loadCourseDetails(courseId) {
-    if(lastCourseId!=courseId){
+    if (lastCourseId != courseId) {
         lastCourseId = courseId;
         getCourseData(courseId);
         generateUserReview(courseId).then(
@@ -19,7 +19,7 @@ export function loadCourseDetails(courseId) {
             }
         ).catch(
             (e) => { console.log(e); publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load course reviews."]); }
-        );   
+        );
     }
 }
 
@@ -27,8 +27,6 @@ function getCourseData(courseId) {
     getCourseDetailsAPICalls(courseId).then(
         (courseData) => {
             if (courseData) {
-
-
                 var textCourse = document.querySelector('.text-course');
                 textCourse.querySelectorAll('.chapters').forEach((event) => {
                     event.innerHTML = courseData.chapterCount;
@@ -41,7 +39,6 @@ function getCourseData(courseId) {
                 const level = courseData.level;
                 const n = 4 - level; // Calculate the value of n based on the level
                 textCourse.querySelector('#course-level').innerHTML = levelNames[level - 1];
-
                 const bars = document.querySelectorAll('.signal-bars .bar:nth-last-child(n+' + n + ')');
                 bars.forEach(bar => {
                     bar.style.background = 'var(--main-color)';
@@ -89,12 +86,10 @@ function getCourseContentDetails(courseId) {
                         this.children[0].children[1].classList.replace('fa-angle-down', 'fa-angle-up');
                     else
                         this.children[0].children[1].classList.replace('fa-angle-up', 'fa-angle-down');
-
                 });
             });
             document.getElementById("expand-button").addEventListener('click', () => {
                 var expandItems = document.querySelectorAll('.expand');
-
                 var accordionItems = document.querySelectorAll('.accordion-item');
                 accordionItems.forEach(function (item) {
                     item.classList.add('active');
@@ -104,15 +99,12 @@ function getCourseContentDetails(courseId) {
                 });
                 document.getElementById("collapse-button").hidden = false;
                 document.getElementById("expand-button").hidden = true;
-
             });
             document.getElementById("collapse-button").addEventListener('click', () => {
                 var accordionItems = document.querySelectorAll('.accordion-item');
                 var expandItems = document.querySelectorAll('.expand');
-
                 accordionItems.forEach(function (item) {
                     item.classList.remove('active');
-
                 });
                 expandItems.forEach(function (expandItem) {
                     expandItem.classList.replace('fa-angle-up', 'fa-angle-down');
@@ -140,7 +132,7 @@ function getCourseVideoDetails(courseId) {
                 <img src="${cvd.thumbnail}"alt="">
                 <h3>${cvd.title}</h3>
                 </a>`;
-                playlistHtml+=videoHtml
+                playlistHtml += videoHtml
             });
             var videoDetails = document.querySelector(".video-container .box-container");
             videoDetails.innerHTML = playlistHtml;
