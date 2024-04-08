@@ -1,10 +1,12 @@
 import { publish } from "./event-bus";
 import { getUserPrivateData, getUserPublicData, updateUserData } from "./fetch-data";
+import { EVENTS } from "./const";
 
 var userPublicProfile = {};
 
 export function initProfile(uid) {
-    getUserPublicData("zhcyWRZpJKZohfqSt6Xihyo4Awq2").then((data) => {
+    console.log(uid);
+    getUserPublicData(uid).then((data) => {
         userPublicProfile = data;
         setUserProfilePhoto(data.userProfileSrc);
         setUserRole(data.role);
@@ -17,9 +19,9 @@ export function initProfile(uid) {
         }
         console.log('profile loaded');
     }).catch(() => {
-        publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load profile."]);
+        publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load profile."]);
     });
-    getUserPrivateData("zhcyWRZpJKZohfqSt6Xihyo4Awq2").then((data) => {
+    getUserPrivateData(uid).then((data) => {
         data = data.actvities;
         for (const property in data) {
             initUserActivities(property, data[property]);
@@ -27,15 +29,15 @@ export function initProfile(uid) {
         console.log('activities loaded');
     }
     ).catch(() => {
-        publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load activities."]);
+        publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load activities."]);
     });
-    getUserPrivateData("zhcyWRZpJKZohfqSt6Xihyo4Awq2").then(
+    getUserPrivateData(uid).then(
         (data) => {
             data = data.enrolledCourses;
             createEnrolledCourses(data);
         }
     ).catch(() => {
-        publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load courses."]);
+        publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load courses."]);
     });
 }
 function setUserProfilePhoto(userProfileSrc) {
@@ -67,10 +69,10 @@ function updateUserPublicProfile(fieldId) {
     confirmButton.addEventListener("click", () => {
         //TODO: add validations.
         userPublicProfile[fieldId] = dataField.innerHTML;
-        updateUserData("zhcyWRZpJKZohfqSt6Xihyo4Awq2",userPublicProfile).then(() => {
-            publish('pushPopupMessage', ["SUCCESS", `${fieldId} successfully updated.`]);
+        updateUserData("uid",userPublicProfile).then(() => {
+            publish(EVENTS.PUSH_POPUP_MESSAGE, ["SUCCESS", `${fieldId} successfully updated.`]);
         })
-            .catch(() => { publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to save changes."]); });
+            .catch(() => { publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to save changes."]); });
         dataField.contentEditable = false;
         dataField.classList.remove("editable");
         editButton.classList.toggle('inactive');

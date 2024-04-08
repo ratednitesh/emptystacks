@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600&display=swap');
+
+:root {
+    --main-color: #df5050;
+    --red: #e74c3c;
+    --orange: #f39c12;
+    --white: #fff;
+    --black: #2c3e50;
+    --light-color: #888;
+    --light-bg: #eee;
+    --border: .1rem solid rgba(0, 0, 0, .2);
+    --small-font: 1.5rem;
+    --medium-font: 2rem;
+    --heading-font: 2.5rem;
+    --logo-font: 2.8rem;
+    --small-gap: 1rem;
+    --medium-gap: 2rem;
+    --tiny-border: .5rem;
+    --small-padding-box: 1rem 2rem;
+    --padding: 1.8rem;
+}
+
+* {
+    font-family: 'Nunito', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    text-decoration: none;
+}
+
+*::selection {
+    background-color: var(--main-color);
+    color: #fff;
+}
+
+html {
+    font-size: 62.5%;
+    overflow-x: hidden;
+}
+
+body {
+    background-color: var(--light-bg);
+    padding-left: 0;
+}
+
+body.dark {
+    --white: #222;
+    --black: #fff;
+    --light-color: #aaa;
+    --light-bg: #333;
+    --border: .1rem solid rgba(255, 255, 255, .2);
+
+}
+/* When sidebar enabled  */
+body.active {
+    padding-left: 30rem;
+}
+
+.heading {
+    padding-bottom: var(--padding);
+    border-bottom: var(--border);
+    font-size: var(--heading-font);
+    color: var(--black);
+    margin-bottom: var(--medium-gap);
+}
+
+section {
+    padding:var(--small-padding-box);
+    max-width: 1440px;
+    margin: 0 auto;
+}
+@media(max-width:991px) {
+    html {
+        font-size: 55%;
+    }
+}

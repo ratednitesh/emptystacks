@@ -1,0 +1,74 @@
+
+.btn,
+.option-btn,
+.delete-btn,
+.inline-btn,
+.inline-option-btn,
+.inline-delete-btn {
+    border-radius: .5rem;
+    padding: 1rem 3rem;
+    font-size: 1.8rem;
+    color: #fff;
+    margin-top: 1rem;
+    text-transform: capitalize;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn,
+.option-btn,
+.delete-btn {
+    display: block;
+    width: 100%;
+}
+
+.inline-btn,
+.inline-option-btn,
+.inline-delete-btn {
+    display: inline-block;
+}
+
+.btn,
+.inline-btn {
+    background-color: var(--main-color);
+}
+
+.option-btn,
+.inline-option-btn {
+    background-color: var(--orange);
+}
+
+.delete-btn,
+.inline-delete-btn {
+    background-color: var(--red);
+}
+
+.flex-btn {
+    display: flex;
+    gap: 1rem;
+}
+
+.transparent-btn {
+    border-radius: .5rem;
+    padding: 1rem 1rem;
+    font-size: 1.4rem;
+    color: var(--black);
+    cursor: pointer;
+    text-align: center;
+    border: var(--border);
+}
+
+.transparent-btn:hover {
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.btn:hover,
+.option-btn:hover,
+.delete-btn:hover,
+.inline-btn:hover,
+.inline-option-btn:hover,
+.inline-delete-btn:hover {
+    background-color: var(--black);
+    color: var(--white);
+}

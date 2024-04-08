@@ -19,7 +19,6 @@ const googleProvider = new GoogleAuthProvider();
 
 export function initFirebase() {
     // Login State Manangement 
-
     return new Promise((resolve, reject) => {
         auth.onAuthStateChanged(function (user) {
             if (user) {
@@ -35,33 +34,21 @@ export function initFirebase() {
         });
     });
 }
-export function getAuthenticator() {
-    return auth;
-}
 
 export function googleSignIn() {
     return new Promise((resolve, reject) => {
         signInWithPopup(auth, googleProvider)
             .then((result) => {
                 console.log('User Signed In with Google');
-
-                // This gives you a Google Access Token. You can use it to access the Google API.
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
-                // The signed-in user info.
                 const user = result.user;
-                // IdP data available using getAdditionalUserInfo(result)
-                // ...
                 resolve();
             }).catch((error) => {
-                // Handle Errors here.
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                // The email of the user's account used.
                 const email = error.customData.email;
-                // The AuthCredential type that was used.
                 const credential = GoogleAuthProvider.credentialFromError(error);
-                // ...
                 console.log('Error Sign In with Google');
                 reject();
             });
@@ -80,7 +67,10 @@ export function isUserLoggedIn() {
     else
         false;
 }
-
+export function getUid() {
+    console.log(auth.currentUser.uid);
+    return auth.currentUser.uid;
+}
 export function createNewUser(userToken) {
     return new Promise((resolve, reject) => {
         createUserWithEmailAndPassword(auth, userToken.email, userToken.password)

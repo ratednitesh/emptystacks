@@ -28,10 +28,53 @@ export var userPrivateProfile = {
 
             }
         ]
-    }
+    },
+    "hhjGEzFfz4gcFBUt9qROUwxxI852": {
+        "username": "Nitesh S.",
+        "userProfileSrc": "/images/profile/user.jpg",
+        "mailId": "nitesh_91@outlook.com",
+        "role": "Stack Explorer",
+        "actvities": {
+            "saved-courses": "43",
+            "liked-tutorials": "23",
+            "total-comments": "12"
+        },
+        "enrolledCourses": [
+            {
+                "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
+                "title": "1. Solving LeetCode Questions",
+                "href": "/course/course1"
+
+            },
+            {
+                "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
+                "title": "2. Solving LeetCode Questions",
+                "href": "/course/course2"
+
+            }, {
+                "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
+                "title": "3. Solving LeetCode Questions",
+                "href": "/course/course2"
+
+            }
+        ]
+    },
 }
 export var userPublicProfile = {
     "zhcyWRZpJKZohfqSt6Xihyo4Awq2": {
+        "username": "Nitesh S.",
+        "about-me": "I am a curious little kid.",
+        "work": "Vice President",
+        "location": "India",
+        "tech-stack": "JAVA Developer",
+        "facebook": "ratednitesh",
+        "instagram": "ratednitesh",
+        "linkedin": "ratednitesh",
+        "github": "",
+        "userProfileSrc": "/images/profile/user.jpg",
+        "role": "Stack Explorer"
+    },
+    "hhjGEzFfz4gcFBUt9qROUwxxI852": {
         "username": "Nitesh S.",
         "about-me": "I am a curious little kid.",
         "work": "Vice President",

@@ -1,39 +1,31 @@
 import { publish } from "./event-bus";
 import { forgotPassword, signIn, signUp } from "./manage-auth";
+import { EVENTS } from "./const";
 
-var form_modal;
-var form_login;
-var form_signup;
-var form_forgot_password;
-var form_modal_tab;
-var tab_login;
-var tab_signup;
-var forgot_password_link;
-var back_to_login_link;
-var main_nav;
-var startJourney;
+const form_modal = document.querySelector(".cd-user-modal");
+const form_login = document.querySelector("#cd-login");
+const form_login_email = form_login.querySelector('#signin-email');
+const form_login_pass = form_login.querySelector('#signin-password');
+const form_signup = document.querySelector("#cd-signup");
+const form_signup_email = form_signup.querySelector('#signup-email');
+const form_signup_pass = form_signup.querySelector('#signup-password');
+const form_signup_username = form_signup.querySelector('#signup-username');
+const form_forgot_password = document.querySelector("#cd-reset-password");
+const form_modal_tab = document.querySelector(".cd-switcher");
+const tab_login = form_modal_tab.children[0].children[0];
+const tab_signup = form_modal_tab.children[1].children[0];
+const forgot_password_link = form_login.querySelector(".cd-form-bottom-message a");
+const back_to_login_link = form_forgot_password.querySelector(".cd-form-bottom-message a");
+const main_nav = document.querySelector("#sign-up");
+const startJourney = document.querySelector('#start-journey');
 
 export function initUserModal() {
-    createUserAuthForm(function(){
-        form_modal = document.querySelector(".cd-user-modal");
-        form_login = document.querySelector("#cd-login");
-        form_signup = document.querySelector("#cd-signup");
-        form_forgot_password = document.querySelector("#cd-reset-password");
-        form_modal_tab = document.querySelector(".cd-switcher");
-        tab_login = form_modal_tab.children[0].children[0];
-        tab_signup = form_modal_tab.children[1].children[0];
-        forgot_password_link = form_login.querySelector(".cd-form-bottom-message a");
-        back_to_login_link = form_forgot_password.querySelector(".cd-form-bottom-message a");
-        main_nav = document.querySelector("#sign-up");
-        startJourney = document.querySelector('#start-journey');
-        var rememberedEmail = localStorage.getItem('rememberedEmail');
-        if (rememberedEmail) {
-            document.getElementById('signin-email').value = rememberedEmail;
-            document.getElementById('remember-me').checked = true;
-        }
-        modalListeners();
-    });
-    
+    var rememberedEmail = localStorage.getItem('rememberedEmail');
+    if (rememberedEmail) {
+        document.getElementById('signin-email').value = rememberedEmail;
+        document.getElementById('remember-me').checked = true;
+    }
+    modalListeners();
 }
 
 function modalListeners() {
@@ -45,19 +37,10 @@ function modalListeners() {
     // open modal
     main_nav.addEventListener("click", function (event) {
         publish('removeMenuOptions');
-        if (event.target === main_nav) {
-            // on mobile open the submenu
-            main_nav.children[0].classList.toggle("is-visible");
-        } else {
-            // on mobile close submenu
-            main_nav.children[0].classList.remove("is-visible");
-            // show modal layer
-            form_modal.classList.add("is-visible");
-            // show the selected form
-            event.target.classList.contains("cd-signup") ? signup_selected() : login_selected();
-        }
+        form_modal.classList.add("is-visible");
+        event.target.classList.contains("cd-signup") ? signup_selected() : login_selected();
     });
-
+    
     // switch from a tab to another
     form_modal_tab.addEventListener("click", function (event) {
         event.preventDefault();
@@ -67,10 +50,8 @@ function modalListeners() {
     // hide or show password
     document.querySelectorAll(".hide-password").forEach((event) => event.addEventListener("click", function () {
         var passwordField = this.previousElementSibling;
-
         passwordField.type = passwordField.type === "password" ? "text" : "password";
         this.textContent = passwordField.type === "password" ? "Show" : "Hide";
-
         // focus and move cursor to the end of input field
         passwordField.putCursorAtEnd();
     }));
@@ -87,12 +68,11 @@ function modalListeners() {
         login_selected();
     });
 
-    // REMOVE THIS - it's just to show error messages
     form_login.querySelector('input[type="submit"]').addEventListener("click", function (event) {
         event.preventDefault();
         // let username = form_login.querySelector('signup-username').value;
-        let email = form_login.querySelector('#signin-email').value;
-        let password = form_login.querySelector('#signin-password').value;
+        let email = form_login_email.value;
+        let password = form_login_pass.value;
         let rememberMe = form_login.querySelector('#remember-me').checked;
         if (rememberMe) {
             localStorage.setItem('rememberedEmail', email);
@@ -101,15 +81,14 @@ function modalListeners() {
             localStorage.removeItem('rememberedEmail');
         }
         if (!validateEmail(email))
-            form_login.querySelector('#signin-email').classList.add("has-error");
+            form_login_email.classList.add("has-error");
         else {
-            form_login.querySelector('#signin-email').classList.add("has-no-error");
-
+            form_login_email.classList.add("has-no-error");
             if (!validatePassword(password))
-                form_login.querySelector('#signin-password').classList.add("has-error");
+                form_login_pass.classList.add("has-error");
             else {
-                form_login.querySelector('#signin-password').classList.add("has-no-error");
-                publish('pushPopupMessage', ['SUCCESS', 'Processing request...']);
+                form_login_pass.classList.add("has-no-error");
+                publish(EVENTS.PUSH_POPUP_MESSAGE, ['SUCCESS', 'Processing request...']);
                 let userToken = createUserToken('', email, password);
                 signIn('emailAddress', userToken);
             }
@@ -120,31 +99,29 @@ function modalListeners() {
 
     form_signup.querySelector('input[type="submit"]').addEventListener("click", function (event) {
         event.preventDefault();
-        let username = form_signup.querySelector('#signup-username').value;
-        let email = form_signup.querySelector('#signup-email').value;
-        let password = form_signup.querySelector('#signup-password').value;
+        let username = form_signup_username.value;
+        let email = form_signup_email.value;
+        let password = form_signup_pass.value;
 
         if (!validateUsername(username))
-            form_signup.querySelector('#signup-username').classList.add("has-error");
+            form_signup_username.classList.add("has-error");
         else {
-            form_signup.querySelector('#signup-username').classList.add("has-no-error");
-
+            form_signup_username.classList.add("has-no-error");
             if (!validateEmail(email))
-                form_signup.querySelector('#signup-email').classList.add("has-error");
+                form_signup_email.classList.add("has-error");
             else {
-                form_signup.querySelector('#signup-email').classList.add("has-no-error");
-
+                form_signup_email.classList.add("has-no-error");
                 if (!validatePassword(password))
-                    form_signup.querySelector('#signup-password').classList.add("has-error");
+                    form_signup_pass.classList.add("has-error");
                 else {
-                    form_signup.querySelector('#signup-password').classList.add("has-no-error");
+                    form_signup_pass.classList.add("has-no-error");
                     if (form_signup.querySelector('#accept-terms').checked) {
-                        publish('pushPopupMessage', ['SUCCESS', 'Processing request...']);
+                        publish(EVENTS.PUSH_POPUP_MESSAGE, ['SUCCESS', 'Processing request...']);
                         let userToken = createUserToken(username, email, password);
                         signUp(userToken);
                     }
                     else
-                        publish('pushPopupMessage', ['FAILURE', 'Please agree to Terms & Conditions!']);
+                        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Please agree to Terms & Conditions!']);
                 }
             }
         }
@@ -157,7 +134,7 @@ function modalListeners() {
             form_forgot_password.querySelector('#reset-email').classList.add("has-error");
         else {
             form_forgot_password.querySelector('#reset-email').classList.add("has-no-error");
-            publish('pushPopupMessage', ['SUCCESS', 'Processing request...']);
+            publish(EVENTS.PUSH_POPUP_MESSAGE, ['SUCCESS', 'Processing request...']);
             forgotPassword(email);
         }
     });
@@ -210,9 +187,9 @@ function modalListeners() {
     };
 
     document.querySelectorAll('.google-btn').forEach((event) => event.addEventListener("click", () => { signIn('Google') }));
-    document.querySelectorAll('.facebook-btn').forEach((event) => event.addEventListener("click", () => { publish('pushPopupMessage', ['FAILURE', 'Sorry, Facebook login not supported at the moment!']) }));
-    document.querySelectorAll('.apple-btn').forEach((event) => event.addEventListener("click", () => { publish('pushPopupMessage', ['FAILURE', 'Sorry, Apple login not supported at the moment!']) }));
-    document.querySelectorAll('.github-btn').forEach((event) => event.addEventListener("click", () => { publish('pushPopupMessage', ['FAILURE', 'Sorry, GitHub login not supported at the moment!']) }));
+    document.querySelectorAll('.facebook-btn').forEach((event) => event.addEventListener("click", () => { publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Sorry, Facebook login not supported at the moment!']) }));
+    document.querySelectorAll('.apple-btn').forEach((event) => event.addEventListener("click", () => { publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Sorry, Apple login not supported at the moment!']) }));
+    document.querySelectorAll('.github-btn').forEach((event) => event.addEventListener("click", () => { publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Sorry, GitHub login not supported at the moment!']) }));
 }
 
 function login_selected() {
@@ -254,7 +231,7 @@ export function loginSuccess() {
 }
 function validateUsername(username) {
     if (username.trim() === '') {
-        publish('pushPopupMessage', ['FAILURE', 'Username is required.']);
+        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Username is required.']);
         return false;
     }
     return true;
@@ -263,10 +240,10 @@ function validateEmail(email) {
     // Basic email validation using a regular expression
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email.trim() === '') {
-        publish('pushPopupMessage', ['FAILURE', 'email id is required.']);
+        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'email id is required.']);
         return false;
     } else if (!emailRegex.test(email)) {
-        publish('pushPopupMessage', ['FAILURE', 'Email ID is not valid']);
+        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Email ID is not valid']);
         return false;
     }
 
@@ -278,21 +255,21 @@ function validatePassword(password) {
     var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
 
     if (password.trim() === '') {
-        publish('pushPopupMessage', ['FAILURE', 'Password is required.']);
+        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Password is required.']);
         return false;
     } else if (password.length < 8) {
-        publish('pushPopupMessage', ['FAILURE', 'Password must be at least 8 characters long.']);
+        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Password must be at least 8 characters long.']);
         return false;
     } else if (!passwordRegex.test(password)) {
         var invalidSpecialChars = Array.from(password).filter(char => !allowedSpecialCharacters.includes(char)).join('').replace(/[a-zA-Z0-9]/g, '');
         if (invalidSpecialChars.length != 0) {
-            publish('pushPopupMessage', ['FAILURE', `${invalidSpecialChars} - not part of allowed special characters: ${allowedSpecialCharacters}`]);
+            publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', `${invalidSpecialChars} - not part of allowed special characters: ${allowedSpecialCharacters}`]);
             return false;
         }
-        publish('pushPopupMessage', ['FAILURE', 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.']);
+        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.']);
         return false;
     } else if (password.length > 25) {
-        publish('pushPopupMessage', ['FAILURE', 'Password cannot be more than 25 characters.']);
+        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Password cannot be more than 25 characters.']);
         return false;
     }
     return true;
@@ -305,22 +282,10 @@ function createUserToken(username, email, password) {
         email: email
         // Add other relevant information as needed
     };
-
     return userToken;
 }
 
 export function loadSignUpForm() {
     form_modal.classList.add("is-visible");
     signup_selected();
-}
-
-async function createUserAuthForm(callback) {
-    var userAuthRoute = "/pages/authModal.html";
-    const userAuthModal = await fetch(userAuthRoute).then((data) => data.text());
-    const modalContainer = document.createElement('div');
-    modalContainer.classList.add('cd-user-modal');
-    modalContainer.innerHTML = userAuthModal;
-    document.body.insertBefore(modalContainer,document.getElementById('main-page'));
-    
-    callback();
 }

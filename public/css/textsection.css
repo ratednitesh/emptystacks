@@ -9,16 +9,6 @@
     text-align: center;
 }
 
-.text-section .chapter-details .heading {
-    margin-bottom: 0;
-    padding-bottom: 0.5rem;
-    font-size: 2.5rem;
-    color: var(--black);
-    text-transform: capitalize;
-    margin-bottom: 0.5rem;
-}
-
-
 .text-section .chapter-details .info {
     display: flex;
     flex-direction: row-reverse;

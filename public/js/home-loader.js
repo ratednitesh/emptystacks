@@ -2,54 +2,57 @@ import { publish } from "./event-bus";
 import { loginStatus } from "./manage-auth";
 import { getTopCourses, getTopStreams, getUserPrivateData } from "./fetch-data";
 import { loadSignUpForm } from "./user-auth-modal";
-var slideImagesSrc = ['/images/banners/1.jpg', '/images/banners/2.jpg', '/images/banners/3.jpg'];
+import { EVENTS } from "./const";
+
+var slideImagesPath = '/images/banners/';
+var slideImagesSrc = ['1.jpg', '2.jpg', '3.jpg'];
 let bannerInterval;
 let initHomeStatus = false, initCoursesStatus = false;
 //  Load and Unload Home 
 export function loadHome(args) {
-    if(args !='only-course'){
-        if(!initHomeStatus){
+    if (args != 'only-course') {
+        if (!initHomeStatus) {
             initHome();
-            initHomeStatus= true;
+            initHomeStatus = true;
         }
-        document.querySelector('.quick-select').style.display="block";
-        document.querySelector('.highlight-section').style.display="block";
+        document.querySelector('.quick-select').style.display = "block";
+        document.querySelector('.highlight-section').style.display = "block";
         loadBanner();
-    }else{
-        document.querySelector('.quick-select').style.display="none";
-        document.querySelector('.highlight-section').style.display="none";
+    } else {
+        document.querySelector('.quick-select').style.display = "none";
+        document.querySelector('.highlight-section').style.display = "none";
     }
-    if(!initCoursesStatus){
-    initPopularCourses();
-    initCoursesStatus = true;
+    if (!initCoursesStatus) {
+        initPopularCourses();
+        initCoursesStatus = true;
     }
 }
 export function unloadHome() {
     unloadBanner();
 }
-function loadBanner(){
+function loadBanner() {
     let i = 1;
     bannerInterval = setInterval(() => { showSlide(i++); if (i > 3) i = 1; }, 3500);
 }
-function unloadBanner(){
+function unloadBanner() {
     clearInterval(bannerInterval);
 }
-function initHome(){
+function initHome() {
     initBanner();
     initQuickSelect();
 }
-function initBanner(){
+function initBanner() {
     var j = 1;
     while (j <= 3) {
-        document.getElementById('slide-img-' + j).src = slideImagesSrc[j - 1];
+        document.getElementById('slide-img-' + j).src = slideImagesPath + slideImagesSrc[j - 1];
         j++;
-    } 
+    }
     document.getElementById('slide-1').addEventListener('click', () => { showSlide(1); });
     document.getElementById('slide-2').addEventListener('click', () => { showSlide(2); });
     document.getElementById('slide-3').addEventListener('click', () => { showSlide(3); });
 }
 
-function initQuickSelect(){
+function initQuickSelect() {
     var startJourneyHome = document.querySelector('#start-journey-home');
     startJourneyHome.addEventListener("click", function () {
         loadSignUpForm();
@@ -88,7 +91,7 @@ function initStreams() {
             });
         }
     ).catch(
-        () => { publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load streams."]); }
+        () => { publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load streams."]); }
     );
     // Loop through the streams array and create anchor tags for each item
 
@@ -96,7 +99,8 @@ function initStreams() {
 }
 
 function initQuickCourses() {
-    getUserPrivateData("zhcyWRZpJKZohfqSt6Xihyo4Awq2").then(
+    getUserPrivateData("zhcyWRZpJKZohfqSt6Xihyo4Awq2") // TODO: Use it from args
+    .then(
         (data) => {
             var quickCourses = data.enrolledCourses;
             console.log(quickCourses);
@@ -162,7 +166,7 @@ function initQuickCourses() {
                 });
 
         }
-    ).catch(() => { publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load top courses."]); });
+    ).catch(() => { publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load top courses."]); });
 }
 
 export function updateQuickSelectOptions(isUserLoggedIn) {
@@ -230,6 +234,6 @@ function initPopularCourses() {
             });
 
         }
-    ).catch(() => { publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load top courses."]); });
+    ).catch(() => { publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load top courses."]); });
 
 }

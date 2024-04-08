@@ -1,3 +1,4 @@
+import { EVENTS } from "./const";
 import { publish } from "./event-bus";
 import { generateUserReview, getCourseContentDetailsAPICalls, getCourseDetailsAPICalls, getCourseVideoDetailsAPICalls } from "./fetch-data";
 
@@ -18,7 +19,7 @@ export function loadCourseDetails(courseId) {
                 }
             }
         ).catch(
-            (e) => { console.log(e); publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load course reviews."]); }
+            (e) => { console.log(e); publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load course reviews."]); }
         );
     }
 }
@@ -60,14 +61,14 @@ function getCourseData(courseId) {
                     getCourseVideoDetails(courseId);
                 }
             } else {
-                publish('notFoundRoute');
+                publish(EVENTS.NOT_FOUND_ROUTE);
             }
         }
     )
         .catch(
             (e) => {
                 console.log(e);
-                publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load course."]);
+                publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load course."]);
             }
         )
 }
@@ -117,7 +118,7 @@ function getCourseContentDetails(courseId) {
         .catch(
             (e) => {
                 console.log(e);
-                publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load course content details."]);
+                publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load course content details."]);
             }
         )
 }
@@ -140,7 +141,7 @@ function getCourseVideoDetails(courseId) {
     ).catch(
         (e) => {
             console.log(e);
-            publish('pushPopupMessage', ["FAILURE", "Something went wrong, unable to load course content details."]);
+            publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load course content details."]);
         }
     );
 }

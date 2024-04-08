@@ -1,54 +1,39 @@
 import { publish } from "./event-bus";
-var cachedPages = {
-    "home": null,
-    "about": null,
-    "contact": null,
-    "profileUpdate": null,
-    "register": null,
-    "course": null,
-    "content": null,
-    "profile": null,
-    "notFound": null,
-};
-var cachedSideBar = {
-    "mainSidebar": null,
-    "contentSidebar": null,
-};
+var cachedPages = {};
+var cachedSideBar = {};
 const routes = {
-    "/": "/pages/home.html",
-    "/home": "/pages/home.html",
-    "/home/*": "/pages/home.html",
-    "/about": "/pages/about.html",
-    "/about/*": "/pages/about.html",
-    "/courses": "/pages/home.html",
-    "/courses/*": "/pages/home.html",
-    "/contact": "/pages/contact.html",
-    "/contact/*": "/pages/contact.html",
-    "/profile-update": "/pages/profileUpdate.html",
-    "/profile-update/*": "/pages/profileUpdate.html",
-    "/register": "/pages/register.html",
-    "/register/*": "/pages/register.html",
-    "/course": "/pages/notFound.html",
-    "/course/": "/pages/notFound.html",
-    "/course/*": "/pages/course.html",
-    "/content": "/pages/content.html",
-    "/content/*": "/pages/content.html",
-    "/profile": "/pages/notFound.html",
-    "/profile/": "/pages/notFound.html",
-    "/profile/*": "/pages/profile.html",
-    404: "/pages/notFound.html"
+    "/": "home",
+    "/home": "home",
+    "/home/*": "home",
+    "/about": "about",
+    "/about/*": "about",
+    "/courses": "home",
+    "/courses/*": "home",
+    "/contact": "contact",
+    "/contact/*": "contact",
+    "/profile-update": "profileUpdate",
+    "/profile-update/*": "profileUpdate",
+    "/register": "register",
+    "/register/*": "register",
+    "/course": "notFound",
+    "/course/": "notFound",
+    "/course/*": "course",
+    "/content": "content",
+    "/content/*": "content",
+    "/profile": "notFound",
+    "/profile/": "notFound",
+    "/profile/*": "profile",
+    404: "notFound"
 };
-
+const filePathPrefix = "/pages/";
+const filePathSuffix = ".html";
 const SIDE_BAR_OPTIONS = {
-    "noSidebar": "",
-    "mainSidebar": "/pages/mainSidebar.html",
-    "contentSidebar": "/pages/contentSidebar.html"
+    "mainSidebar": "mainSidebar",
+    "contentSidebar": "contentSidebar"
 };
 
 let previousSideBarPath = "";
 let previousMainBodyPath = "";
-let mainSideBarVisible = true;
-
 // main page routing
 const route = (event) => {
     event = event || window.event;
@@ -80,7 +65,7 @@ function loadMainScripts(path) {
         publish('loadCourseDetails', matchCoursePath[1]);
     } else if (matchProfilepath) {
         publish('unloadHome');
-        publish('loadProfile', matchProfilepath[1]);
+        publish('initProfile', matchProfilepath[1]);
     } else {
         switch (path) {
             case "/content":
@@ -106,30 +91,24 @@ const handleLocation = async () => {
     if (previousMainBodyPath != path) {
         previousMainBodyPath = path;
         const route = findMatchingRoute(path);
-        var regex = /^\/pages\/([^\/]+)\.html$/;
-        var match = regex.exec(route)[1];
-        if (!cachedPages[match]) {
-            const mainBody = await fetch(route).then((data) => data.text());
-            cachedPages[match] = true;
-            document.getElementById(match).innerHTML = mainBody;
+        if (!cachedPages[route]) {
+            const mainBody = await fetch(filePathPrefix + route + filePathSuffix).then((data) => data.text());
+            cachedPages[route] = true;
+            document.getElementById(route).innerHTML = mainBody;
         }
-        for (let key in cachedPages) document.getElementById(key).style.display = (key === match) ? "block" : "none";
+        for (let key in cachedPages) document.getElementById(key).style.display = (key === route) ? "block" : "none";
         loadMainScripts(path);
-        const currentSidebar = path === "/content" ? "contentSidebar" : (mainSideBarVisible ? "mainSidebar" : "noSidebar");
+        const currentSidebar = path === "/content" ? "contentSidebar" : "mainSidebar";
         if (previousSideBarPath != currentSidebar) {
             previousSideBarPath = currentSidebar;
-            if (currentSidebar == "noSidebar") {
-                publish('unloadSideBar');
-            } else {
-                if (!cachedSideBar[currentSidebar]) {
-                    const sidebarRoute = SIDE_BAR_OPTIONS[currentSidebar];
-                    const sidebarBody = await fetch(sidebarRoute).then((data) => data.text());
-                    document.getElementById(currentSidebar).innerHTML = sidebarBody;
-                    cachedSideBar[currentSidebar] = true;
-                }
-                for (let key in cachedSideBar) document.getElementById(key).style.display = (key === currentSidebar) ? "block" : "none";
-                publish(currentSidebar == "mainSidebar" ? "loadMainSidebar" : "loadContentSidebar");
+            if (!cachedSideBar[currentSidebar]) {
+                const sidebarRoute = SIDE_BAR_OPTIONS[currentSidebar];
+                const sidebarBody = await fetch(filePathPrefix + sidebarRoute + filePathSuffix).then((data) => data.text());
+                document.getElementById(currentSidebar).innerHTML = sidebarBody;
+                cachedSideBar[currentSidebar] = true;
             }
+            for (let key in cachedSideBar) document.getElementById(key).style.display = (key === currentSidebar) ? "block" : "none";
+            publish(currentSidebar == "mainSidebar" ? "loadMainSidebar" : "loadContentSidebar");
         }
     }
 };

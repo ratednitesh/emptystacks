@@ -1,68 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600&display=swap');
-
-:root {
-    --main-color: #df5050;
-    --red: #e74c3c;
-    --orange: #f39c12;
-    --white: #fff;
-    --black: #2c3e50;
-    --light-color: #888;
-    --light-bg: #eee;
-    --border: .1rem solid rgba(0, 0, 0, .2);
-    --small-font: 1.5rem;
-    --medium-font: 2rem;
-    --heading-font: 2.5rem;
-    --logo-font: 2.8rem;
-    --small-gap: 1rem;
-    --medium-gap: 2rem;
-    --tiny-border: .5rem;
-    --small-padding: 1rem 2rem;
-}
-
-* {
-    font-family: 'Nunito', sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    outline: none;
-    border: none;
-    text-decoration: none;
-}
-
-*::selection {
-    background-color: var(--main-color);
-    color: #fff;
-}
-
-html {
-    font-size: 62.5%;
-    overflow-x: hidden;
-}
-
-body {
-    background-color: var(--light-bg);
-    padding-left: 0;
-}
-
-body.dark {
-    --white: #222;
-    --black: #fff;
-    --light-color: #aaa;
-    --light-bg: #333;
-    --border: .1rem solid rgba(255, 255, 255, .2);
-   
-}
-
-body.active {
-    padding-left: 30rem;
-
-}
 
 .popup {
     position: fixed;
     bottom: -60px;
     right: 10px;
-    padding: var(--small-padding);
+    padding: var(--small-padding-box);
     font-size: var(--small-font);
     color: #fff;
     border-radius: var(--medium-gap);
@@ -80,20 +21,9 @@ body.active {
     }
 }
 
-.heading {
-    padding-bottom: 1.8rem;
-    border-bottom: var(--border);
-    font-size: var(--heading-font);
-    color: var(--black);
-    text-transform:capitalize;
-    margin-bottom: var(--medium-gap);
-}
 
-section {
-    padding:var(--small-padding);
-    max-width: 1440px;
-    margin: 0 auto;
-}
+
+
 /* 
 .image-loader {
     display: flex;
@@ -127,80 +57,6 @@ section {
     }
 } */
 
-.btn,
-.option-btn,
-.delete-btn,
-.inline-btn,
-.inline-option-btn,
-.inline-delete-btn {
-    border-radius: .5rem;
-    padding: 1rem 3rem;
-    font-size: 1.8rem;
-    color: #fff;
-    margin-top: 1rem;
-    text-transform: capitalize;
-    cursor: pointer;
-    text-align: center;
-}
-
-.btn,
-.option-btn,
-.delete-btn {
-    display: block;
-    width: 100%;
-}
-
-.inline-btn,
-.inline-option-btn,
-.inline-delete-btn {
-    display: inline-block;
-}
-
-.btn,
-.inline-btn {
-    background-color: var(--main-color);
-}
-
-.option-btn,
-.inline-option-btn {
-    background-color: var(--orange);
-}
-
-.delete-btn,
-.inline-delete-btn {
-    background-color: var(--red);
-}
-
-.flex-btn {
-    display: flex;
-    gap: 1rem;
-}
-
-.transparent-btn {
-    border-radius: .5rem;
-    padding: 1rem 1rem;
-    font-size: 1.4rem;
-    color: var(--black);
-    cursor: pointer;
-    text-align: center;
-    border: var(--border);
-}
-
-.transparent-btn:hover {
-    background-color: var(--black);
-    color: var(--white);
-}
-
-.btn:hover,
-.option-btn:hover,
-.delete-btn:hover,
-.inline-btn:hover,
-.inline-option-btn:hover,
-.inline-delete-btn:hover {
-    background-color: var(--black);
-    color: var(--white);
-}
-
 .error-container {
     color: var(--black);
     text-align: center;
@@ -230,23 +86,9 @@ section {
     margin-bottom: 10rem;
     color: var(--light-color);
 }
-
-.footer {
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background-color: var(--white);
-    border-top: var(--border);
-    padding: 1rem 2rem;
-    text-align: center;
-    color: var(--black);
-    font-size: 2rem;
-    margin-top: 2rem;
-    z-index: 1000;
-}
-
-.footer span {
-    color: var(--main-color);
+#main-page{
+    min-height: 90vh;
+    padding-bottom: 2rem;
 }
 
 
@@ -268,50 +110,7 @@ section {
 
 }
 
-@media(max-width:991px) {
-    html {
-        font-size: 55%;
-    }
-}
 
-@media(max-width:768px) {
-    #search-btn {
-        display: inline-block;
-    }
-
-    .header .flex {
-        padding: .5rem 1rem;
-    }
-
-    .logo img {
-        display: none;
-    }
-
-    .header .flex .search-form {
-        position: absolute;
-        top: 99%;
-        left: 0;
-        right: 0;
-        width: auto;
-        border-top: var(--border);
-        border-bottom: var(--border);
-        background-color: var(--white);
-        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-        transition: .2s linear;
-    }
-
-    .header .flex .search-form input {
-        width: 100%;
-    }
-
-    .header .flex .search-form label {
-        display: none;
-    }
-
-    .header .flex .search-form.active {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    }
-}
 
 @media only screen and (min-width: 600px) {
     .cd-user-modal-container {
