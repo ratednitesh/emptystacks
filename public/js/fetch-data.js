@@ -198,7 +198,6 @@ function generateStarRating(rating) {
     return '<div class="stars">' + starsHTML + '</div>';
 }
 
-
 export async function getCourseDetailsAPICalls(courseId) {
     const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {

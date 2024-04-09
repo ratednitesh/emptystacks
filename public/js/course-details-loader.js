@@ -1,6 +1,7 @@
 import { EVENTS } from "./const";
 import { publish } from "./event-bus";
 import { generateUserReview, getCourseContentDetailsAPICalls, getCourseDetailsAPICalls, getCourseVideoDetailsAPICalls } from "./fetch-data";
+import { pushPopupMessage } from "./helper";
 
 let lastCourseId;
 const levelNames = ['Beginner', 'Intermediate', 'Expert'];
@@ -19,7 +20,7 @@ export function loadCourseDetails(courseId) {
                 }
             }
         ).catch(
-            (e) => { console.log(e); publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load course reviews."]); }
+            (e) => { console.log(e); pushPopupMessage(["FAILURE", "Something went wrong, unable to load course reviews."]); }
         );
     }
 }
@@ -68,7 +69,7 @@ function getCourseData(courseId) {
         .catch(
             (e) => {
                 console.log(e);
-                publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load course."]);
+                pushPopupMessage(["FAILURE", "Something went wrong, unable to load course."]);
             }
         )
 }
@@ -118,7 +119,7 @@ function getCourseContentDetails(courseId) {
         .catch(
             (e) => {
                 console.log(e);
-                publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load course content details."]);
+                pushPopupMessage(["FAILURE", "Something went wrong, unable to load course content details."]);
             }
         )
 }
@@ -141,7 +142,7 @@ function getCourseVideoDetails(courseId) {
     ).catch(
         (e) => {
             console.log(e);
-            publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load course content details."]);
+            pushPopupMessage(["FAILURE", "Something went wrong, unable to load course content details."]);
         }
     );
 }

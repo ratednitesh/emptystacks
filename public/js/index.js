@@ -1,11 +1,9 @@
 
 import { initEventBus } from "./event-bus";
 import { initFirebase } from "./firebase-config";
-import { initGlobalEvents } from "./global-events";
-import { initHeaders } from "./header";
+import { initStaticContent } from "./initial-load";
 import { initAuthentication } from "./manage-auth";
 import { initRouter } from "./router";
-import { initUserModal } from "./user-auth-modal";
 import "../css/main.css";
 import "../css/style.css";
 import "../css/loader.css";
@@ -31,11 +29,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initialize App
   initFirebase().then(() => {
     initEventBus();
-    initGlobalEvents();
-    initHeaders();
+    initStaticContent();
     initAuthentication();
     initRouter();
-    initUserModal();
   });
   // Check User Log In status
 });

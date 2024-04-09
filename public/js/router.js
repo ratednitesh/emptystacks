@@ -1,6 +1,6 @@
 import { publish } from "./event-bus";
 var cachedPages = {};
-var cachedSideBar = {};
+var cachedSideBar = {"mainSidebar":true};
 const routes = {
     "/": "home",
     "/home": "home",

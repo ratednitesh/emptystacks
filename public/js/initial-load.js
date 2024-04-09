@@ -1,7 +1,161 @@
-import { publish } from "./event-bus";
-import { forgotPassword, signIn, signUp } from "./manage-auth";
-import { EVENTS } from "./const";
+import { getUserPrivateData } from "./fetch-data";
+import { getUid } from "./firebase-config";
+import { forgotPassword, signIn, signOut, signUp } from "./manage-auth";
+import { pushPopupMessage } from "./helper";
 
+// Header Button
+const toggleBtn = document.querySelector('#toggle-btn');
+const toggleModeIcon = document.querySelector('#mode-icon');
+const toggleModeText = document.querySelector('#mode-text');
+const menuBtn = document.querySelector('#menu-btn');
+const userBtn = document.querySelector('#user-btn');
+
+const sideBar = document.querySelector('#sideBar');
+const logoImg = document.getElementsByClassName("logo-img");
+const menusModal = document.querySelector('.header .flex .menus-modal');
+const profile = document.querySelector('.header .flex .menus-modal .menus');
+
+const profileMenuPrivate = document.querySelectorAll('.header .flex .menus .private');
+const profileMenuOnlyPublic = document.querySelectorAll('.header .flex .menus .only-public');
+
+
+let initContentSidebarStatus = false;
+
+export function initStaticContent() {
+    initHeaders();
+    initGlobalEvents();
+    initUserModal();
+}
+function initHeaders() {
+    headerListeners();
+    let darkMode = localStorage.getItem('dark-mode');
+    if (darkMode === 'enabled') {
+        enableDarkMode();
+    }
+}
+
+function headerListeners() {
+    // static actions 
+    userBtn.onclick = () => {
+        toggleMenuOptions();
+    };
+    toggleBtn.onclick = (e) => {
+        let darkMode = localStorage.getItem('dark-mode');
+        if (darkMode === 'disabled')
+            enableDarkMode();
+        else
+            disableDarkMode();
+    };
+    menuBtn.onclick = () => {
+        sideBar.classList.toggle('active');
+        document.body.classList.toggle('active');
+
+    };
+    //trigger events
+    document.getElementById('signOutButton').addEventListener('click', () => { removeMenuOptions(); signOut(); });
+}
+
+function enableDarkMode() {
+    toggleBtn.classList.replace('fa-sun', 'fa-moon');
+    toggleModeIcon.classList.replace('fa-moon', 'fa-sun');
+    toggleModeText.innerHTML = "Enable Light Mode";
+    logoImg[0].src = "/images/Logo/logo_dark.svg"
+    document.body.classList.add('dark');
+    localStorage.setItem('dark-mode', 'enabled');
+}
+
+function disableDarkMode() {
+    toggleBtn.classList.replace('fa-moon', 'fa-sun');
+    toggleModeIcon.classList.replace('fa-sun', 'fa-moon');
+    toggleModeText.innerHTML = "Enable Dark Mode";
+    logoImg[0].src = "/images/Logo/logo_light.svg"
+    document.body.classList.remove('dark');
+    localStorage.setItem('dark-mode', 'disabled');
+}
+
+function toggleMenuOptions() {
+    profile.classList.toggle('active');
+    // userButton.classList.toggle('fa-rotate-270');
+    menusModal.classList.toggle('is-visible');
+}
+
+function removeMenuOptions() {
+    menusModal.classList.remove('is-visible');
+    profile.classList.remove('active');
+}
+
+// Global Event click outside of menus dropdown
+function closeMenuOptions(event) {
+    if (event.target === menusModal) {
+        removeMenuOptions();
+    }
+}
+
+export function updateUserPrivateData(userLoggedIn) {
+    if (userLoggedIn) {
+        let uid = getUid();
+        getUserPrivateData(uid) // TODO: Use it from args
+            .then((userData) => {
+                document.getElementById('user-photo-header').src = userData.userProfileSrc;
+                document.getElementById('user-menu-photo').src = userData.userProfileSrc;
+                document.getElementById('user-menu-name').innerHTML = userData.username;
+                document.getElementById('user-menu-mail').innerHTML = userData.mailId;
+                profileMenuOnlyPublic.forEach((node) => { node.style.display = "none" });
+                profileMenuPrivate.forEach((node) => { node.style.display = "block" });
+                document.getElementById('user-photo-header').style.display = "block";
+                document.getElementById('guest-photo-header').style.display = "none";
+                document.getElementById('profile-link').href = "/profile/" + uid;
+                sideBar.querySelector('#user-photo-sb').src = userData.userProfileSrc;
+                sideBar.querySelector('#user-name-sb').innerHTML = userData.username;
+                sideBar.querySelector('#user-role-sb').innerHTML = userData.role;
+            }).catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load user profile."]); })
+    } else {
+        profileMenuPrivate.forEach((node) => { node.style.display = "none" });
+        profileMenuOnlyPublic.forEach((node) => { node.style.display = "block" });
+        document.getElementById('user-photo-header').style.display = "none";
+        document.getElementById('guest-photo-header').style.display = "block";
+        document.getElementById('guest-menu-photo').src = "/images/profile/guest-user.svg";
+        sideBar.querySelector('#user-photo-sb').src = "/images/profile/guest-user.svg";
+        sideBar.querySelector('#user-name-sb').innerHTML = 'Hello Guest!';
+    }
+}
+
+export function loadMainSidebar() {
+    sideBar.classList.remove('active');
+    document.body.classList.remove('active');
+}
+
+function initializeContentSideBarListeners() {
+    let subMenus = document.querySelectorAll(".sub-menu > a");
+    subMenus.forEach(function (link) {
+        link.addEventListener("click", function (e) {
+            // Close all other sub-menus
+            document.querySelectorAll(".sidebar .sub-menu ul").forEach(function (submenu) {
+                if (submenu !== link.nextElementSibling) {
+                    submenu.style.display = "none";
+                }
+            });
+            // Toggle the visibility of the clicked sub-menu
+            if (link.nextElementSibling.style.display == "" || link.nextElementSibling.style.display == "none") {
+                link.nextElementSibling.style.display = "block";
+            } else {
+                link.nextElementSibling.style.display = "none";
+            }
+
+            // Prevent the click event from propagating up the DOM hierarchy
+            e.stopPropagation();
+        });
+    });
+    initContentSidebarStatus = true;
+}
+export function loadContentSidebar() {
+    if (!initContentSidebarStatus)
+        initializeContentSideBarListeners();
+    sideBar.classList.add('active');
+    document.body.classList.add('active');
+}
+
+// auth modal
 const form_modal = document.querySelector(".cd-user-modal");
 const form_login = document.querySelector("#cd-login");
 const form_login_email = form_login.querySelector('#signin-email');
@@ -19,7 +173,7 @@ const back_to_login_link = form_forgot_password.querySelector(".cd-form-bottom-m
 const main_nav = document.querySelector("#sign-up");
 const startJourney = document.querySelector('#start-journey');
 
-export function initUserModal() {
+function initUserModal() {
     var rememberedEmail = localStorage.getItem('rememberedEmail');
     if (rememberedEmail) {
         document.getElementById('signin-email').value = rememberedEmail;
@@ -31,16 +185,15 @@ export function initUserModal() {
 function modalListeners() {
     // start journey
     startJourney.addEventListener("click", function () {
-        publish('removeMenuOptions');
-        loadSignUpForm();
+        removeMenuOptions();
+        signup_selected();
     });
     // open modal
     main_nav.addEventListener("click", function (event) {
-        publish('removeMenuOptions');
-        form_modal.classList.add("is-visible");
+        removeMenuOptions();
         event.target.classList.contains("cd-signup") ? signup_selected() : login_selected();
     });
-    
+
     // switch from a tab to another
     form_modal_tab.addEventListener("click", function (event) {
         event.preventDefault();
@@ -88,7 +241,7 @@ function modalListeners() {
                 form_login_pass.classList.add("has-error");
             else {
                 form_login_pass.classList.add("has-no-error");
-                publish(EVENTS.PUSH_POPUP_MESSAGE, ['SUCCESS', 'Processing request...']);
+                pushPopupMessage(['SUCCESS', 'Processing request...']);
                 let userToken = createUserToken('', email, password);
                 signIn('emailAddress', userToken);
             }
@@ -116,12 +269,12 @@ function modalListeners() {
                 else {
                     form_signup_pass.classList.add("has-no-error");
                     if (form_signup.querySelector('#accept-terms').checked) {
-                        publish(EVENTS.PUSH_POPUP_MESSAGE, ['SUCCESS', 'Processing request...']);
+                        pushPopupMessage(['SUCCESS', 'Processing request...']);
                         let userToken = createUserToken(username, email, password);
                         signUp(userToken);
                     }
                     else
-                        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Please agree to Terms & Conditions!']);
+                        pushPopupMessage(['FAILURE', 'Please agree to Terms & Conditions!']);
                 }
             }
         }
@@ -134,7 +287,7 @@ function modalListeners() {
             form_forgot_password.querySelector('#reset-email').classList.add("has-error");
         else {
             form_forgot_password.querySelector('#reset-email').classList.add("has-no-error");
-            publish(EVENTS.PUSH_POPUP_MESSAGE, ['SUCCESS', 'Processing request...']);
+            pushPopupMessage(['SUCCESS', 'Processing request...']);
             forgotPassword(email);
         }
     });
@@ -187,12 +340,13 @@ function modalListeners() {
     };
 
     document.querySelectorAll('.google-btn').forEach((event) => event.addEventListener("click", () => { signIn('Google') }));
-    document.querySelectorAll('.facebook-btn').forEach((event) => event.addEventListener("click", () => { publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Sorry, Facebook login not supported at the moment!']) }));
-    document.querySelectorAll('.apple-btn').forEach((event) => event.addEventListener("click", () => { publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Sorry, Apple login not supported at the moment!']) }));
-    document.querySelectorAll('.github-btn').forEach((event) => event.addEventListener("click", () => { publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Sorry, GitHub login not supported at the moment!']) }));
+    document.querySelectorAll('.facebook-btn').forEach((event) => event.addEventListener("click", () => { pushPopupMessage(['FAILURE', 'Sorry, Facebook login not supported at the moment!']) }));
+    document.querySelectorAll('.apple-btn').forEach((event) => event.addEventListener("click", () => { pushPopupMessage(['FAILURE', 'Sorry, Apple login not supported at the moment!']) }));
+    document.querySelectorAll('.github-btn').forEach((event) => event.addEventListener("click", () => { pushPopupMessage(['FAILURE', 'Sorry, GitHub login not supported at the moment!']) }));
 }
 
 function login_selected() {
+    form_modal.classList.add("is-visible");
     form_login.classList.add("is-selected");
     form_signup.classList.remove("is-selected");
     form_forgot_password.classList.remove("is-selected");
@@ -200,7 +354,8 @@ function login_selected() {
     tab_signup.classList.remove("selected");
 }
 
-function signup_selected() {
+export function signup_selected() {
+    form_modal.classList.add("is-visible");
     form_login.classList.remove("is-selected");
     form_signup.classList.add("is-selected");
     form_forgot_password.classList.remove("is-selected");
@@ -214,13 +369,13 @@ function forgot_password_selected() {
     form_forgot_password.classList.add("is-selected");
 }
 
-export function closeModal(event) {
+function closeModal(event) {
     if (event.target === form_modal || event.target.classList.contains("cd-close-form")) {
         form_modal.classList.remove("is-visible");
     }
 }
 
-export function escModal(event) {
+function escModal(event) {
     if (event.which === 27 && form_modal.classList.contains("is-visible")) {
         form_modal.classList.remove("is-visible");
     }
@@ -231,7 +386,7 @@ export function loginSuccess() {
 }
 function validateUsername(username) {
     if (username.trim() === '') {
-        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Username is required.']);
+        pushPopupMessage(['FAILURE', 'Username is required.']);
         return false;
     }
     return true;
@@ -240,10 +395,10 @@ function validateEmail(email) {
     // Basic email validation using a regular expression
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email.trim() === '') {
-        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'email id is required.']);
+        pushPopupMessage(['FAILURE', 'email id is required.']);
         return false;
     } else if (!emailRegex.test(email)) {
-        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Email ID is not valid']);
+        pushPopupMessage(['FAILURE', 'Email ID is not valid']);
         return false;
     }
 
@@ -255,21 +410,21 @@ function validatePassword(password) {
     var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
 
     if (password.trim() === '') {
-        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Password is required.']);
+        pushPopupMessage(['FAILURE', 'Password is required.']);
         return false;
     } else if (password.length < 8) {
-        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Password must be at least 8 characters long.']);
+        pushPopupMessage(['FAILURE', 'Password must be at least 8 characters long.']);
         return false;
     } else if (!passwordRegex.test(password)) {
         var invalidSpecialChars = Array.from(password).filter(char => !allowedSpecialCharacters.includes(char)).join('').replace(/[a-zA-Z0-9]/g, '');
         if (invalidSpecialChars.length != 0) {
-            publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', `${invalidSpecialChars} - not part of allowed special characters: ${allowedSpecialCharacters}`]);
+            pushPopupMessage(['FAILURE', `${invalidSpecialChars} - not part of allowed special characters: ${allowedSpecialCharacters}`]);
             return false;
         }
-        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.']);
+        pushPopupMessage(['FAILURE', 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.']);
         return false;
     } else if (password.length > 25) {
-        publish(EVENTS.PUSH_POPUP_MESSAGE, ['FAILURE', 'Password cannot be more than 25 characters.']);
+        pushPopupMessage(['FAILURE', 'Password cannot be more than 25 characters.']);
         return false;
     }
     return true;
@@ -285,7 +440,7 @@ function createUserToken(username, email, password) {
     return userToken;
 }
 
-export function loadSignUpForm() {
-    form_modal.classList.add("is-visible");
-    signup_selected();
+function initGlobalEvents() {
+    document.addEventListener("click", function (event) { closeModal(event); closeMenuOptions(event); });
+    document.addEventListener("keyup", function (event) { escModal(event); });
 }

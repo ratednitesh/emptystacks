@@ -34,7 +34,6 @@ export function initFirebase() {
         });
     });
 }
-
 export function googleSignIn() {
     return new Promise((resolve, reject) => {
         signInWithPopup(auth, googleProvider)
@@ -54,13 +53,12 @@ export function googleSignIn() {
             });
     });
 }
-
 export function firebaseSignOut() {
+    console.log(' Sign Out');
     return new Promise((resolve, reject) => {
         auth.signOut().then(() => { resolve(); });
     });
 }
-
 export function isUserLoggedIn() {
     if (auth.currentUser)
         return true;
@@ -116,7 +114,6 @@ export function emailPasswordSignIn(userToken) {
             });
     });
 }
-
 export function tryPasswordResetEmail(email){
     return new Promise((resolve, reject) => {
     sendPasswordResetEmail(auth, email)

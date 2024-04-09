@@ -1,6 +1,5 @@
 export const EVENTS = {
-    SIGN_OUT: 'signOut',
-    UPDATE_PROFILE_MENU: 'updateProfileMenu',
+    UPDATE_USER_PRIVATE_DATA: 'updateUserPrivateData',
     UPDATE_QUICK_SELECT_OPTIONS: 'updateQuickSelectOptions',
     LOAD_HOME: 'loadHome',
     UNLOAD_HOME: 'unloadHome',
@@ -14,6 +13,5 @@ export const EVENTS = {
     GLOBAL_CLICK_EVENT: 'globalClickEvent',
     LOGIN_SUCCESS: 'loginSuccess',
     REMOVE_MENU_OPTIONS: 'removeMenuOptions',
-    PUSH_POPUP_MESSAGE: 'pushPopupMessage',
     UPDATE_USER_INFO_ON_SIDEBAR: 'updateUserInfoOnSideBar',
 };

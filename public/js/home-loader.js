@@ -1,8 +1,7 @@
-import { publish } from "./event-bus";
 import { loginStatus } from "./manage-auth";
 import { getTopCourses, getTopStreams, getUserPrivateData } from "./fetch-data";
-import { loadSignUpForm } from "./user-auth-modal";
-import { EVENTS } from "./const";
+import { signup_selected } from "./initial-load";
+import { pushPopupMessage } from "./helper";
 
 var slideImagesPath = '/images/banners/';
 var slideImagesSrc = ['1.jpg', '2.jpg', '3.jpg'];
@@ -55,7 +54,7 @@ function initBanner() {
 function initQuickSelect() {
     var startJourneyHome = document.querySelector('#start-journey-home');
     startJourneyHome.addEventListener("click", function () {
-        loadSignUpForm();
+        signup_selected();
     });
     updateQuickSelectOptions(loginStatus());
     initQuickCourses();
@@ -91,7 +90,7 @@ function initStreams() {
             });
         }
     ).catch(
-        () => { publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load streams."]); }
+        () => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load streams."]); }
     );
     // Loop through the streams array and create anchor tags for each item
 
@@ -166,7 +165,7 @@ function initQuickCourses() {
                 });
 
         }
-    ).catch(() => { publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load top courses."]); });
+    ).catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load top courses."]); });
 }
 
 export function updateQuickSelectOptions(isUserLoggedIn) {
@@ -234,6 +233,6 @@ function initPopularCourses() {
             });
 
         }
-    ).catch(() => { publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, unable to load top courses."]); });
+    ).catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load top courses."]); });
 
 }

@@ -1,23 +1,22 @@
 import { publish } from "./event-bus";
 import { createNewUser, emailPasswordSignIn, firebaseSignOut, googleSignIn, isUserLoggedIn, tryPasswordResetEmail } from "./firebase-config";
-import { EVENTS } from "./const";
+import { pushPopupMessage } from "./helper";
 
 let userLoggedIn;
 export function initAuthentication() {
     userLoggedIn = isUserLoggedIn();
     console.log("user logged in status:" + userLoggedIn);
-    publish('updateProfileMenu', userLoggedIn);
+    publish('updateUserPrivateData', userLoggedIn);
 }
 export function signOut() {
     firebaseSignOut().then(() => {
         userLoggedIn = isUserLoggedIn();
         if (!userLoggedIn) {
-            publish(EVENTS.PUSH_POPUP_MESSAGE, ["SUCCESS", "Logout successful!"]);
-            publish('updateProfileMenu', userLoggedIn);
-            publish('updateUserInfoOnSideBar', userLoggedIn);
+            pushPopupMessage(["SUCCESS", "Logout successful!"]);
+            publish('updateUserPrivateData', userLoggedIn);
             publish('updateQuickSelectOptions', userLoggedIn);
         } else {
-            publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Sign out Failed!"])
+            pushPopupMessage(["FAILURE", "Sign out Failed!"])
         }
     });
 }
@@ -29,13 +28,12 @@ export function signIn(provider, userToken) {
             if (userLoggedIn) {
                 console.log("User Logged In");
                 publish('loginSuccess');
-                publish('updateProfileMenu', userLoggedIn);
-                publish('updateUserInfoOnSideBar', userLoggedIn);
+                publish('updateUserPrivateData', userLoggedIn);
                 publish('updateQuickSelectOptions', userLoggedIn);
-                publish(EVENTS.PUSH_POPUP_MESSAGE, ["SUCCESS", "Login successful!"])
+                pushPopupMessage(["SUCCESS", "Login successful!"])
             }
         }).catch(() => {
-            publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Sign In Failed!"])
+            pushPopupMessage(["FAILURE", "Sign In Failed!"])
         });
     } else if (provider == 'emailAddress') {
         emailPasswordSignIn(userToken).then(() => {
@@ -43,13 +41,12 @@ export function signIn(provider, userToken) {
             if (userLoggedIn) {
                 console.log("User Logged In");
                 publish('loginSuccess');
-                publish('updateProfileMenu', userLoggedIn);
-                publish('updateUserInfoOnSideBar', userLoggedIn);
+                publish('updateUserPrivateData', userLoggedIn);
                 publish('updateQuickSelectOptions', userLoggedIn);
-                publish(EVENTS.PUSH_POPUP_MESSAGE, ["SUCCESS", "Login successful!"])
+                pushPopupMessage(["SUCCESS", "Login successful!"])
             }
         }).catch(() => {
-            publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Sign In Failed!"])
+            pushPopupMessage(["FAILURE", "Sign In Failed!"])
         });
     }
 }
@@ -60,22 +57,21 @@ export function signUp(userToken) {
         if (userLoggedIn) {
             console.log("User Logged In");
             publish('loginSuccess');
-            publish('updateProfileMenu', userLoggedIn);
-            publish('updateUserInfoOnSideBar', userLoggedIn);
+            publish('updateUserPrivateData', userLoggedIn);
             publish('updateQuickSelectOptions', userLoggedIn);
-            publish(EVENTS.PUSH_POPUP_MESSAGE, ["SUCCESS", "Registration successful!"]);
-            setTimeout(() => { publish(EVENTS.PUSH_POPUP_MESSAGE, ["SUCCESS", `A verification link is sent to ${userToken.email}`]) }, 5000);
+            pushPopupMessage(["SUCCESS", "Registration successful!"]);
+            setTimeout(() => { pushPopupMessage(["SUCCESS", `A verification link is sent to ${userToken.email}`]) }, 5000);
         }
     }).catch(() => {
-        publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Registration Failed!"])
+        pushPopupMessage(["FAILURE", "Registration Failed!"])
     });
 }
 
 export function forgotPassword(email) {
     tryPasswordResetEmail(email).then(
-        () => { publish(EVENTS.PUSH_POPUP_MESSAGE, ["SUCCESS", "A password reset email has been sent!"]) }
+        () => { pushPopupMessage(["SUCCESS", "A password reset email has been sent!"]) }
     ).catch(() => {
-        publish(EVENTS.PUSH_POPUP_MESSAGE, ["FAILURE", "Something went wrong, please try again later!"])
+        pushPopupMessage(["FAILURE", "Something went wrong, please try again later!"])
     });
 }
 
