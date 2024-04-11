@@ -1,5 +1,3 @@
-// import { mockUpdateUserDataAPICall, mockgetCourseContentDetailsAPICall, mockgetCourseReviewAPICall, mockgetCourseVideoDetailsAPICall, mockgetTextCourseAPICall, mockgetTopCoursesAPICall, mockgetTopStreamsAPICall, mockgetUserDataAPICall, mockgetUserPrivateDataAPICall } from "../test/mock-api";
-
 // Function to dynamically import mock-api.js
 async function importMockApi() {
     try {
@@ -23,34 +21,12 @@ async function importMockApi() {
 }
 let cachedData = {
     userData: null,
-    userPrivateData: null, // TODO: Clear this if user log out
     activities: null,
     enrolledCourses: null,
     topStreams: null,
     topCourses: null
 }
-export async function getUserPrivateData(uid) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // If data is already cached, resolve with the cached data
-        if (cachedData.userPrivateData) {
-            console.log('Read private from cache');
-            resolve(cachedData.userPrivateData);
-        } else {
-            // Simulate an API call
-            mockApi.mockgetUserPrivateDataAPICall(uid)
-                .then(response => {
-                    // Store the API response in the cachedData object
-                    console.log('Resolved');
-                    cachedData.userPrivateData = response;
-                    resolve(response); // Resolve with the API response
-                })
-                .catch(error => {
-                    reject(error); // Reject with the error from the API call
-                });
-        }
-    });
-}
+
 
 export async function getUserPublicData(uid) {
     const mockApi = await importMockApi();

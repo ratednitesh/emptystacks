@@ -1,6 +1,8 @@
 import { publish } from "./event-bus";
-var cachedPages = {};
-var cachedSideBar = {"mainSidebar":true};
+import { initAddOn } from "./initialiser";
+
+const filePathPrefix = "/pages/";
+const filePathSuffix = ".html";
 const routes = {
     "/": "home",
     "/home": "home",
@@ -25,15 +27,20 @@ const routes = {
     "/profile/*": "profile",
     404: "notFound"
 };
-const filePathPrefix = "/pages/";
-const filePathSuffix = ".html";
 const SIDE_BAR_OPTIONS = {
     "mainSidebar": "mainSidebar",
     "contentSidebar": "contentSidebar"
 };
-
+let cachedPages = {};
+let cachedSideBar = {"mainSidebar":true};
 let previousSideBarPath = "";
 let previousMainBodyPath = "";
+
+export function initRouter() {
+    window.onpopstate = handleLocation;
+    window.route = route;
+    handleLocation();
+}
 // main page routing
 const route = (event) => {
     event = event || window.event;
@@ -55,7 +62,33 @@ export function notFoundRoute() {
     handleLocation();
 }
 
-
+const handleLocation = async () => {
+    const path = window.location.pathname;
+    if (previousMainBodyPath != path) {
+        previousMainBodyPath = path;
+        const route = findMatchingRoute(path);
+        if (!cachedPages[route]) {
+            await initAddOn(route);
+            const mainBody = await fetch(filePathPrefix + route + filePathSuffix).then((data) => data.text());
+            cachedPages[route] = true;
+            document.getElementById(route).innerHTML = mainBody;
+        }
+        for (let key in cachedPages) document.getElementById(key).style.display = (key === route) ? "block" : "none";
+        loadMainScripts(path);
+        const currentSidebar = path === "/content" ? "contentSidebar" : "mainSidebar";
+        if (previousSideBarPath != currentSidebar) {
+            previousSideBarPath = currentSidebar;
+            if (!cachedSideBar[currentSidebar]) {
+                const sidebarRoute = SIDE_BAR_OPTIONS[currentSidebar];
+                const sidebarBody = await fetch(filePathPrefix + sidebarRoute + filePathSuffix).then((data) => data.text());
+                document.getElementById(currentSidebar).innerHTML = sidebarBody;
+                cachedSideBar[currentSidebar] = true;
+            }
+            for (let key in cachedSideBar) document.getElementById(key).style.display = (key === currentSidebar) ? "block" : "none";
+            publish(currentSidebar == "mainSidebar" ? "loadMainSidebar" : "loadContentSidebar");
+        }
+    }
+};
 function loadMainScripts(path) {
     const matchCoursePath = path.match(/^\/course\/(\w+)$/);
     const matchProfilepath = path.match(/^\/profile\/(\w+)$/);
@@ -86,37 +119,8 @@ function loadMainScripts(path) {
     }
 }
 
-const handleLocation = async () => {
-    const path = window.location.pathname;
-    if (previousMainBodyPath != path) {
-        previousMainBodyPath = path;
-        const route = findMatchingRoute(path);
-        if (!cachedPages[route]) {
-            const mainBody = await fetch(filePathPrefix + route + filePathSuffix).then((data) => data.text());
-            cachedPages[route] = true;
-            document.getElementById(route).innerHTML = mainBody;
-        }
-        for (let key in cachedPages) document.getElementById(key).style.display = (key === route) ? "block" : "none";
-        loadMainScripts(path);
-        const currentSidebar = path === "/content" ? "contentSidebar" : "mainSidebar";
-        if (previousSideBarPath != currentSidebar) {
-            previousSideBarPath = currentSidebar;
-            if (!cachedSideBar[currentSidebar]) {
-                const sidebarRoute = SIDE_BAR_OPTIONS[currentSidebar];
-                const sidebarBody = await fetch(filePathPrefix + sidebarRoute + filePathSuffix).then((data) => data.text());
-                document.getElementById(currentSidebar).innerHTML = sidebarBody;
-                cachedSideBar[currentSidebar] = true;
-            }
-            for (let key in cachedSideBar) document.getElementById(key).style.display = (key === currentSidebar) ? "block" : "none";
-            publish(currentSidebar == "mainSidebar" ? "loadMainSidebar" : "loadContentSidebar");
-        }
-    }
-};
-export function initRouter() {
-    window.onpopstate = handleLocation;
-    window.route = route;
-    handleLocation();
-}
+
+
 
 function findMatchingRoute(path) {
     const matchingRoute = Object.keys(routes).find(route => {

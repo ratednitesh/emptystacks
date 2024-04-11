@@ -1,4 +1,3 @@
-import { EVENTS } from "./const";
 import { publish } from "./event-bus";
 import { generateUserReview, getCourseContentDetailsAPICalls, getCourseDetailsAPICalls, getCourseVideoDetailsAPICalls } from "./fetch-data";
 import { pushPopupMessage } from "./helper";
@@ -62,7 +61,7 @@ function getCourseData(courseId) {
                     getCourseVideoDetails(courseId);
                 }
             } else {
-                publish(EVENTS.NOT_FOUND_ROUTE);
+                publish('notFoundRoute');
             }
         }
     )

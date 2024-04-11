@@ -2,7 +2,7 @@
 import { initEventBus } from "./event-bus";
 import { initFirebase } from "./firebase-config";
 import { initStaticContent } from "./initial-load";
-import { initAuthentication } from "./manage-auth";
+import { initAuthentication } from "./authentication";
 import { initRouter } from "./router";
 import "../css/main.css";
 import "../css/style.css";
@@ -24,19 +24,11 @@ import "../css/textsection.css";
 import "../css/watchvideo.css";
 import "../css/footer.css";
 
-document.addEventListener('DOMContentLoaded', function () {
-
-  // Initialize App
-  initFirebase().then(() => {
-    initEventBus();
-    initStaticContent();
-    initAuthentication();
-    initRouter();
-  });
-  // Check User Log In status
-});
-
+initEventBus();
+initFirebase();
 window.addEventListener('load', function () {
-  // All resources are loaded, hide the preloader
+  initStaticContent();
+  initAuthentication();
+  initRouter();
   document.querySelector('.preloader').classList.add('inactive');
 });

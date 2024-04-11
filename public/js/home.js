@@ -1,6 +1,6 @@
-import { loginStatus } from "./manage-auth";
-import { getTopCourses, getTopStreams, getUserPrivateData } from "./fetch-data";
-import { signup_selected } from "./initial-load";
+import { loginStatus } from "./authentication";
+import { getTopCourses, getTopStreams } from "./fetch-data";
+import { signup_selected, getUserPrivateData } from "./initial-load";
 import { pushPopupMessage } from "./helper";
 
 var slideImagesPath = '/images/banners/';

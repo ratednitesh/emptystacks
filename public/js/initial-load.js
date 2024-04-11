@@ -1,6 +1,5 @@
-import { getUserPrivateData } from "./fetch-data";
 import { getUid } from "./firebase-config";
-import { forgotPassword, signIn, signOut, signUp } from "./manage-auth";
+import { forgotPassword, signIn, signOut, signUp } from "./authentication";
 import { pushPopupMessage } from "./helper";
 
 // Header Button
@@ -443,4 +442,28 @@ function createUserToken(username, email, password) {
 function initGlobalEvents() {
     document.addEventListener("click", function (event) { closeModal(event); closeMenuOptions(event); });
     document.addEventListener("keyup", function (event) { escModal(event); });
+}
+let cachedPrivateDate;
+export async function getUserPrivateData(uid) {
+    return new Promise((resolve, reject) => {
+        // If data is already cached, resolve with the cached data
+        if (cachedPrivateDate) {
+            console.log('Read private from cache');
+            resolve(cachedPrivateDate);
+        } else {
+            import('/public/test/mock-api.js').then(mockApi => {
+                // Simulate an API call
+                mockApi.mockgetUserPrivateDataAPICall(uid)
+                    .then(response => {
+                        // Store the API response in the cachedData object
+                        console.log('Resolved');
+                        cachedPrivateDate = response;
+                        resolve(response); // Resolve with the API response
+                    })
+                    .catch(error => {
+                        reject(error); // Reject with the error from the API call
+                    });
+            });
+        }
+    });
 }

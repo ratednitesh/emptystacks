@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore/lite';
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail ,sendEmailVerification} from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -15,25 +15,22 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 const auth = getAuth();
 const googleProvider = new GoogleAuthProvider();
-// let user;
 
 export function initFirebase() {
     // Login State Manangement 
-    return new Promise((resolve, reject) => {
-        auth.onAuthStateChanged(function (user) {
-            if (user) {
-                console.log('User Logged In');
-                console.log(user);
-                console.log(user.displayName);
-                console.log(user.photoURL);
-                // user = auth.currentUser;
-            }
-            else
-                console.log('User "NOT" Logged In');
-            resolve();
-        });
+    auth.onAuthStateChanged(function (user) {
+        if (user) {
+            console.log('User Logged In');
+            console.log(user);
+            console.log(user.displayName);
+            console.log(user.photoURL);
+            // user = auth.currentUser;
+        }
+        else
+            console.log('User "NOT" Logged In');
     });
 }
+/*** AUTHENTICATION ***/
 export function googleSignIn() {
     return new Promise((resolve, reject) => {
         signInWithPopup(auth, googleProvider)
@@ -78,18 +75,18 @@ export function createNewUser(userToken) {
                 // ...
                 console.log('Registration Successful.');
                 sendEmailVerification(auth.currentUser)
-                .then(() => {
-                    console.log('Pwd vrf link Successful.');
-                    resolve();
-                  // Email verification sent!
-                  // ...
-                });
-              
+                    .then(() => {
+                        console.log('Pwd vrf link Successful.');
+                        resolve();
+                        // Email verification sent!
+                        // ...
+                    });
+
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                console.log(errorCode+ " "+errorMessage);
+                console.log(errorCode + " " + errorMessage);
                 // ..
                 console.log('Error in Registration.');
                 reject();
@@ -114,18 +111,18 @@ export function emailPasswordSignIn(userToken) {
             });
     });
 }
-export function tryPasswordResetEmail(email){
+export function tryPasswordResetEmail(email) {
     return new Promise((resolve, reject) => {
-    sendPasswordResetEmail(auth, email)
-    .then(() => {
-        console.log("Password reset link has been sent!")
-        resolve();
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log('Your email id is not found in our systems.');
-      reject();
+        sendPasswordResetEmail(auth, email)
+            .then(() => {
+                console.log("Password reset link has been sent!")
+                resolve();
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log('Your email id is not found in our systems.');
+                reject();
+            });
     });
-});
 }
