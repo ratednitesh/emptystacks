@@ -69,6 +69,7 @@ const handleLocation = async () => {
         const route = findMatchingRoute(path);
         if (!cachedPages[route]) {
             await initAddOn(route);
+            console.log('loaded additional js files');
             const mainBody = await fetch(filePathPrefix + route + filePathSuffix).then((data) => data.text());
             cachedPages[route] = true;
             document.getElementById(route).innerHTML = mainBody;

@@ -1,33 +1,36 @@
 import { subscribe } from './event-bus.js';
 
 export async function initAddOn(page) {
-    if (page == "home")
+    return new Promise((resolve, reject) => {
         try {
-            import('./home.js').then(module => {
-                subscribe('updateQuickSelectOptions', module.updateQuickSelectOptions);
-                subscribe('loadHome', module.loadHome);
-                subscribe('unloadHome', module.unloadHome);
-            });
+            console.log('loading additional js files: ' + page);
+            if (page == "home")
+
+                import('./home.js').then(module => {
+                    console.log("import done for home");
+                    subscribe('updateQuickSelectOptions', module.updateQuickSelectOptions);
+                    subscribe('loadHome', module.loadHome);
+                    subscribe('unloadHome', module.unloadHome);
+                    resolve();
+                });
+
+            else if (page == "profile")
+                import('./profile.js').then(module => {
+                    subscribe('initProfile', module.initProfile);
+                    resolve();
+                });
+
+            else if (page == "course")
+                import('./course.js').then(module => {
+                    subscribe('loadCourseDetails', module.loadCourseDetails);
+                    resolve();
+                });
+            else
+                resolve();
         } catch (error) {
-            console.error('Error importing home js:', error);
-            throw error;
+            console.error(`Error importing ${page} js:`, error);
+            reject();
         }
-    else if (page == "profile")
-        try {
-            import('./profile.js').then(module => {
-                subscribe('initProfile', module.initProfile);
-            });
-        } catch (error) {
-            console.error('Error importing profile js:', error);
-            throw error;
-        }
-    else if (page == "course")
-        try {
-            import('./course.js').then(module => {
-                subscribe('loadCourseDetails', module.loadCourseDetails);
-            });
-        } catch (error) {
-            console.error('Error importing course js:', error);
-            throw error;
-        }
+    });
+
 }

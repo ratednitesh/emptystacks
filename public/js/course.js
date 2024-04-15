@@ -83,10 +83,10 @@ function getCourseContentDetails(courseId) {
                 header.addEventListener('click', function () {
                     var item = this.parentNode;
                     item.classList.toggle('active');
-                    if (this.children[0].children[1].classList[2] == 'fa-angle-down')
-                        this.children[0].children[1].classList.replace('fa-angle-down', 'fa-angle-up');
+                    if (this.children[0].children[1].classList[2] == 'es-angle-down')
+                        this.children[0].children[1].classList.replace('es-angle-down', 'es-angle-up');
                     else
-                        this.children[0].children[1].classList.replace('fa-angle-up', 'fa-angle-down');
+                        this.children[0].children[1].classList.replace('es-angle-up', 'es-angle-down');
                 });
             });
             document.getElementById("expand-button").addEventListener('click', () => {
@@ -96,7 +96,7 @@ function getCourseContentDetails(courseId) {
                     item.classList.add('active');
                 });
                 expandItems.forEach(function (expandItem) {
-                    expandItem.classList.replace('fa-angle-down', 'fa-angle-up');
+                    expandItem.classList.replace('es-angle-down', 'es-angle-up');
                 });
                 document.getElementById("collapse-button").hidden = false;
                 document.getElementById("expand-button").hidden = true;
@@ -108,7 +108,7 @@ function getCourseContentDetails(courseId) {
                     item.classList.remove('active');
                 });
                 expandItems.forEach(function (expandItem) {
-                    expandItem.classList.replace('fa-angle-up', 'fa-angle-down');
+                    expandItem.classList.replace('es-angle-up', 'es-angle-down');
                 });
                 document.getElementById("collapse-button").hidden = true;
                 document.getElementById("expand-button").hidden = false;
@@ -129,7 +129,7 @@ function getCourseVideoDetails(courseId) {
             var playlistHtml = "";
             courseVideoDetails.forEach((cvd) => {
                 var videoHtml = `<a href="/content"  onclick="route()" class="box">
-                <i class="fas fa-play"></i>
+                <i class="es-play-lg"></i>
                 <img src="${cvd.thumbnail}"alt="">
                 <h3>${cvd.title}</h3>
                 </a>`;

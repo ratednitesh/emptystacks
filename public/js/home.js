@@ -75,7 +75,7 @@ function initStreams() {
 
                 // Create the icon element
                 const iconElement = document.createElement('i');
-                iconElement.classList.add('fas', stream.icon);
+                iconElement.classList.add( stream.icon);
 
                 // Create the span element for the text
                 const spanElement = document.createElement('span');
@@ -183,12 +183,12 @@ function showSlide(n) {
 
 function setSlide(index) {
     let slides = document.querySelectorAll('.banner-slide');
-    let dots = document.querySelectorAll(".slider .fa-circle");
+    let dots = document.querySelectorAll(".slider .circle");
     if (index > slides.length)
         index = 1;
     if (index < 1)
         index = slides.length;
-    dots.forEach((node, i) => { if (index - 1 == i) node.classList.replace('fa-regular', 'fa-solid'); else node.classList.replace('fa-solid', 'fa-regular'); })
+    dots.forEach((node, i) => { if (index - 1 == i) node.classList.replace('es-circle-empty', 'es-circle'); else node.classList.replace('es-circle', 'es-circle-empty'); })
     slides.forEach((node, i) => { if (index - 1 == i) node.style.display = "block"; else node.style.display = "none"; })
 
 }

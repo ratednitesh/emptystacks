@@ -55,8 +55,8 @@ function headerListeners() {
 }
 
 function enableDarkMode() {
-    toggleBtn.classList.replace('fa-sun', 'fa-moon');
-    toggleModeIcon.classList.replace('fa-moon', 'fa-sun');
+    toggleBtn.classList.replace('es-sun', 'es-moon');
+    toggleModeIcon.classList.replace('es-moon', 'es-sun');
     toggleModeText.innerHTML = "Enable Light Mode";
     logoImg[0].src = "/images/Logo/logo_dark.svg"
     document.body.classList.add('dark');
@@ -64,8 +64,8 @@ function enableDarkMode() {
 }
 
 function disableDarkMode() {
-    toggleBtn.classList.replace('fa-moon', 'fa-sun');
-    toggleModeIcon.classList.replace('fa-sun', 'fa-moon');
+    toggleBtn.classList.replace('es-moon', 'es-sun');
+    toggleModeIcon.classList.replace('es-sun', 'es-moon');
     toggleModeText.innerHTML = "Enable Dark Mode";
     logoImg[0].src = "/images/Logo/logo_light.svg"
     document.body.classList.remove('dark');
@@ -74,7 +74,7 @@ function disableDarkMode() {
 
 function toggleMenuOptions() {
     profile.classList.toggle('active');
-    // userButton.classList.toggle('fa-rotate-270');
+    // userButton.classList.toggle('es-rotate-270');
     menusModal.classList.toggle('is-visible');
 }
 

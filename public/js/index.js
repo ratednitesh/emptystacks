@@ -23,6 +23,7 @@ import "../css/textcourse.css";
 import "../css/textsection.css";
 import "../css/watchvideo.css";
 import "../css/footer.css";
+import "../css/icon.css";
 
 initEventBus();
 initFirebase();

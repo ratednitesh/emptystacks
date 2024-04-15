@@ -136,15 +136,15 @@
 }
 
 .cd-form label.cd-username {
-    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/148866/cd-icon-username.svg");
+    background-image: url("../images/icons/cd-icon-username.svg");
 }
 
 .cd-form label.cd-email {
-    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/148866/cd-icon-email.svg");
+    background-image: url("../images/icons/cd-icon-email.svg");
 }
 
 .cd-form label.cd-password {
-    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/148866/cd-icon-password.svg");
+    background-image: url("../images/icons/cd-icon-password.svg");
 }
 
 .cd-form input {
@@ -324,7 +324,7 @@
     height: 2rem;
     right: 0;
     top: -5rem;
-    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/148866/cd-icon-close.svg") no-repeat center center;
+    background: url("../images/icons/cd-icon-close.svg") no-repeat center center;
     text-indent: 100%;
     white-space: nowrap;
     overflow: hidden;

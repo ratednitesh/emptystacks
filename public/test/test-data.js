@@ -89,16 +89,16 @@ export var userPublicProfile = {
     }
 };
 export var topStreams = [
-    { icon: 'fa-code', text: 'development' },
-    { icon: 'fa-chart-simple', text: 'business' },
-    { icon: 'fa-pen', text: 'design' },
-    { icon: 'fa-chart-line', text: 'marketing' },
-    { icon: 'fa-music', text: 'music-tech' },
-    { icon: 'fa-camera', text: 'photography' },
-    { icon: 'fa-cog', text: 'software' },
-    { icon: 'fa-vial', text: 'science' },
-    { icon: 'fa-cog', text: 'space' },
-    { icon: 'fa-vial', text: 'backend' }
+    { icon: 'es-code', text: 'development' },
+    { icon: 'es-chart-bar', text: 'business' },
+    { icon: 'es-pencil', text: 'design' },
+    { icon: 'es-chart-line', text: 'marketing' },
+    { icon: 'es-music', text: 'music-tech' },
+    { icon: 'es-camera', text: 'photography' },
+    { icon: 'es-cog', text: 'software' },
+    { icon: 'es-cloud', text: 'science' },
+    { icon: 'es-cogs', text: 'space' },
+    { icon: 'es-rupee', text: 'backend' }
 ];
 
 export var topCourses = [
@@ -220,54 +220,54 @@ export var courseContentDetails = `    <h1 class="heading">Course Details</h1>
     <div class="accordion">
         <div class="accordion-item">
             <div class=" expandable accordion-header">
-                <h3><i class="fas fa-diamond bullet"></i> Introduction to HTML <i
-                        class=" expand fas fa-angle-down"></i></h3>
+                <h3><i class="es-play-lg bullet"></i> Introduction to HTML <i
+                        class=" expand es-angle-down"></i></h3>
             </div>
             <div class="accordion-content">
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fas fa-caret-right"></i>What is HTML?</a></li>
+                            class="es-play"></i>What is HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fas fa-caret-right"></i>Why HTML?</a></li>
+                            class="es-play"></i>Why HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fas fa-caret-right"></i>Basics of HTML?</a></li>
+                            class="es-play"></i>Basics of HTML?</a></li>
 
             </div>
         </div>
         <div class="accordion-item">
             <div class=" expandable accordion-header">
-                <h3><i class="fas fa-diamond bullet"></i> Section deep Learn to HTML<i
-                        class=" expand fas fa-angle-down"></i></h3>
+                <h3><i class="es-play-lg bullet"></i> Section deep Learn to HTML<i
+                        class=" expand es-angle-down"></i></h3>
             </div>
             <div class="accordion-content">
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fas fa-caret-right"></i>What is HTML?</a></li>
+                            class="es-play"></i>What is HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fas fa-caret-right"></i>Why HTML?</a></li>
+                            class="es-play"></i>Why HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fas fa-caret-right"></i>Basics of HTML?</a></li>
+                            class="es-play"></i>Basics of HTML?</a></li>
 
 
             </div>
         </div>
         <div class="accordion-item">
             <div class=" expandable accordion-header">
-                <h3><i class="fas fa-diamond bullet"></i> Section advanced to HTML<i
-                        class=" expand fas fa-angle-down"></i></h3>
+                <h3><i class="es-play-lg bullet"></i> Section advanced to HTML<i
+                        class=" expand es-angle-down"></i></h3>
             </div>
             <div class="accordion-content">
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fas fa-caret-right"></i>What is HTML?</a></li>
+                            class="es-play"></i>What is HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fas fa-caret-right"></i>Why HTML?</a></li>
+                            class="es-play"></i>Why HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="fas fa-caret-right"></i>Basics of HTML?</a></li>
+                            class="es-play"></i>Basics of HTML?</a></li>
 
 
             </div>
         </div>
         <div class="accordion-item">
             <div class="accordion-header"><a href="/content" onclick="route()">
-                <h3><i class="fas fa-diamond bullet"></i> no sub section to HTML</h3></a>
+                <h3><i class="es-play-lg bullet"></i> no sub section to HTML</h3></a>
             </div>
         </div>
     </div>

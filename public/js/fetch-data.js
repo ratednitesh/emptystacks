@@ -156,18 +156,18 @@ function generateStarRating(rating) {
 
     // Add full stars
     for (let i = 0; i < fullStars; i++) {
-        starsHTML += '<i class="fas fa-star"></i>';
+        starsHTML += '<i class="es-star"></i>';
     }
 
     // Add half star if necessary
     if (hasHalfStar) {
-        starsHTML += '<i class="fas fa-star-half-alt"></i>';
+        starsHTML += '<i class="es-star-half-alt"></i>';
     }
 
     // Add empty stars to fill up to 5
     const emptyStars = 5 - Math.ceil(rating);
     for (let i = 0; i < emptyStars; i++) {
-        starsHTML += '<i class="far fa-star"></i>';
+        starsHTML += '<i class="es-star-empty"></i>';
     }
 
     // Wrap stars in a div

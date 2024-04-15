@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>emptyStacks</title>
-    <!-- font awesome cdn link -->
-    <script src="https://kit.fontawesome.com/0a47280f13.js" crossorigin="anonymous"></script>
     <!-- favicon  -->
     <link href="/images/Logo/favicon.png" type="image/x-icon" rel="icon" />
 </head>
@@ -30,13 +28,12 @@
             <div class="right-header">
                 <form action="" method="post" class="search-form">
                     <input type="text" id="search_box" placeholder="search courses..." maxlength="100">
-                    <label for="search_box" class="fas fa-search" name="search_box"></label>
+                    <label for="search_box" class="es-search" name="search_box"></label>
                 </form>
                 <div class="icons">
-                    <!-- <div id="search-btn" class="header-icon fas fa-search"></div> -->
-                    <div id="menu-btn" class="header-icon fas fa-bars"></div>
+                    <div id="menu-btn" class="header-icon  es-nav"></div>
                     <div id="user-btn">
-                        <div id="guest-photo-header" class="header-icon fas fa-user"></div>
+                        <div id="guest-photo-header" class="header-icon es-user "></div>
                         <img id="user-photo-header" alt="">
                     </div>
                 </div>
@@ -54,23 +51,23 @@
                             <span id="user-menu-mail"></span>
                         </div>
                         <div class="menu private">
-                            <a id="profile-link" onclick="route()"><i class="fas fa-user"></i><span>My
+                            <a id="profile-link" onclick="route()"><i class="es-user"></i><span>My
                                     Profile</span></a>
-                            <a href="/courses" onclick="route()"><i class="fas fa-book-open-reader"></i><span>My
+                            <a href="/courses" onclick="route()"><i class="es-book"></i><span>My
                                     Courses</span></i></a>
-                            <a href="/profile-update" onclick="route()"><i class="fas fa-cog"></i><span>Account
+                            <a href="/profile-update" onclick="route()"><i class="es-cogs"></i><span>Account
                                     Settings</span></i></a>
                         </div>
                         <div class="menu public">
-                            <a id="toggle-btn"><i id="mode-icon" class="fas fa-moon"></i><span id="mode-text">
+                            <a id="toggle-btn"><i id="mode-icon" class="es-moon"></i><span id="mode-text">
                                     Enable Dark Mode</span></a>
                         </div>
                         <div class="menu private">
-                            <a id="signOutButton"><i class="fas fa-right-from-bracket"></i><span>Sign Out</span></i></a>
+                            <a id="signOutButton"><i class="es-logout"></i><span>Sign Out</span></i></a>
                         </div>
                         <div id="sign-up" class="menu only-public">
-                            <a href="#0" class="cd-signin"><i class="fas fa-right-to-bracket"></i>Sign In</a>
-                            <a href="#0" class="cd-signup"><i class="fas fa-user-plus"></i>Sign Up</a>
+                            <a href="#0" class="cd-signin"><i class="es-login"></i>Sign In</a>
+                            <a href="#0" class="cd-signup"><i class="es-user-plus"></i>Sign Up</a>
                         </div>
                     </div>
                 </div>
@@ -87,13 +84,13 @@
                     <span id="user-role-sb"></span>
                 </div>
                 <nav class="navbar">
-                    <a href="/home" onclick="route()"><i class="fas fa-home"></i><span>Home</span></i></a>
-                    <a href="/courses" onclick="route()"><i class="fas fa-graduation-cap"></i><span>All
+                    <a href="/home" onclick="route()"><i class="es-home"></i><span>Home</span></i></a>
+                    <a href="/courses" onclick="route()"><i class="es-graduation-cap"></i><span>All
                             Courses</span></i></a>
-                    <a href="/courses" onclick="route()"><i class="fas fa-tags"></i><span>All Streams</span></i></a>
-                    <a href="/about" onclick="route()"><i class="fas fa-address-card"></i><span>About Us</span></i></a>
-                    <a href="/contact" onclick="route()"><i class="fas fa-headset"></i><span>Contact Us</span></i></a>
-                    <a href="/register" onclick="route()"><i class="fas fa-chalkboard-user"></i><span>Become a
+                    <a href="/courses" onclick="route()"><i class="es-tags"></i><span>All Streams</span></i></a>
+                    <a href="/about" onclick="route()"><i class="es-address-card"></i><span>About Us</span></i></a>
+                    <a href="/contact" onclick="route()"><i class="es-headphones"></i><span>Contact Us</span></i></a>
+                    <a href="/register" onclick="route()"><i class="es-magic"></i><span>Become a
                             Tutor</span></i></a>
                 </nav>
             </div>
@@ -124,10 +121,10 @@
                         <!-- <span class="cd-error-message">Error message here!</span> -->
                     </p>
                     <div class="icons">
-                        <i class="google-btn fa-brands fa-google"></i>
-                        <i class="facebook-btn fa-brands fa-facebook-f"></i>
-                        <i class="github-btn fa-brands fa-github"></i>
-                        <i class="apple-btn fa-brands fa-apple"></i>
+                        <i class="google-btn es-google"></i>
+                        <i class="facebook-btn es-facebook"></i>
+                        <i class="github-btn es-github"></i>
+                        <i class="apple-btn es-apple"></i>
                     </div>
                     <p class="fieldset">
                         <input type="checkbox" id="remember-me">
@@ -166,10 +163,10 @@
                         <!-- <span class="cd-error-message">Error message here!</span> -->
                     </p>
                     <div class="icons">
-                        <i class="google-btn fa-brands fa-google"></i>
-                        <i class="facebook-btn fa-brands fa-facebook-f"></i>
-                        <i class="github-btn fa-brands fa-github"></i>
-                        <i class="apple-btn fa-brands fa-apple"></i>
+                        <i class="google-btn es-google"></i>
+                        <i class="facebook-btn es-facebook"></i>
+                        <i class="github-btn es-github"></i>
+                        <i class="apple-btn es-apple"></i>
                     </div>
                     <p class="fieldset">
                         <input type="checkbox" id="accept-terms">
