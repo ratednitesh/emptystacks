@@ -41,6 +41,12 @@ module.exports = (argv) => {
           concurrency: 100,
         },
       }),
+      new CopyWebpackPlugin({
+        patterns: [
+          { from: 'public/robots.txt', to: 'robots.txt' },
+          // Add more patterns if you need to copy other files
+        ],
+      }),
     ],
     module: {
       rules: [
@@ -59,7 +65,7 @@ module.exports = (argv) => {
         new TerserPlugin({
           terserOptions: {
             compress: {
-              // drop_console:true,
+              drop_console:true,
               reduce_funcs: true,
               reduce_vars: true,
             },

@@ -3,8 +3,6 @@ import { getTopCourses, getTopStreams } from "./fetch-data";
 import { signup_selected, getUserPrivateData } from "./initial-load";
 import { pushPopupMessage } from "./helper";
 
-var slideImagesPath = '/images/banners/';
-var slideImagesSrc = ['1.jpg', '2.jpg', '3.jpg'];
 let bannerInterval;
 let initHomeStatus = false, initCoursesStatus = false;
 //  Load and Unload Home 
@@ -30,7 +28,7 @@ export function unloadHome() {
     unloadBanner();
 }
 function loadBanner() {
-    let i = 1;
+    let i = 2;
     bannerInterval = setInterval(() => { showSlide(i++); if (i > 3) i = 1; }, 3500);
 }
 function unloadBanner() {
@@ -41,11 +39,7 @@ function initHome() {
     initQuickSelect();
 }
 function initBanner() {
-    var j = 1;
-    while (j <= 3) {
-        document.getElementById('slide-img-' + j).src = slideImagesPath + slideImagesSrc[j - 1];
-        j++;
-    }
+    showSlide(1);
     document.getElementById('slide-1').addEventListener('click', () => { showSlide(1); });
     document.getElementById('slide-2').addEventListener('click', () => { showSlide(2); });
     document.getElementById('slide-3').addEventListener('click', () => { showSlide(3); });
@@ -121,6 +115,7 @@ function initQuickCourses() {
                 const imageTag = document.createElement('img');
                 imageTag.src = course.thumbnail;
                 imageTag.classList.add('thumb');
+                imageTag.alt = "Course Name";
 
                 // Create paragraph tag for course title
                 const paragraphTag = document.createElement('p');
@@ -176,12 +171,7 @@ export function updateQuickSelectOptions(isUserLoggedIn) {
     homeOptionOnlyPublic.forEach((node) => { if (isUserLoggedIn) node.style.display = "none"; else node.style.display = "block" });
 }
 
-function showSlide(n) {
-    setSlide(n);
-
-}
-
-function setSlide(index) {
+function showSlide(index) {
     let slides = document.querySelectorAll('.banner-slide');
     let dots = document.querySelectorAll(".slider .circle");
     if (index > slides.length)
@@ -190,7 +180,6 @@ function setSlide(index) {
         index = slides.length;
     dots.forEach((node, i) => { if (index - 1 == i) node.classList.replace('es-circle-empty', 'es-circle'); else node.classList.replace('es-circle', 'es-circle-empty'); })
     slides.forEach((node, i) => { if (index - 1 == i) node.style.display = "block"; else node.style.display = "none"; })
-
 }
 
 function initPopularCourses() {

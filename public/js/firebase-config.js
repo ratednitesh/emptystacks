@@ -18,16 +18,19 @@ const googleProvider = new GoogleAuthProvider();
 
 export function initFirebase() {
     // Login State Manangement 
-    auth.onAuthStateChanged(function (user) {
-        if (user) {
-            console.log('User Logged In');
-            console.log(user);
-            console.log(user.displayName);
-            console.log(user.photoURL);
-            // user = auth.currentUser;
-        }
-        else
-            console.log('User "NOT" Logged In');
+    return new Promise((resolve, reject) => {
+        auth.onAuthStateChanged(function (user) {
+            if (user) {
+                console.log('User Logged In');
+                console.log(user);
+                console.log(user.displayName);
+                console.log(user.photoURL);
+                // user = auth.currentUser;
+            }
+            else
+                console.log('User "NOT" Logged In');
+            resolve();
+        });
     });
 }
 /*** AUTHENTICATION ***/

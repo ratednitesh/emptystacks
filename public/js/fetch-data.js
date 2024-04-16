@@ -161,7 +161,7 @@ function generateStarRating(rating) {
 
     // Add half star if necessary
     if (hasHalfStar) {
-        starsHTML += '<i class="es-star-half-alt"></i>';
+        starsHTML += '<i class="es-star-half"></i>';
     }
 
     // Add empty stars to fill up to 5

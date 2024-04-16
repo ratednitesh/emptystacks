@@ -1,4 +1,3 @@
-
 import { initEventBus } from "./event-bus";
 import { initFirebase } from "./firebase-config";
 import { initStaticContent } from "./initial-load";
@@ -25,11 +24,12 @@ import "../css/watchvideo.css";
 import "../css/footer.css";
 import "../css/icon.css";
 
-initEventBus();
-initFirebase();
 window.addEventListener('load', function () {
-  initStaticContent();
-  initAuthentication();
-  initRouter();
-  document.querySelector('.preloader').classList.add('inactive');
+  initFirebase().then(() => {
+    initEventBus();
+    initStaticContent();
+    initAuthentication();
+    initRouter();
+    document.querySelector('.preloader').classList.add('inactive');
+  });
 });

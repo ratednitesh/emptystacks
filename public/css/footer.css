@@ -13,5 +13,5 @@
 }
 
 .footer span {
-    color: var(--main-color);
+    text-decoration: underline;
 }

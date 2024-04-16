@@ -139,7 +139,7 @@ export var courseDetails = {
         "type": "text",
         "courseName": "Complete HTML tutorial",
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
-        "level": 3,
+        "level": 2,
         "href": "/content",
         "chapterCount": "14 Chapters",
         "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
@@ -220,54 +220,54 @@ export var courseContentDetails = `    <h1 class="heading">Course Details</h1>
     <div class="accordion">
         <div class="accordion-item">
             <div class=" expandable accordion-header">
-                <h3><i class="es-play-lg bullet"></i> Introduction to HTML <i
+                <h3><i class="es-circle-empty bullet"></i> Introduction to HTML <i
                         class=" expand es-angle-down"></i></h3>
             </div>
             <div class="accordion-content">
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="es-play"></i>What is HTML?</a></li>
+                            class="es-circle-empty"></i>What is HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="es-play"></i>Why HTML?</a></li>
+                            class="es-circle-empty"></i>Why HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="es-play"></i>Basics of HTML?</a></li>
+                            class="es-circle-empty"></i>Basics of HTML?</a></li>
 
             </div>
         </div>
         <div class="accordion-item">
             <div class=" expandable accordion-header">
-                <h3><i class="es-play-lg bullet"></i> Section deep Learn to HTML<i
+                <h3><i class="es-circle-empty bullet"></i> Section deep Learn to HTML<i
                         class=" expand es-angle-down"></i></h3>
             </div>
             <div class="accordion-content">
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="es-play"></i>What is HTML?</a></li>
+                            class="es-circle-empty"></i>What is HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="es-play"></i>Why HTML?</a></li>
+                            class="es-circle-empty"></i>Why HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="es-play"></i>Basics of HTML?</a></li>
+                            class="es-circle-empty"></i>Basics of HTML?</a></li>
 
 
             </div>
         </div>
         <div class="accordion-item">
             <div class=" expandable accordion-header">
-                <h3><i class="es-play-lg bullet"></i> Section advanced to HTML<i
+                <h3><i class="es-circle-empty bullet"></i> Section advanced to HTML<i
                         class=" expand es-angle-down"></i></h3>
             </div>
             <div class="accordion-content">
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="es-play"></i>What is HTML?</a></li>
+                            class="es-circle-empty"></i>What is HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="es-play"></i>Why HTML?</a></li>
+                            class="es-circle-empty"></i>Why HTML?</a></li>
                 <li class="course-list"><a href="/content" onclick="route()"><i
-                            class="es-play"></i>Basics of HTML?</a></li>
+                            class="es-circle-empty"></i>Basics of HTML?</a></li>
 
 
             </div>
         </div>
         <div class="accordion-item">
             <div class="accordion-header"><a href="/content" onclick="route()">
-                <h3><i class="es-play-lg bullet"></i> no sub section to HTML</h3></a>
+                <h3><i class="es-circle-empty bullet"></i> no sub section to HTML</h3></a>
             </div>
         </div>
     </div>
