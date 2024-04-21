@@ -1,7 +1,101 @@
 import { getUid } from "./firebase-config";
-import { forgotPassword, signIn, signOut, signUp } from "./authentication";
-import { pushPopupMessage } from "./helper";
+import { publish } from "./event-bus";
+import { createNewUser, emailPasswordSignIn, firebaseSignOut, googleSignIn, isUserLoggedIn, tryPasswordResetEmail } from "./firebase-config";
 
+let userLoggedIn;
+export function pushPopupMessage(data) {
+    let el = document.createElement('DIV');
+    el.classList.add('popup');
+    el.innerHTML = data[1];
+    let color;
+    switch (data[0]) {
+        case 'SUCCESS': color = "#38c464"; break;
+        case 'FAILURE': color = "#c5503b"; break;
+        case 'WARNING': color = "#eab735"; break;
+        case 'INFO': color = "#33a6e8";
+    }
+    el.style.backgroundColor = color;
+    document.body.appendChild(el);
+    setTimeout(() => {
+        el.remove();
+    }, 5000);
+  }
+
+function initAuthentication() {
+    userLoggedIn = isUserLoggedIn();
+    console.log("user logged in status:" + userLoggedIn);
+    updateUserPrivateData(userLoggedIn);
+}
+function signOut() {
+    firebaseSignOut().then(() => {
+        userLoggedIn = isUserLoggedIn();
+        if (!userLoggedIn) {
+            pushPopupMessage(["SUCCESS", "Logout successful!"]);
+            updateUserPrivateData(userLoggedIn);
+            publish('updateQuickSelectOptions', userLoggedIn);
+        } else {
+            pushPopupMessage(["FAILURE", "Sign out Failed!"])
+        }
+    });
+}
+
+function signIn(provider, userToken) {
+    if (provider == 'Google') {
+        googleSignIn().then(() => {
+            userLoggedIn = isUserLoggedIn();
+            if (userLoggedIn) {
+                console.log("User Logged In");
+                loginSuccess();
+                updateUserPrivateData(userLoggedIn);
+                publish('updateQuickSelectOptions', userLoggedIn);
+                pushPopupMessage(["SUCCESS", "Login successful!"])
+            }
+        }).catch(() => {
+            pushPopupMessage(["FAILURE", "Sign In Failed!"])
+        });
+    } else if (provider == 'emailAddress') {
+        emailPasswordSignIn(userToken).then(() => {
+            userLoggedIn = isUserLoggedIn();
+            if (userLoggedIn) {
+                console.log("User Logged In");
+                loginSuccess();
+                updateUserPrivateData(userLoggedIn);
+                publish('updateQuickSelectOptions', userLoggedIn);
+                pushPopupMessage(["SUCCESS", "Login successful!"])
+            }
+        }).catch(() => {
+            pushPopupMessage(["FAILURE", "Sign In Failed!"])
+        });
+    }
+}
+
+function signUp(userToken) {
+    createNewUser(userToken).then(() => {
+        userLoggedIn = isUserLoggedIn();
+        if (userLoggedIn) {
+            console.log("User Logged In");
+            loginSuccess();
+            updateUserPrivateData(userLoggedIn);
+            publish('updateQuickSelectOptions', userLoggedIn);
+            pushPopupMessage(["SUCCESS", "Registration successful!"]);
+            setTimeout(() => { pushPopupMessage(["SUCCESS", `A verification link is sent to ${userToken.email}`]) }, 5000);
+        }
+    }).catch(() => {
+        pushPopupMessage(["FAILURE", "Registration Failed!"])
+    });
+}
+
+function forgotPassword(email) {
+    tryPasswordResetEmail(email).then(
+        () => { pushPopupMessage(["SUCCESS", "A password reset email has been sent!"]) }
+    ).catch(() => {
+        pushPopupMessage(["FAILURE", "Something went wrong, please try again later!"])
+    });
+}
+
+export function loginStatus() {
+    return userLoggedIn;
+}
 // Header Button
 const toggleBtn = document.querySelector('#toggle-btn');
 const toggleModeIcon = document.querySelector('#mode-icon');
@@ -24,6 +118,7 @@ export function initStaticContent() {
     initHeaders();
     initGlobalEvents();
     initUserModal();
+    initAuthentication();
 }
 function initHeaders() {
     headerListeners();

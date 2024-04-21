@@ -1,15 +1,13 @@
 import { loadContentMainSection } from "./content";
-import {  loadMainSidebar, updateUserPrivateData, loadContentSidebar, loginSuccess } from "./initial-load";
+import { loadMainSidebar, loadContentSidebar } from "./setup";
 import { notFoundRoute } from "./router";
 
 const eventListeners = {};
 export function initEventBus() {
-    subscribe('updateUserPrivateData', updateUserPrivateData);
     subscribe('loadContentSidebar', loadContentSidebar);
     subscribe('loadContentMainSection', loadContentMainSection);
     subscribe('loadMainSidebar', loadMainSidebar);
     subscribe('notFoundRoute', notFoundRoute);
-    subscribe('loginSuccess', loginSuccess);
 }
 export function subscribe(eventName, callback) {
     if (!eventListeners[eventName])

@@ -1,6 +1,6 @@
 import { publish } from "./event-bus";
 import { generateUserReview, getCourseContentDetailsAPICalls, getCourseDetailsAPICalls, getCourseVideoDetailsAPICalls } from "./fetch-data";
-import { pushPopupMessage } from "./helper";
+import { pushPopupMessage } from "./setup";
 
 let lastCourseId;
 const levelNames = ['Beginner', 'Intermediate', 'Expert'];

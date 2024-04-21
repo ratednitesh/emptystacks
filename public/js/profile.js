@@ -1,6 +1,5 @@
 import {  getUserPublicData, updateUserData } from "./fetch-data";
-import { getUserPrivateData } from "./initial-load";
-import { pushPopupMessage } from "./helper";
+import { getUserPrivateData, pushPopupMessage } from "./setup";
 
 var userPublicProfile = {};
 

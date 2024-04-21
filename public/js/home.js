@@ -1,7 +1,5 @@
-import { loginStatus } from "./authentication";
 import { getTopCourses, getTopStreams } from "./fetch-data";
-import { signup_selected, getUserPrivateData } from "./initial-load";
-import { pushPopupMessage } from "./helper";
+import { signup_selected, getUserPrivateData, loginStatus, pushPopupMessage } from "./setup";
 
 let bannerInterval;
 let initHomeStatus = false, initCoursesStatus = false;
