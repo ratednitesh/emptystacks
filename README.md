@@ -10,7 +10,7 @@ File System:
                          firebase-config.js
                          event-bus.js (content.js)
                          setup.js
-                         router.js (initialiser.js), 
+                         router.js (dependency-loader.js), 
             CSS - *.css
     OTHER STATIC CONTENT:
             HTML - about.html

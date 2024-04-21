@@ -1,5 +1,5 @@
 import { publish } from "./event-bus";
-import { initAddOn } from "./initialiser";
+import { initAddOn } from "./dependecny-loader";
 
 const filePathPrefix = "/pages/";
 const filePathSuffix = ".html";
