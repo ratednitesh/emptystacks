@@ -32,8 +32,9 @@ PERFORMANCE & ACCESSIBILITY:
 
 FEATURES: 
     HIGH:
-     - Make content dynamic
-     - improve and ssimplify html/ css code
+     - Make content.html dynamic
+     - improve and simplify html/ css code
+     - make edit options available programatically only for self profile
 
     LOW:
      - Firebase Store connectivity

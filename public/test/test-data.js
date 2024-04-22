@@ -220,8 +220,8 @@ export var courseContentDetails = `    <h1 class="heading">Course Details</h1>
     <div class="accordion">
         <div class="accordion-item">
             <div class=" expandable accordion-header">
-                <h3><i class="es-circle-empty bullet"></i> Introduction to HTML <i
-                        class=" expand es-angle-down"></i></h3>
+                <h2><i class="es-circle-empty bullet"></i> Introduction to HTML <i
+                        class=" expand es-angle-down"></i></h2>
             </div>
             <div class="accordion-content">
                 <li class="course-list"><a href="/content" onclick="route()"><i
@@ -235,8 +235,8 @@ export var courseContentDetails = `    <h1 class="heading">Course Details</h1>
         </div>
         <div class="accordion-item">
             <div class=" expandable accordion-header">
-                <h3><i class="es-circle-empty bullet"></i> Section deep Learn to HTML<i
-                        class=" expand es-angle-down"></i></h3>
+                <h2><i class="es-circle-empty bullet"></i> Section deep Learn to HTML<i
+                        class=" expand es-angle-down"></i></h2>
             </div>
             <div class="accordion-content">
                 <li class="course-list"><a href="/content" onclick="route()"><i
@@ -251,8 +251,8 @@ export var courseContentDetails = `    <h1 class="heading">Course Details</h1>
         </div>
         <div class="accordion-item">
             <div class=" expandable accordion-header">
-                <h3><i class="es-circle-empty bullet"></i> Section advanced to HTML<i
-                        class=" expand es-angle-down"></i></h3>
+                <h2><i class="es-circle-empty bullet"></i> Section advanced to HTML<i
+                        class=" expand es-angle-down"></i></h2>
             </div>
             <div class="accordion-content">
                 <li class="course-list"><a href="/content" onclick="route()"><i
@@ -267,7 +267,7 @@ export var courseContentDetails = `    <h1 class="heading">Course Details</h1>
         </div>
         <div class="accordion-item">
             <div class="accordion-header"><a href="/content" onclick="route()">
-                <h3><i class="es-circle-empty bullet"></i> no sub section to HTML</h3></a>
+                <h2><i class="es-circle-empty bullet"></i> no sub section to HTML</h2></a>
             </div>
         </div>
     </div>

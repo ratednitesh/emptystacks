@@ -131,7 +131,7 @@ function getCourseVideoDetails(courseId) {
                 var videoHtml = `<a href="/content"  onclick="route()" class="box">
                 <i class="es-play-lg"></i>
                 <img src="${cvd.thumbnail}"alt="">
-                <h3>${cvd.title}</h3>
+                <h2>${cvd.title}</h2>
                 </a>`;
                 playlistHtml += videoHtml
             });

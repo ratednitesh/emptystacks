@@ -199,7 +199,7 @@ function initPopularCourses() {
                 thumbnailImg.classList.add('thumb');
 
                 // Create title
-                const title = document.createElement('h3');
+                const title = document.createElement('p');
                 title.classList.add('title');
                 title.textContent = course.title;
 

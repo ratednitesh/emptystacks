@@ -53,7 +53,7 @@
     object-fit: cover;
 }
 
-.watch-video .video-details .tutor h3 {
+.watch-video .video-details .tutor h2 {
     font-size: 2rem;
     color: var(--black);
     margin-bottom: .2rem;

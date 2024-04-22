@@ -85,7 +85,7 @@ function updateUserPublicProfile(fieldId) {
 }
 function initUserActivities(fieldId, fieldValue) {
     var field = document.getElementById(fieldId);
-    var dataField = field.querySelector('h3');
+    var dataField = field.querySelector('h2');
     dataField.innerHTML = fieldValue;
 }
 function createEnrolledCourses(enrolledCourses) {
@@ -104,8 +104,8 @@ function createEnrolledCourses(enrolledCourses) {
         img.classList.add('thumb');
         img.alt = '';
 
-        // Create an h3 element for the title
-        const title = document.createElement('h3');
+        // Create an h2 element for the title
+        const title = document.createElement('h2');
         title.classList.add('title');
         title.textContent = course.title;
 

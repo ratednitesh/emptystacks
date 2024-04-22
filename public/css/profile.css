@@ -21,6 +21,7 @@
 
 .profile .details .user {
     text-align: center;
+    padding: 1.3rem 0;
 }
 
 .profile .details .user img {
@@ -31,7 +32,7 @@
     margin-bottom: .5rem;
 }
 
-.profile .details .user h3 {
+.profile .details .user h2 {
     display: inline-block;
     padding: 0 1rem;
     font-size: 2rem;
@@ -106,7 +107,7 @@
     text-align: center;
 }
 
-.profile .details .box-container .box .flex h3 {
+.profile .details .box-container .box .flex h2 {
     font-size: 2rem;
     color: var(--main-color);
     margin-bottom: .2rem;

@@ -23,7 +23,7 @@
     text-align: center;
 }
 
-.contact .row form h3 {
+.contact .row form h2 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
     color: var(--black);
@@ -67,7 +67,7 @@
     margin-bottom: 1rem;
 }
 
-.contact .box-container .box h3 {
+.contact .box-container .box h2 {
     margin: 1.5rem 0;
     font-size: 2rem;
     color: var(--black);

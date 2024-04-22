@@ -131,7 +131,7 @@ export async function generateUserReview(courseId) {
                             <div class="user">
                                 <img src="${userInfo.userProfileSrc}" alt="${userInfo.name}">
                                 <div>
-                                    <h3>${userInfo.name}</h3>
+                                    <h2>${userInfo.name}</h2>
                                     ${starsHTML}
                                 </div>
                             </div>

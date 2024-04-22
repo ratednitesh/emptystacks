@@ -27,7 +27,7 @@
     object-fit: cover;
 }
 
-.courses .box-container .box .tutor h3 {
+.courses .box-container .box .tutor h2 {
     font-size: 2rem;
     color: var(--black);
     margin-bottom: .2rem;
