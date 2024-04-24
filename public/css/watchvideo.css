@@ -1,4 +1,6 @@
-
+.watch-video{
+    display: none;
+}
 .watch-video .video-details {
     background-color: var(--white);
     padding: 2rem;
@@ -106,11 +108,12 @@
 
 .watch-video .video-details .description {
     padding-top: 2rem;
+    text-align: justify;
 }
 
 .watch-video .video-details .description p {
     line-height: 1.5;
     font-size: 1.7rem;
-    color: var(--light-color);
+    color: var(--black);
     white-space: pre-line;
 }

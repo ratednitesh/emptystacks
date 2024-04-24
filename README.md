@@ -32,6 +32,7 @@ PERFORMANCE & ACCESSIBILITY:
 
 FEATURES: 
     HIGH:
+     - Improve test-data.js
      - Make content.html dynamic
      - improve and simplify html/ css code
      - make edit options available programatically only for self profile

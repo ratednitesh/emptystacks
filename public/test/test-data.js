@@ -140,7 +140,7 @@ export var courseDetails = {
         "courseName": "Complete HTML tutorial",
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 2,
-        "href": "/content",
+        "href": "/content/chapter1",
         "chapterCount": "14 Chapters",
         "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
         "author": {
@@ -156,7 +156,7 @@ export var courseDetails = {
         "courseName": "Complete Something Else tutorial",
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 3,
-        "href": "/content",
+        "href": "/content/chapter2",
         "chapterCount": "6 Videos",
         "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
         "author": {
@@ -210,7 +210,9 @@ export var courseReviews = {
         }
     ]
 }
-export var courseContentDetails = `    <h1 class="heading">Course Details</h1>
+export var courseContentDetails = {
+
+    "course1": `    <h1 class="heading">Course Details</h1>
 <div class="container">
     <div class="button-container">
         <button id="expand-button" class="button-container-button expand">Expand
@@ -271,7 +273,7 @@ export var courseContentDetails = `    <h1 class="heading">Course Details</h1>
             </div>
         </div>
     </div>
-</div>`;
+</div>`};
 
 export var courseVideoDetails = {
     "course2": [
@@ -307,4 +309,160 @@ export var courseVideoDetails = {
             "title": "Complete HTML Tutorial (part 06)",
         }
     ]
+}
+
+export var courseContent = {
+    "chapter1": {
+        "type": "text",
+        "heading": "Complete HTML Tutorial - Part 1",
+        "publishDate": "21-01-2024",
+        "likes": 45,
+        "content": ` <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit explicabo ad voluptatem sit sapiente
+        exercitationem officiis dolores adipisci dolorem saepe harum deserunt sequi quaerat ex laboriosam
+        eligendi fuga alias, natus itaque! Modi distinctio doloribus sunt, esse eos mollitia itaque adipisci
+        doloremque praesentium sed ab saepe animi earum in at! Deserunt!</p>
+    <h4>Moreo on this</h4>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam corporis eum architecto soluta
+        veniam hic officiis quibusdam id nemo.</p>
+    <h5>something else</h5>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Link to somewhere </a>Illum rerum
+        voluptatibus in omnis nobis consequatur ad possimus impedit magni corporis!</p>
+    <ul>
+        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, atque.</li>
+        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed maxime itaque qui explicabo ipsum
+            suscipit vitae neque, nam eos id!</li>
+        <li>Lorem ipsum dolor sit amet.</li>
+        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui iusto aliquid et eligendi nesciunt
+            totam.</li>
+        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod et rerum cupiditate fugiat optio
+            voluptatum perspiciatis officiis hic modi?</li>
+        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic!</li>
+    </ul>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit explicabo ad voluptatem sit sapiente
+        exercitationem officiis dolores adipisci dolorem saepe harum deserunt sequi quaerat ex laboriosam
+        eligendi fuga alias, natus itaque! Modi distinctio doloribus sunt, esse eos mollitia itaque adipisci
+        doloremque praesentium sed ab saepe animi earum in at! Deserunt!</p>
+    <h4>Moreo on this</h4>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam corporis eum architecto soluta
+        veniam hic officiis quibusdam id nemo.</p>
+    <h5>something else</h5>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Link to somewhere </a>Illum rerum
+        voluptatibus in omnis nobis consequatur ad possimus impedit magni corporis!</p>
+    <ul>
+        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, atque.</li>
+        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed maxime itaque qui explicabo ipsum
+            suscipit vitae neque, nam eos id!</li>
+        <li>Lorem ipsum dolor sit amet.</li>
+        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui iusto aliquid et eligendi nesciunt
+            totam.</li>
+        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod et rerum cupiditate fugiat optio
+            voluptatum perspiciatis officiis hic modi?</li>
+        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic!</li>
+    </ul>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit explicabo ad voluptatem sit sapiente
+        exercitationem officiis dolores adipisci dolorem saepe harum deserunt sequi quaerat ex laboriosam
+        eligendi fuga alias, natus itaque! Modi distinctio doloribus sunt, esse eos mollitia itaque adipisci
+        doloremque praesentium sed ab saepe animi earum in at! Deserunt!</p>
+    <h4>Moreo on this</h4>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam corporis eum architecto soluta
+        veniam hic officiis quibusdam id nemo.</p>
+    <h5>something else</h5>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Link to somewhere </a>Illum rerum
+        voluptatibus in omnis nobis consequatur ad possimus impedit magni corporis!</p>
+    <ul>
+        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, atque.</li>
+        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed maxime itaque qui explicabo ipsum
+            suscipit vitae neque, nam eos id!</li>
+        <li>Lorem ipsum dolor sit amet.</li>
+        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui iusto aliquid et eligendi nesciunt
+            totam.</li>
+        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod et rerum cupiditate fugiat optio
+            voluptatum perspiciatis officiis hic modi?</li>
+        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic!</li>
+    </ul>
+    `,
+        "author": {
+            "id": "12345",
+            "name": "John Doe",
+            "role": "Stack Builder",
+            "userProfileSrc": "/images/profile/photo_1.png",
+        },
+        "previousChapter": "",
+        "nextChapter": "",
+        "similarCourse": "",
+        "comments": 6
+    },
+    "chapter2": {
+        "type": "video",
+        "heading": "Complete HTML Tutorial - Part 1",
+        "publishDate": "21-01-2024",
+        "likes": 45,
+        "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
+        "author": {
+            "id": "12345",
+            "name": "John Doe",
+            "role": "Stack Builder",
+            "userProfileSrc": "/images/profile/photo_1.png",
+        },
+        "description": ` <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe ut numquam amet deleniti tempore earum
+        assumenda omnis asperiores dolor accusamus!</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis ullam eveniet possimus, reiciendis
+        molestiae culpa alias, magni odio corrupti dolores nobis dignissimos rem ipsam quas quasi illo
+        minus. Consectetur, dicta!</p>`,
+        "playlist": "",
+        "previousChapter": "",
+        "nextChapter": "",
+        "similarCourse": "",
+        "comments": 5
+
+    }
+}
+export var courseContentComments = {
+    "course1": [
+        {
+            "uid": "xtz",
+            "name": "nit",
+            "commentDate": "22-12-2023",
+            "comment": "This is an awesome comment.",
+            "imageSrc": "/images/profile/photo_1.png"
+        },
+        {
+            "uid": "xtz",
+            "name": "nit",
+            "commentDate": "22-12-2023",
+            "comment": "This is an awesome comment.",
+            "imageSrc": "/images/profile/photo_1.png"
+        },
+        {
+            "uid": "xtz",
+            "name": "nit",
+            "commentDate": "22-12-2023",
+            "comment": "This is an awesome comment.",
+            "imageSrc": "/images/profile/photo_1.png"
+        }
+    ],
+    "course2": [
+        {
+            "uid": "xtz",
+            "name": "nit",
+            "commentDate": "22-12-2023",
+            "comment": "This is an awesome comment.",
+            "imageSrc": "/images/profile/photo_1.png"
+        },
+        {
+            "uid": "xtz",
+            "name": "nit",
+            "commentDate": "22-12-2023",
+            "comment": "This is an awesome comment.",
+            "imageSrc": "/images/profile/photo_1.png"
+        },
+        {
+            "uid": "xtz",
+            "name": "nit",
+            "commentDate": "22-12-2023",
+            "comment": "This is an awesome comment.",
+            "imageSrc": "/images/profile/photo_1.png"
+        }
+    ]
+
 }

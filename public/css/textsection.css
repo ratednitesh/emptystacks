@@ -40,6 +40,7 @@
     font-size: 1.6rem;
     color: var(--black);
     border-bottom: var(--border);
+    display: none;
 }
 
 .text-section .chapter-details .chapter-content a {
@@ -67,7 +68,7 @@
     margin: 1rem 4rem;
 }
 
-.text-section .chapter-details .chapter-content .chapter-footer {
+.text-section .chapter-details  .chapter-footer {
     text-align: center;
     padding-top: 2rem;
     color: var(--light-color);
@@ -75,18 +76,18 @@
 
 }
 
-.text-section .chapter-details .chapter-content .chapter-footer p {
+.text-section .chapter-details .chapter-footer p {
     padding: 0;
 }
 
-.text-section .chapter-details .chapter-content .chapter-footer i {
+.text-section .chapter-details  .chapter-footer i {
     padding: 0 .5rem;
     padding-bottom: 1rem;
     cursor: pointer;
     font-size: 1.5rem;
 }
 
-.text-section .chapter-details .chapter-content .chapter-footer i:hover {
+.text-section .chapter-details .chapter-footer i:hover {
     color: var(--main-color);
 }
 

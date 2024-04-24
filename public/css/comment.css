@@ -1,4 +1,7 @@
 
+.comments{
+    display: none;
+}
 .comments .add-comment {
     background-color: var(--white);
     border-radius: .5rem;

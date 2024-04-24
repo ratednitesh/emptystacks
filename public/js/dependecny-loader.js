@@ -25,6 +25,12 @@ export async function initAddOn(page) {
                     subscribe('loadCourseDetails', module.loadCourseDetails);
                     resolve();
                 });
+            else if (page == "content")
+                import('./content.js').then(module => {
+                    console.log("loading content");
+                    subscribe('loadCourseContent', module.loadCourseContent);
+                    resolve();
+                });
             else
                 resolve();
         } catch (error) {

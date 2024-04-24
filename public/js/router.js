@@ -20,7 +20,8 @@ const routes = {
     "/course": "notFound",
     "/course/": "notFound",
     "/course/*": "course",
-    "/content": "content",
+    "/content": "notFound",
+    "/content/": "notFound",
     "/content/*": "content",
     "/profile": "notFound",
     "/profile/": "notFound",
@@ -32,7 +33,7 @@ const SIDE_BAR_OPTIONS = {
     "contentSidebar": "contentSidebar"
 };
 let cachedPages = {};
-let cachedSideBar = {"mainSidebar":true};
+let cachedSideBar = { "mainSidebar": true };
 let previousSideBarPath = "";
 let previousMainBodyPath = "";
 
@@ -76,7 +77,7 @@ const handleLocation = async () => {
         }
         for (let key in cachedPages) document.getElementById(key).style.display = (key === route) ? "block" : "none";
         loadMainScripts(path);
-        const currentSidebar = path === "/content" ? "contentSidebar" : "mainSidebar";
+        const currentSidebar = route === "content" ? "contentSidebar" : "mainSidebar";
         if (previousSideBarPath != currentSidebar) {
             previousSideBarPath = currentSidebar;
             if (!cachedSideBar[currentSidebar]) {
@@ -93,6 +94,7 @@ const handleLocation = async () => {
 function loadMainScripts(path) {
     const matchCoursePath = path.match(/^\/course\/(\w+)$/);
     const matchProfilepath = path.match(/^\/profile\/(\w+)$/);
+    const matchContentpath = path.match(/^\/content\/(\w+)$/);
 
     if (matchCoursePath) {
         publish('unloadHome');
@@ -100,12 +102,11 @@ function loadMainScripts(path) {
     } else if (matchProfilepath) {
         publish('unloadHome');
         publish('initProfile', matchProfilepath[1]);
+    } else if (matchContentpath) {
+        publish('unloadHome');
+        publish('loadCourseContent', matchContentpath[1]);
     } else {
         switch (path) {
-            case "/content":
-                publish('unloadHome');
-                publish('loadContentMainSection');
-                break;
             case "/courses":
                 publish('loadHome', 'only-course');
                 break;

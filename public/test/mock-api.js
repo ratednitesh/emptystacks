@@ -1,4 +1,4 @@
-import { courseContentDetails, courseDetails, courseReviews, courseVideoDetails, topCourses, topStreams, userPrivateProfile, userPublic, userPublicProfile } from "../test/test-data";
+import { courseContent, courseContentComments, courseContentDetails, courseDetails, courseReviews, courseVideoDetails, topCourses, topStreams, userPrivateProfile, userPublic, userPublicProfile } from "../test/test-data";
 
 export function mockgetUserPrivateDataAPICall(uid) {
     return new Promise((resolve, reject) => {
@@ -34,8 +34,6 @@ export function mockUpdateUserDataAPICall(uid, newData) {
         }, 1000); // 1000 milliseconds delay (1 second)
     });
 }
-
-
 export function mockgetTopStreamsAPICall() {
     // Simulate some asynchronous operation (e.g., fetching data)
     return new Promise((resolve, reject) => {
@@ -100,7 +98,7 @@ export function mockgetCourseContentDetailsAPICall(courseId){
         setTimeout(() => {
             // Simulate a successful response with dummy data
             console.log("Course Content Details read from the server.");
-            resolve(courseContentDetails); // Resolve the Promise with the dummy data
+            resolve(courseContentDetails[courseId]); // Resolve the Promise with the dummy data
         }, 1000); // 1000 milliseconds delay (1 second)
     });
 }
@@ -112,6 +110,26 @@ export function mockgetCourseVideoDetailsAPICall(courseId){
             // Simulate a successful response with dummy data
             console.log("Course Content Details read from the server.");
             resolve(courseVideoDetails[courseId]); // Resolve the Promise with the dummy data
+        }, 1000); // 1000 milliseconds delay (1 second)
+    });
+}
+export function mockgetCourseContentAPICall(courseId){
+    return new Promise((resolve, reject) => {
+        // Simulate a delay of 1 second
+        setTimeout(() => {
+            // Simulate a successful response with dummy data
+            console.log("Course Content Details read from the server.");
+            resolve(courseContent[courseId]); // Resolve the Promise with the dummy data
+        }, 1000); // 1000 milliseconds delay (1 second)
+    });
+}
+export function mockgetCourseContentCommentsAPICall(courseId){
+    return new Promise((resolve, reject) => {
+        // Simulate a delay of 1 second
+        setTimeout(() => {
+            // Simulate a successful response with dummy data
+            console.log("Course Content Details read from the server.");
+            resolve(courseContentCommentss[courseId]); // Resolve the Promise with the dummy data
         }, 1000); // 1000 milliseconds delay (1 second)
     });
 }
