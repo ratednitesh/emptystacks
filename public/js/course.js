@@ -1,22 +1,27 @@
 import { publish } from "./event-bus";
-import { generateUserReview, getCourseContentDetailsAPICalls, getCourseDetailsAPICalls, getCourseVideoDetailsAPICalls } from "./fetch-data";
+import { generateUserReview, getCourseContentDetailsAPICalls, getCourseDetailsAPICalls } from "./fetch-data";
 import { pushPopupMessage } from "./setup";
 
 let lastCourseId;
-const levelNames = ['Beginner', 'Intermediate', 'Expert'];
+const levelNames = ['Easy', 'Intermediate', 'Expert'];
 
 export function loadCourseDetails(courseId) {
+    console.log(courseId);
+    console.log("courseId");
     if (lastCourseId != courseId) {
         lastCourseId = courseId;
         getCourseData(courseId);
         generateUserReview(courseId).then(
             (reviewsHtml) => {
+                console.log("read course reviews");
+                console.log(reviewsHtml);
                 if (reviewsHtml) {
                     const boxContainer = document.querySelector('.reviews .box-container');
                     if (boxContainer) {
                         boxContainer.innerHTML = reviewsHtml;
                     }
-                }
+                }else
+                document.querySelector('.reviews').style.display="none";
             }
         ).catch(
             (e) => { console.log(e); pushPopupMessage(["FAILURE", "Something went wrong, unable to load course reviews."]); }
@@ -77,13 +82,60 @@ function getCourseData(courseId) {
 function getCourseContentDetails(courseId) {
     getCourseContentDetailsAPICalls(courseId).then(
         (courseData) => {
-            var courseDetails = document.querySelector(".course-details");
-            courseDetails.innerHTML = courseData;
+            var courseDetails = document.querySelector(".course-details .container .accordion");
+
+            for (const [course, topics] of Object.entries(courseData)) {
+                const accordionItem = document.createElement("div");
+                accordionItem.classList.add("accordion-item");
+
+                const accordionHeader = document.createElement("div");
+                accordionHeader.classList.add("accordion-header");
+                const headerTitle = document.createElement("h2");
+                const headerIcon = document.createElement("i");
+                headerIcon.classList.add("es-circle-empty", "bullet");
+                headerTitle.appendChild(headerIcon);
+                headerTitle.innerHTML += ` ${course}`;
+                
+                if (typeof topics === "string") {
+                    const headingLink = document.createElement("a");
+                    headingLink.href = topics;
+                    headingLink.setAttribute("onclick", "route()");
+                    headingLink.appendChild(headerTitle);
+                    accordionHeader.appendChild(headingLink);
+                    accordionItem.appendChild(accordionHeader);
+                }
+                else if (typeof topics === "object") {
+                    const expandIcon = document.createElement("i");
+                    expandIcon.classList.add("expand", "es-angle-up");
+                    headerTitle.appendChild(expandIcon);
+                    accordionHeader.classList.add("expandable");
+                    accordionHeader.appendChild(headerTitle);
+                    accordionItem.appendChild(accordionHeader);
+                    const accordionContent = document.createElement("div");
+                    accordionContent.classList.add("accordion-content");
+
+                    for (const [topic, href] of Object.entries(topics)) {
+                        const courseList = document.createElement("li");
+                        courseList.classList.add("course-list");
+                        const topicLink = document.createElement("a");
+                        topicLink.href = href;
+                        topicLink.setAttribute("onclick", "route()");
+                        topicLink.innerHTML = `<i class="es-circle-empty"></i>${topic}`;
+                        courseList.appendChild(topicLink);
+                        accordionContent.appendChild(courseList);
+                    }
+
+                    accordionItem.appendChild(accordionContent);
+                    accordionItem.classList.add("active");
+                }
+                courseDetails.appendChild(accordionItem);
+            }
+            // courseDetails.innerHTML = courseData;
             document.querySelectorAll('.expandable').forEach(function (header) {
                 header.addEventListener('click', function () {
                     var item = this.parentNode;
                     item.classList.toggle('active');
-                    if (this.children[0].children[1].classList[2] == 'es-angle-down')
+                    if (this.children[0].children[1].classList[1] == 'es-angle-down')
                         this.children[0].children[1].classList.replace('es-angle-down', 'es-angle-up');
                     else
                         this.children[0].children[1].classList.replace('es-angle-up', 'es-angle-down');
@@ -113,6 +165,7 @@ function getCourseContentDetails(courseId) {
                 document.getElementById("collapse-button").hidden = true;
                 document.getElementById("expand-button").hidden = false;
             });
+
         }
     )
         .catch(
@@ -124,17 +177,17 @@ function getCourseContentDetails(courseId) {
 }
 
 function getCourseVideoDetails(courseId) {
-    getCourseVideoDetailsAPICalls(courseId).then(
+    getCourseContentDetailsAPICalls(courseId).then(
         (courseVideoDetails) => {
             var playlistHtml = "";
-            courseVideoDetails.forEach((cvd) => {
-                var videoHtml = `<a href="/content"  onclick="route()" class="box">
+            for (const [title, cvd] of Object.entries(courseVideoDetails)) {
+                var videoHtml = `<a href="${cvd.href}"  onclick="route()" class="box">
                 <i class="es-play-lg"></i>
                 <img src="${cvd.thumbnail}"alt="">
-                <h2>${cvd.title}</h2>
+                <h2>${title}</h2>
                 </a>`;
                 playlistHtml += videoHtml
-            });
+            };
             var videoDetails = document.querySelector(".video-container .box-container");
             videoDetails.innerHTML = playlistHtml;
         }

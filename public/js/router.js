@@ -28,12 +28,12 @@ const routes = {
     "/profile/*": "profile",
     404: "notFound"
 };
+const sideBar = document.querySelector('#sideBar');
 const SIDE_BAR_OPTIONS = {
     "mainSidebar": "mainSidebar",
     "contentSidebar": "contentSidebar"
 };
 let cachedPages = {};
-let cachedSideBar = { "mainSidebar": true };
 let previousSideBarPath = "";
 let previousMainBodyPath = "";
 
@@ -80,21 +80,25 @@ const handleLocation = async () => {
         const currentSidebar = route === "content" ? "contentSidebar" : "mainSidebar";
         if (previousSideBarPath != currentSidebar) {
             previousSideBarPath = currentSidebar;
-            if (!cachedSideBar[currentSidebar]) {
-                const sidebarRoute = SIDE_BAR_OPTIONS[currentSidebar];
-                const sidebarBody = await fetch(filePathPrefix + sidebarRoute + filePathSuffix).then((data) => data.text());
-                document.getElementById(currentSidebar).innerHTML = sidebarBody;
-                cachedSideBar[currentSidebar] = true;
+            if (currentSidebar == "mainSidebar") {
+                document.getElementById('mainSidebar').style.display = "block";
+                document.getElementById('contentSidebar').style.display = "none";
+                sideBar.classList.remove('active');
+                document.body.classList.remove('active');
             }
-            for (let key in cachedSideBar) document.getElementById(key).style.display = (key === currentSidebar) ? "block" : "none";
-            publish(currentSidebar == "mainSidebar" ? "loadMainSidebar" : "loadContentSidebar");
+            else {
+                document.getElementById('mainSidebar').style.display = "none";
+                document.getElementById('contentSidebar').style.display = "block";
+                sideBar.classList.add('active');
+                document.body.classList.add('active');
+            };
         }
     }
 };
 function loadMainScripts(path) {
-    const matchCoursePath = path.match(/^\/course\/(\w+)$/);
-    const matchProfilepath = path.match(/^\/profile\/(\w+)$/);
-    const matchContentpath = path.match(/^\/content\/(\w+)$/);
+    const matchCoursePath = path.match(/^\/course\/([\w/-]+)$/);
+    const matchProfilepath = path.match(/^\/profile\/([\w/-]+)$/);
+    const matchContentpath = path.match(/^\/content\/([\w/-]+)$/);
 
     if (matchCoursePath) {
         publish('unloadHome');

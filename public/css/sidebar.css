@@ -123,6 +123,23 @@
     display: none;
 }
 
-.sidebar .sub-menu.active span {
+.sidebar .menu-options.active span {
     color: var(--main-color);
+}
+
+.sub-menu-options.active a{
+    color: var(--main-color);
+}
+.sidebar .menu-options.video-list.active{
+    background-color: var(--light-bg);
+}
+.sidebar .menu-options.video-list.active span{
+    color: var(--light-color);
+}
+.sidebar .menu-options.video-list a{
+    border-bottom:var(--border);
+}
+.sidebar .menu-options.video-list img{
+    padding-top: 2rem;
+    height:15rem;
 }

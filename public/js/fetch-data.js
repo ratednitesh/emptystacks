@@ -1,7 +1,7 @@
 // Function to dynamically import mock-api.js
 async function importMockApi() {
     try {
-        const { mockgetUserPrivateDataAPICall, mockgetUserDataAPICall, mockUpdateUserDataAPICall, mockgetTopStreamsAPICall, mockgetTopCoursesAPICall, mockgetCourseReviewAPICall, mockgetTextCourseAPICall, mockgetCourseVideoDetailsAPICall, 
+        const { mockgetUserPrivateDataAPICall, mockgetUserDataAPICall, mockUpdateUserDataAPICall, mockgetTopStreamsAPICall, mockgetTopCoursesAPICall, mockgetCourseReviewAPICall, mockgetTextCourseAPICall,  
             mockgetCourseContentDetailsAPICall, mockgetCourseContentAPICall, mockgetCourseContentCommentsAPICall } = await import('/public/test/mock-api.js');
         
         return {
@@ -12,7 +12,6 @@ async function importMockApi() {
             mockgetTopCoursesAPICall,
             mockgetCourseReviewAPICall,
             mockgetTextCourseAPICall,
-            mockgetCourseVideoDetailsAPICall,
             mockgetCourseContentDetailsAPICall,
             mockgetCourseContentAPICall,
             mockgetCourseContentCommentsAPICall
@@ -184,24 +183,6 @@ export async function getCourseDetailsAPICalls(courseId) {
       
             // Simulate an API call
             mockApi.mockgetTextCourseAPICall(courseId)
-                .then(response => {
-                    // Store the API response in the cachedData object
-                    resolve(response); // Resolve with the API response
-                })
-                .catch(error => {
-                    reject(error); // Reject with the error from the API call
-                });
-        
-    });
-}
-
-export async function getCourseVideoDetailsAPICalls(courseId) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // If data is already cached, resolve with the cached data
-      
-            // Simulate an API call
-            mockApi.mockgetCourseVideoDetailsAPICall(courseId)
                 .then(response => {
                     // Store the API response in the cachedData object
                     resolve(response); // Resolve with the API response

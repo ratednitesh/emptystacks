@@ -4,9 +4,13 @@
     <div class="box-container">
         <!-- <div class="image-loader animated-background"></div> -->
         <div class="slide-section">
-            <a href="/content" aria-label="Read this course 1"><img id="slide-img-1" src="/images/banners/1.jpg" onclick="route()" class="banner-slide" alt="" style="display: block;"></a>
-            <a href="/content" aria-label="Read this course 2"><img id="slide-img-2"  src="/images/banners/2.jpg" onclick="route()" class="banner-slide" alt=""></a>
-            <a href="/content" aria-label="Read this course 3"><img id="slide-img-3" src="/images/banners/3.jpg"  onclick="route()" class="banner-slide" alt=""></a>
+            <a href="/course/js-projects" aria-label="Read this course 1"><img id="slide-img-1"
+                    src="/images/banners/1.jpg" onclick="route()" class="banner-slide" alt=""
+                    style="display: block;"></a>
+            <a href="/course/htmlBeginner" aria-label="Read this course 2"><img id="slide-img-2"
+                    src="/images/banners/2.jpg" onclick="route()" class="banner-slide" alt=""></a>
+            <a href="/course/problemSolvingLeetCode" aria-label="Read this course 3"><img id="slide-img-3"
+                    src="/images/banners/3.jpg" onclick="route()" class="banner-slide" alt=""></a>
             <div class="slider">
                 <i id="slide-1" class="es-circle-empty circle"></i>
                 <i id="slide-2" class="es-circle-empty circle"></i>
@@ -43,6 +47,7 @@
             </div>
         </div>
         <div class="box tutor">
+            <img src="/images/illustrations/tutor.svg" alt="">
             <h2 class="title">Become a Tutor</h2>
             <p>Empower minds, share knowledge, and inspire future generations through tailored guidance and support!</p>
             <a href="/register" onclick="route()" class="inline-btn">get started</a>
@@ -57,7 +62,8 @@
     <div class="box-container">
     </div>
     <div class="more-btn">
-        <a href="/courses" onclick="route()" class="inline-btn">View More</a>
+        <button id="view-more-courses" class="inline-btn">View More</button>
+        <p id="that-all">That's All!</p>
     </div>
 </section>
 <!-- courses section ends  -->

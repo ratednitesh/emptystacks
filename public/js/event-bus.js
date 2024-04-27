@@ -1,10 +1,7 @@
-import { loadMainSidebar, loadContentSidebar } from "./setup";
 import { notFoundRoute } from "./router";
 
 const eventListeners = {};
 export function initEventBus() {
-    subscribe('loadContentSidebar', loadContentSidebar);
-    subscribe('loadMainSidebar', loadMainSidebar);
     subscribe('notFoundRoute', notFoundRoute);
 }
 export function subscribe(eventName, callback) {

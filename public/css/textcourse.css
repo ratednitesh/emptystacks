@@ -129,7 +129,7 @@
     width: 0;
     display: inline-flex;
     margin-right: 0;
-    background-color: var(--light-color);
+    background-color: #fff;
 }
 
 .signal-bars>.bar {

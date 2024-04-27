@@ -217,7 +217,15 @@ function initPopularCourses() {
 
                 // Append box to the box-container
                 boxContainer.appendChild(box);
+               
             });
+            const viewMoreCourses = document.querySelector("#view-more-courses");
+            viewMoreCourses.addEventListener(
+                'click', () => { 
+                    viewMoreCourses.style.display="none"; 
+                    document.querySelector("#that-all").style.display="block";
+                }
+            );
 
         }
     ).catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load top courses."]); });

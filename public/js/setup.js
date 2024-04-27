@@ -111,9 +111,6 @@ const profile = document.querySelector('.header .flex .menus-modal .menus');
 const profileMenuPrivate = document.querySelectorAll('.header .flex .menus .private');
 const profileMenuOnlyPublic = document.querySelectorAll('.header .flex .menus .only-public');
 
-
-let initContentSidebarStatus = false;
-
 export function initStaticContent() {
     initHeaders();
     initGlobalEvents();
@@ -214,40 +211,8 @@ export function updateUserPrivateData(userLoggedIn) {
     }
 }
 
-export function loadMainSidebar() {
-    sideBar.classList.remove('active');
-    document.body.classList.remove('active');
-}
 
-function initializeContentSideBarListeners() {
-    let subMenus = document.querySelectorAll(".sub-menu > a");
-    subMenus.forEach(function (link) {
-        link.addEventListener("click", function (e) {
-            // Close all other sub-menus
-            document.querySelectorAll(".sidebar .sub-menu ul").forEach(function (submenu) {
-                if (submenu !== link.nextElementSibling) {
-                    submenu.style.display = "none";
-                }
-            });
-            // Toggle the visibility of the clicked sub-menu
-            if (link.nextElementSibling.style.display == "" || link.nextElementSibling.style.display == "none") {
-                link.nextElementSibling.style.display = "block";
-            } else {
-                link.nextElementSibling.style.display = "none";
-            }
 
-            // Prevent the click event from propagating up the DOM hierarchy
-            e.stopPropagation();
-        });
-    });
-    initContentSidebarStatus = true;
-}
-export function loadContentSidebar() {
-    if (!initContentSidebarStatus)
-        initializeContentSideBarListeners();
-    sideBar.classList.add('active');
-    document.body.classList.add('active');
-}
 
 // auth modal
 const form_modal = document.querySelector(".cd-user-modal");
