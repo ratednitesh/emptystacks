@@ -26,7 +26,6 @@ function getCourseContent(chapterId) {
                     contentHtml.querySelector('.chapter-content').innerHTML = chapterData.content;
                 }
                 else {
-                    // TODO: Video 
                     contentHtml.querySelector('.watch-video').style.display = "block";
                     contentHtml.querySelector('.chapter-content').style.display = "none";
                     contentHtml.querySelector('.video').poster = chapterData.thumbnail;

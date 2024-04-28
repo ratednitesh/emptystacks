@@ -26,30 +26,6 @@ File System:
                   profile.js 
                   fetch-data.js
 
-**** OPEN ITEMS ****
-
-PERFORMANCE & ACCESSIBILITY: 
-
-FEATURES: 
-    HIGH:
-     - Improve test-data.js
-     - Make content.html dynamic
-     - improve and simplify html/ css code
-     - make edit options available programatically only for self profile
-     - edit option bug in profile page
-     - build Stream page
-
-    LOW:
-     - Firebase Store connectivity
-     - Do not print all courses at once on Home.
-     - Fix view more option on courses - home and profile
-     - Fix Streams icons 
-
-BUGS: 
- - course difficulty bar issues
-CODE OPTIMIZATION:
-
-
 
 #########################
 

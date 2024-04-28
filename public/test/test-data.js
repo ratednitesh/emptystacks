@@ -265,7 +265,7 @@ export var courseDetails = {
         "courseName": "Data Structure & Algorithm: Beginner",
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 1,
-        "href": "/content/dsa-beginner/Introduction",
+        "href": "/content/dsa-beginner/default",
         "chapterCount": "14 Chapters",
         "thumbnail": "/images/thumbnails/6.jpg",
         "author": {
@@ -297,7 +297,7 @@ export var courseDetails = {
         "courseName": "Data Structure & Algorithm: Medium",
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 1,
-        "href": "/content/dsa-medium/Introduction",
+        "href": "/content/dsa-medium/default",
         "chapterCount": "14 Chapters",
         "thumbnail": "/images/thumbnails/8.jpg",
         "author": {
