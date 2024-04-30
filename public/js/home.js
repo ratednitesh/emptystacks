@@ -1,8 +1,10 @@
 import { getTopCourses, getTopStreams } from "./fetch-data";
+import { getUid } from "./firebase-config";
 import { signup_selected, getUserPrivateData, loginStatus, pushPopupMessage } from "./setup";
 
 let bannerInterval;
 let initHomeStatus = false, initCoursesStatus = false;
+let isUserLoggedIn = false;
 //  Load and Unload Home 
 export function loadHome(args) {
     if (args != 'only-course') {
@@ -48,8 +50,10 @@ function initQuickSelect() {
     startJourneyHome.addEventListener("click", function () {
         signup_selected();
     });
-    updateQuickSelectOptions(loginStatus());
-    initQuickCourses();
+    isUserLoggedIn = loginStatus();
+    updateQuickSelectOptions();
+    if (isUserLoggedIn)
+        initQuickCourses();
     initStreams();
 }
 
@@ -67,7 +71,7 @@ function initStreams() {
 
                 // Create the icon element
                 const iconElement = document.createElement('i');
-                iconElement.classList.add( stream.icon);
+                iconElement.classList.add(stream.icon);
 
                 // Create the span element for the text
                 const spanElement = document.createElement('span');
@@ -90,78 +94,78 @@ function initStreams() {
 }
 
 function initQuickCourses() {
-    getUserPrivateData("zhcyWRZpJKZohfqSt6Xihyo4Awq2") // TODO: Use it from args
-    .then(
-        (data) => {
-            var quickCourses = data.enrolledCourses;
-            console.log(quickCourses);
-            // Reference to the book container
-            const bookContainer = document.querySelector('.box.private .book');
+    getUserPrivateData(getUid())
+        .then(
+            (data) => {
+                var quickCourses = data.enrolledCourses;
+                console.log(quickCourses);
+                // Reference to the book container
+                const bookContainer = document.querySelector('.box.private .book');
 
-            // Iterate over quickCourses array
-            quickCourses.forEach((course) => {
-                // Create cover div
-                const coverDiv = document.createElement('div');
-                coverDiv.classList.add('cover', 'hidden', 'fade');
+                // Iterate over quickCourses array
+                quickCourses.forEach((course) => {
+                    // Create cover div
+                    const coverDiv = document.createElement('div');
+                    coverDiv.classList.add('cover', 'hidden', 'fade');
 
-                // Create anchor tag
-                const anchorTag = document.createElement('a');
-                anchorTag.href = course.href;
-                anchorTag.setAttribute('onclick', 'route()');
+                    // Create anchor tag
+                    const anchorTag = document.createElement('a');
+                    anchorTag.href = course.href;
+                    anchorTag.setAttribute('onclick', 'route()');
 
-                // Create image tag
-                const imageTag = document.createElement('img');
-                imageTag.src = course.thumbnail;
-                imageTag.classList.add('thumb');
-                imageTag.alt = "Course Name";
+                    // Create image tag
+                    const imageTag = document.createElement('img');
+                    imageTag.src = course.thumbnail;
+                    imageTag.classList.add('thumb');
+                    imageTag.alt = "Course Name";
 
-                // Create paragraph tag for course title
-                const paragraphTag = document.createElement('p');
-                paragraphTag.textContent = course.title;
+                    // Create paragraph tag for course title
+                    const paragraphTag = document.createElement('p');
+                    paragraphTag.textContent = course.title;
 
-                // Append image and paragraph tags to anchor tag
-                anchorTag.appendChild(imageTag);
-                anchorTag.appendChild(paragraphTag);
+                    // Append image and paragraph tags to anchor tag
+                    anchorTag.appendChild(imageTag);
+                    anchorTag.appendChild(paragraphTag);
 
-                // Append anchor tag to cover div
-                coverDiv.appendChild(anchorTag);
+                    // Append anchor tag to cover div
+                    coverDiv.appendChild(anchorTag);
 
-                // Append cover div to book container before slideshow div
-                bookContainer.insertBefore(coverDiv, bookContainer.querySelector('.slideshow'));
-            });
-            const enrolledCourses = document.querySelectorAll(".book .cover");
-            // enrolledCourses.forEach((enrolledCourse, i=0)=>{console.log(enrolledCourse.style);console.log(i);enrolledCourse.style.zIndex=i++;});
-            let index = 0;
-            if (enrolledCourses.length != 0)
-                enrolledCourses[index].classList.add("visible");
-            // enrolledCourses[index].style.display="block";
-
-            const nextBtn = document.querySelector(".next");
-            const prevBtn = document.querySelector(".prev");
-            if (nextBtn != null)
-                nextBtn.addEventListener("click", (_) => {
-                    enrolledCourses[index].classList.replace('visible', 'hidden');
-                    if (index == enrolledCourses.length - 1) {
-                        index = -1;
-                    }
-                    enrolledCourses[++index].classList.replace('hidden', 'visible');
+                    // Append cover div to book container before slideshow div
+                    bookContainer.insertBefore(coverDiv, bookContainer.querySelector('.slideshow'));
                 });
-            if (prevBtn != null)
-                prevBtn.addEventListener("click", (_) => {
+                const enrolledCourses = document.querySelectorAll(".book .cover");
+                // enrolledCourses.forEach((enrolledCourse, i=0)=>{console.log(enrolledCourse.style);console.log(i);enrolledCourse.style.zIndex=i++;});
+                let index = 0;
+                if (enrolledCourses.length != 0)
+                    enrolledCourses[index].classList.add("visible");
+                // enrolledCourses[index].style.display="block";
 
-                    enrolledCourses[index].classList.replace('visible', 'hidden');
-                    if (index == 0) {
-                        index = enrolledCourses.length;
-                    }
-                    enrolledCourses[--index].classList.replace('hidden', 'visible');
+                const nextBtn = document.querySelector(".next");
+                const prevBtn = document.querySelector(".prev");
+                if (nextBtn != null)
+                    nextBtn.addEventListener("click", (_) => {
+                        enrolledCourses[index].classList.replace('visible', 'hidden');
+                        if (index == enrolledCourses.length - 1) {
+                            index = -1;
+                        }
+                        enrolledCourses[++index].classList.replace('hidden', 'visible');
+                    });
+                if (prevBtn != null)
+                    prevBtn.addEventListener("click", (_) => {
 
-                });
+                        enrolledCourses[index].classList.replace('visible', 'hidden');
+                        if (index == 0) {
+                            index = enrolledCourses.length;
+                        }
+                        enrolledCourses[--index].classList.replace('hidden', 'visible');
 
-        }
-    ).catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load top courses."]); });
+                    });
+
+            }
+        ).catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load top courses."]); });
 }
 
-export function updateQuickSelectOptions(isUserLoggedIn) {
+export function updateQuickSelectOptions() {
 
     let homeOptionPrivate = document.querySelectorAll('.quick-select .box-container .private');
     homeOptionPrivate.forEach((node) => { if (!isUserLoggedIn) node.style.display = "none"; else node.style.display = "block" });
@@ -217,13 +221,13 @@ function initPopularCourses() {
 
                 // Append box to the box-container
                 boxContainer.appendChild(box);
-               
+
             });
             const viewMoreCourses = document.querySelector("#view-more-courses");
             viewMoreCourses.addEventListener(
-                'click', () => { 
-                    viewMoreCourses.style.display="none"; 
-                    document.querySelector("#that-all").style.display="block";
+                'click', () => {
+                    viewMoreCourses.style.display = "none";
+                    document.querySelector("#that-all").style.display = "block";
                 }
             );
 

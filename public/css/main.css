@@ -71,6 +71,11 @@ section {
     max-width: 1440px;
     margin: 0 auto;
 }
+
+.disabled{
+    display: none !important;
+}
+
 @media(max-width:991px) {
     html {
         font-size: 55%;

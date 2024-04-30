@@ -28,11 +28,11 @@
             </div>
         </div>
     </div>
-    <button class="inline-option-btn" id="show-comments"></button>
+    <button class="inline-option-btn" id="show-comments">Comments</button>
 </section>
 <!-- text section ends   -->
 <!-- comment section starts  -->
-<section class="comments">
+<section class="comments disabled">
     <h1 class="heading">Comments</h1>
     <form action="" method="post" class="add-comment">
         <textarea name="comment_box" required placeholder="Write your comments..." id="" maxlength="1000" cols="30"
@@ -40,22 +40,19 @@
         <input type="submit" value="add comment" name="add_comment" class="inline-btn">
        
     </form>
+    <h2 class="no-comments"><button id="start-journey-content" class="inline-btn">Sign In to add comments!</button></h2>
    
     <div class="show-comments">
         <!-- Self Comment - Do not delete  -->
         <div class="box">
             <div class="user">
-                <img src="/images/profile/photo_1.png" alt="">
+                <img src="/images/profile/guest-user.svg" alt="">
                 <div>
-                    <h2>John Doe</h2>
+                    <h2>Test User</h2>
                     <span>22-12-2023</span>
                 </div>
             </div>
-            <p class="text">This is a awesome comment from John Doe.</p>
-            <form action="" method="post" class="flex-btn">
-                <button type="submit" name="edit-comment" class="inline-option-btn">edit comment</button>
-                <button type="submit" name="delete-comment" class="inline-delete-btn">delete comment</button>
-            </form>
+            <p class="text">A simple test comment to improve edit delete button.</p>
         </div>
     </div>
 

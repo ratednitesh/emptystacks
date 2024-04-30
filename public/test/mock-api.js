@@ -62,21 +62,17 @@ export function mockgetTextCourseAPICall(courseId){
         // Simulate a delay of 1 second
         setTimeout(() => {
             // Simulate a successful response with dummy data
-            console.log("Course Details read from the server.");
             console.log(courseDetails[courseId]);
-
             resolve(courseDetails[courseId]); // Resolve the Promise with the dummy data
         }, 1000); // 1000 milliseconds delay (1 second)
     });
 }
-
+// TODO: Potentially we can remove this.
 export function mockgetUserInfoAPICall(userId){
     return new Promise((resolve, reject) => {
         // Simulate a delay of 1 second
         setTimeout(() => {
             // Simulate a successful response with dummy data
-            console.log("User Info read from the server.");
-            console.log(userPublic[userId]);
             resolve(userId); // Resolve the Promise with the dummy data
         }, 1000); // 1000 milliseconds delay (1 second)
     });

@@ -1,31 +1,32 @@
 export var userPrivateProfile = {
     "zhcyWRZpJKZohfqSt6Xihyo4Awq2": {
-        "username": "Nitesh S.",
-        "userProfileSrc": "/images/profile/user.jpg",
+        "username": "Nitesh Saxena",
+        "userProfileSrc": "/images/profile/photo_1.png",
         "mailId": "nitesh_91@outlook.com",
         "role": "Stack Explorer",
-        "actvities": {
-            "saved-courses": "43",
-            "liked-tutorials": "23",
-            "total-comments": "12"
+        "activities": {
+            "saved-courses": 4,
+            "liked-tutorials": 10,
+            "total-comments": 1,
         },
         "enrolledCourses": [
             {
-                "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
-                "title": "1. Solving LeetCode Questions",
-                "href": "/course/course1"
+                "thumbnail": "/images/thumbnails/1.jpg",
+                "title": "Solving LeetCode Questions",
+                "href": "/course/problemSolvingLeetCode"
+                // TODO: Percentage Completion and last chapter href.
 
             },
             {
-                "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
-                "title": "2. Solving LeetCode Questions",
-                "href": "/course/course2"
+                "thumbnail": "/images/thumbnails/2.jpg",
+                "title": "HTML: Complete Beginner Guide",
+                "href": "/course/htmlBeginner"
 
-            }, {
-                "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
-                "title": "3. Solving LeetCode Questions",
-                "href": "/course/course2"
-
+            },
+            {
+                "thumbnail": "/images/thumbnails/3.jpg",
+                "title": "A complete Javascript Guide",
+                "href": "/course/jsComplete"
             }
         ]
     },
@@ -34,54 +35,100 @@ export var userPrivateProfile = {
         "userProfileSrc": "/images/profile/user.jpg",
         "mailId": "nitesh_91@outlook.com",
         "role": "Stack Explorer",
-        "actvities": {
-            "saved-courses": "43",
-            "liked-tutorials": "23",
-            "total-comments": "12"
+        "activities": {
+            "saved-courses": 4,
+            "liked-tutorials": 23,
+            "total-comments": 12
         },
         "enrolledCourses": [
             {
-                "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
-                "title": "1. Solving LeetCode Questions",
-                "href": "/course/course1"
+                "thumbnail": "/images/thumbnails/4.jpg",
+                "title": "System Design: Deep Dive",
+                "href": "/course/systemDesign"
 
             },
             {
-                "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
-                "title": "2. Solving LeetCode Questions",
-                "href": "/course/course2"
+                "thumbnail": "/images/thumbnails/5.jpg",
+                "title": "JAVA: A complete Beginner Guide",
+                "href": "/course/javaBeginner"
 
-            }, {
-                "thumbnail": "/images/thumbnails/thumbnail sample.jpg",
-                "title": "3. Solving LeetCode Questions",
-                "href": "/course/course2"
+            },
+            {
+                "thumbnail": "/images/thumbnails/3.jpg",
+                "title": "A complete Javascript Guide",
+                "href": "/course/jsComplete"
+            },
+            {
+                "thumbnail": "/images/thumbnails/2.jpg",
+                "title": "HTML: Complete Beginner Guide",
+                "href": "/course/htmlBeginner"
 
-            }
+            },
         ]
     },
-};
-export var userPublic = {
-    "12345": {
-        "name": "John Doe",
-        "role": "Stack Builder",
-        "userProfileSrc": "/images/profile/photo_1.png",
-    },
-    "23456": {
-        "name": "Jane Doe",
-        "role": "Stack Explorer",
-        "userProfileSrc": "/images/profile/photo_1.png",
-    },
-    "34567": {
-        "name": "Jane Deol",
-        "role": "Stack Explorer",
-        "userProfileSrc": "/images/profile/photo_1.png",
+    "eDLhJLXv7ChEf6vBCSSbHUphTlV2": {
+        "username": "Jane T.",
+        "userProfileSrc": "/images/profile/teacher.png",
+        "mailId": "teacher@test.com",
+        "role": "Stack Builder", //TODO: View teacher profile options/ stats
+        "activities": {
+            "saved-courses": 4,
+            "liked-tutorials": 23,
+            "total-comments": 12
+        },
+        "enrolledCourses": [
+            {
+                "thumbnail": "/images/thumbnails/4.jpg",
+                "title": "System Design: Deep Dive",
+                "href": "/course/systemDesign"
+
+            },
+            {
+                "thumbnail": "/images/thumbnails/5.jpg",
+                "title": "JAVA: A complete Beginner Guide",
+                "href": "/course/javaBeginner"
+
+            },
+            {
+                "thumbnail": "/images/thumbnails/3.jpg",
+                "title": "A complete Javascript Guide",
+                "href": "/course/jsComplete"
+            },
+            {
+                "thumbnail": "/images/thumbnails/2.jpg",
+                "title": "HTML: Complete Beginner Guide",
+                "href": "/course/htmlBeginner"
+
+            },
+        ]
     }
 };
+export var likedTutorials = {
+    "zhcyWRZpJKZohfqSt6Xihyo4Awq2": [],
+    "hhjGEzFfz4gcFBUt9qROUwxxI852": [],
+
+    // TODO: Complete these.
+}
+
 export var userPublicProfile = {
     "zhcyWRZpJKZohfqSt6Xihyo4Awq2": {
-        "username": "Nitesh S.",
+        "username": "Nitesh Saxena",
         "about-me": "I am a curious little kid.",
-        "work": "Vice President",
+        "work": "Scarer @ Monster.Inc",
+        "location": "India",
+        "tech-stack": "JAVA Developer",
+        "facebook": "ratednitesh",
+        "instagram": "ratednitesh",
+        "linkedin": "ratednitesh",
+        "github": "",
+        "userProfileSrc": "/images/profile/photo_1.png",
+        "role": "Stack Explorer",
+        "completedCourses": [] // TODO: for later
+    },
+    "hhjGEzFfz4gcFBUt9qROUwxxI852": {
+        "username": "Nitesh S.",
+        "about-me": "I am a boring grown up man.",
+        "work": "Vice President @Goldman Sachs",
         "location": "India",
         "tech-stack": "JAVA Developer",
         "facebook": "ratednitesh",
@@ -91,19 +138,127 @@ export var userPublicProfile = {
         "userProfileSrc": "/images/profile/user.jpg",
         "role": "Stack Explorer"
     },
-    "hhjGEzFfz4gcFBUt9qROUwxxI852": {
-        "username": "Nitesh S.",
-        "about-me": "I am a curious little kid.",
-        "work": "Vice President",
+    "eDLhJLXv7ChEf6vBCSSbHUphTlV2": {
+        "username": "Jane T.",
+        "about-me": "I am a woww woman.",
+        "work": "Professor",
         "location": "India",
-        "tech-stack": "JAVA Developer",
-        "facebook": "ratednitesh",
-        "instagram": "ratednitesh",
-        "linkedin": "ratednitesh",
+        "tech-stack": "Full-Stack Developer",
+        "facebook": "janeT18",
+        "instagram": "janeT18",
+        "linkedin": "janeT18",
         "github": "",
-        "userProfileSrc": "/images/profile/user.jpg",
-        "role": "Stack Explorer"
+        "userProfileSrc": "/images/profile/teacher.png",
+        "role": "Stack Builder",
+        "tutorDetails": {
+            "stats": {
+                "published-courses": 2,
+                "tutor-liked-tutorials": 22,
+                "tutor-rating": 4.5,
+            },
+            "publishedCourses": [
+                {
+                    "thumbnail": "/images/thumbnails/1.jpg",
+                    "title": "Solving LeetCode Questions",
+                    "href": "/course/problemSolvingLeetCode"
+
+                },
+                {
+                    "thumbnail": "/images/thumbnails/2.jpg",
+                    "title": "HTML: Complete Beginner Guide",
+                    "href": "/course/htmlBeginner"
+
+                },
+            ]
+        }
+    },
+    "12345": {
+        "username": "John Doe",
+        "about-me": "I am a woww man.",
+        "work": "IT Professional",
+        "location": "United States",
+        "tech-stack": "Full-Stack Developer",
+        "facebook": "johndoe61",
+        "instagram": "johndoe61",
+        "linkedin": "janejohndoe61T18",
+        "github": "",
+        "userProfileSrc": "/images/profile/teacher2.png",
+        "role": "Stack Builder",
+        "tutorDetails": {
+            "stats": {
+                "published-courses": 10,
+                "tutor-liked-tutorials": 220,
+                "tutor-rating": 4.9,
+            },
+            "publishedCourses": [
+                {
+                    thumbnail: "/images/thumbnails/3.jpg",
+                    title: "Javascript: Complete Tutorial",
+                    href: "/course/jsComplete"
+                },
+                {
+                    thumbnail: "/images/thumbnails/4.jpg",
+                    title: "System Design: Deep Dive",
+                    href: "/course/systemDesign"
+                },
+                {
+                    thumbnail: "/images/thumbnails/5.jpg",
+                    title: "JAVA Complete Tutorial: Beginner",
+                    href: "/course/javaBeginner"
+                },
+                {
+                    thumbnail: "/images/thumbnails/6.jpg",
+                    title: "Data Structure & Algorithm: Beginner",
+                    href: "/course/dsa-beginner"
+                },
+                {
+                    thumbnail: "/images/thumbnails/7.jpg",
+                    title: "Javascript: Advanced Projects",
+                    href: "/course/js-projects"
+                },
+                {
+                    thumbnail: "/images/thumbnails/8.jpg",
+                    title: "Data Structure & Algorithm: Medium",
+                    href: "/course/dsa-medium"
+                },
+                {
+                    thumbnail: "/images/thumbnails/9.jpg",
+                    title: "JAVA Complete Tutorial: Medium",
+                    href: "/course/javaMedium"
+                },
+                {
+                    thumbnail: "/images/thumbnails/10.jpg",
+                    title: "Data Structure & Algorithm: Expert",
+                    href: "/course/dsa-expert"
+                },
+                {
+                    thumbnail: "/images/thumbnails/3.jpg",
+                    title: "JAVA Complete Tutorial: Expert",
+                    href: "/course/javaExpert"
+                },
+                {
+                    thumbnail: "/images/thumbnails/5.jpg",
+                    title: "JAVA: Advanced Projects",
+                    href: "/course/javaProjects"
+                }
+            ]
+        }
+    },
+    "xtz": {
+        "username": "Kitty Holmes",
+        "about-me": "I am a cutie girl.",
+        "work": "Student @ DU",
+        "location": "United States",
+        "tech-stack": "Full-Stack Developer",
+        "facebook": "cuteKitty12",
+        "instagram": "cuteKitty12",
+        "linkedin": "cuteKitty12",
+        "github": "cuteKitty12",
+        "userProfileSrc": "/images/profile/testUser.png",
+        "role": "Stack Explorer",
+
     }
+
 };
 export var topStreams = [
     { icon: 'es-code', text: 'JAVA' },
@@ -189,10 +344,10 @@ export var courseDetails = {
         "chapterCount": "9 Chapters",
         "thumbnail": "/images/thumbnails/1.jpg",
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "publishDate": "22-12-2023"
     },
@@ -205,10 +360,10 @@ export var courseDetails = {
         "chapterCount": "6 Chapters",
         "thumbnail": "/images/thumbnails/2.jpg",
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "publishDate": "22-12-2023"
     },
@@ -224,7 +379,7 @@ export var courseDetails = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "publishDate": "22-12-2023"
     },
@@ -240,7 +395,7 @@ export var courseDetails = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "publishDate": "22-12-2023"
     },
@@ -256,7 +411,7 @@ export var courseDetails = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "publishDate": "22-12-2023"
     },
@@ -272,7 +427,7 @@ export var courseDetails = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "publishDate": "22-12-2023"
     },
@@ -288,7 +443,7 @@ export var courseDetails = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "publishDate": "22-12-2023"
     },
@@ -304,7 +459,7 @@ export var courseDetails = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "publishDate": "22-12-2023"
     },
@@ -320,7 +475,7 @@ export var courseDetails = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "publishDate": "22-12-2023"
     },
@@ -336,7 +491,7 @@ export var courseDetails = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "publishDate": "22-12-2023"
     },
@@ -352,7 +507,7 @@ export var courseDetails = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "publishDate": "22-12-2023"
     },
@@ -368,7 +523,7 @@ export var courseDetails = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "publishDate": "22-12-2023"
     },
@@ -564,20 +719,20 @@ export var courseReviews = {
         {
             "review": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque autem id eligendi minima quo pariatur            quidem! Recusandae nisi vero non dolorum facere quibusdam minus sequi, eos pariatur atque voluptatibus",
             "user": {
-                "id": "12345",
+                "uid": "12345",
                 "name": "John Doe",
                 "role": "Stack Builder",
-                "userProfileSrc": "/images/profile/photo_1.png",
+                "userProfileSrc": "/images/profile/teacher2.png",
             },
             "rating": 4.5
         },
         {
             "review": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque autem id eligendi minima quo pariatur            quidem! Recusandae nisi vero non dolorum facere quibusdam minus sequi, eos pariatur atque voluptatibus",
             "user": {
-                "id": "23456",
-                "name": "Jane Doe",
+                "uid": "xtz",
+                "name": "Kitty Holmes",
                 "role": "Stack Explorer",
-                "userProfileSrc": "/images/profile/photo_1.png",
+                "userProfileSrc": "/images/profile/testUser.png",
             },
             "rating": 2.5
         }
@@ -586,18 +741,18 @@ export var courseReviews = {
         {
             "review": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque autem id eligendi minima quo pariatur            quidem! Recusandae nisi vero non dolorum facere quibusdam minus sequi, eos pariatur atque voluptatibus",
             "user": {
-                "id": "12345",
+                "uid": "12345",
                 "name": "John Doe",
                 "role": "Stack Builder",
-                "userProfileSrc": "/images/profile/photo_1.png",
+                "userProfileSrc": "/images/profile/teacher2.png",
             },
             "rating": 4.5
         },
         {
             "review": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque autem id eligendi minima quo pariatur            quidem! Recusandae nisi vero non dolorum facere quibusdam minus sequi, eos pariatur atque voluptatibus",
             "user": {
-                "id": "23456",
-                "name": "Jane Doe",
+                "uid": "zhcyWRZpJKZohfqSt6Xihyo4Awq2",
+                "name": "Nitesh Saxena",
                 "role": "Stack Explorer",
                 "userProfileSrc": "/images/profile/photo_1.png",
             },
@@ -606,10 +761,10 @@ export var courseReviews = {
         {
             "review": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque autem id eligendi minima quo pariatur            quidem! Recusandae nisi vero non dolorum facere quibusdam minus sequi, eos pariatur atque voluptatibus",
             "user": {
-                "id": "23456",
-                "name": "Jane Doe",
+                "uid": "hhjGEzFfz4gcFBUt9qROUwxxI852",
+                "name": "Nitesh S.",
                 "role": "Stack Explorer",
-                "userProfileSrc": "/images/profile/photo_1.png",
+                "userProfileSrc": "/images/profile/user.jpg",
             },
             "rating": 4
         }
@@ -689,10 +844,10 @@ export var courseContent = {
     </ul>
     `,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "",
         "nextChapter": "",
@@ -710,71 +865,12 @@ export var courseContent = {
         exercitationem officiis dolores adipisci dolorem saepe harum deserunt sequi quaerat ex laboriosam
         eligendi fuga alias, natus itaque! Modi distinctio doloribus sunt, esse eos mollitia itaque adipisci
         doloremque praesentium sed ab saepe animi earum in at! Deserunt!</p>
-    <h4>Moreo on this</h4>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam corporis eum architecto soluta
-        veniam hic officiis quibusdam id nemo.</p>
-    <h5>something else</h5>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Link to somewhere </a>Illum rerum
-        voluptatibus in omnis nobis consequatur ad possimus impedit magni corporis!</p>
-    <ul>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, atque.</li>
-        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed maxime itaque qui explicabo ipsum
-            suscipit vitae neque, nam eos id!</li>
-        <li>Lorem ipsum dolor sit amet.</li>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui iusto aliquid et eligendi nesciunt
-            totam.</li>
-        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod et rerum cupiditate fugiat optio
-            voluptatum perspiciatis officiis hic modi?</li>
-        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic!</li>
-    </ul>
-    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit explicabo ad voluptatem sit sapiente
-        exercitationem officiis dolores adipisci dolorem saepe harum deserunt sequi quaerat ex laboriosam
-        eligendi fuga alias, natus itaque! Modi distinctio doloribus sunt, esse eos mollitia itaque adipisci
-        doloremque praesentium sed ab saepe animi earum in at! Deserunt!</p>
-    <h4>Moreo on this</h4>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam corporis eum architecto soluta
-        veniam hic officiis quibusdam id nemo.</p>
-    <h5>something else</h5>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Link to somewhere </a>Illum rerum
-        voluptatibus in omnis nobis consequatur ad possimus impedit magni corporis!</p>
-    <ul>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, atque.</li>
-        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed maxime itaque qui explicabo ipsum
-            suscipit vitae neque, nam eos id!</li>
-        <li>Lorem ipsum dolor sit amet.</li>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui iusto aliquid et eligendi nesciunt
-            totam.</li>
-        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod et rerum cupiditate fugiat optio
-            voluptatum perspiciatis officiis hic modi?</li>
-        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic!</li>
-    </ul>
-    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit explicabo ad voluptatem sit sapiente
-        exercitationem officiis dolores adipisci dolorem saepe harum deserunt sequi quaerat ex laboriosam
-        eligendi fuga alias, natus itaque! Modi distinctio doloribus sunt, esse eos mollitia itaque adipisci
-        doloremque praesentium sed ab saepe animi earum in at! Deserunt!</p>
-    <h4>Moreo on this</h4>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam corporis eum architecto soluta
-        veniam hic officiis quibusdam id nemo.</p>
-    <h5>something else</h5>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Link to somewhere </a>Illum rerum
-        voluptatibus in omnis nobis consequatur ad possimus impedit magni corporis!</p>
-    <ul>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, atque.</li>
-        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed maxime itaque qui explicabo ipsum
-            suscipit vitae neque, nam eos id!</li>
-        <li>Lorem ipsum dolor sit amet.</li>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui iusto aliquid et eligendi nesciunt
-            totam.</li>
-        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod et rerum cupiditate fugiat optio
-            voluptatum perspiciatis officiis hic modi?</li>
-        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic!</li>
-    </ul>
     `,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "",
         "nextChapter": "",
@@ -796,68 +892,12 @@ export var courseContent = {
     <h4>Moreo on this</h4>
     <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam corporis eum architecto soluta
         veniam hic officiis quibusdam id nemo.</p>
-    <h5>something else</h5>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Link to somewhere </a>Illum rerum
-        voluptatibus in omnis nobis consequatur ad possimus impedit magni corporis!</p>
-    <ul>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, atque.</li>
-        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed maxime itaque qui explicabo ipsum
-            suscipit vitae neque, nam eos id!</li>
-        <li>Lorem ipsum dolor sit amet.</li>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui iusto aliquid et eligendi nesciunt
-            totam.</li>
-        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod et rerum cupiditate fugiat optio
-            voluptatum perspiciatis officiis hic modi?</li>
-        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic!</li>
-    </ul>
-    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit explicabo ad voluptatem sit sapiente
-        exercitationem officiis dolores adipisci dolorem saepe harum deserunt sequi quaerat ex laboriosam
-        eligendi fuga alias, natus itaque! Modi distinctio doloribus sunt, esse eos mollitia itaque adipisci
-        doloremque praesentium sed ab saepe animi earum in at! Deserunt!</p>
-    <h4>Moreo on this</h4>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam corporis eum architecto soluta
-        veniam hic officiis quibusdam id nemo.</p>
-    <h5>something else</h5>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Link to somewhere </a>Illum rerum
-        voluptatibus in omnis nobis consequatur ad possimus impedit magni corporis!</p>
-    <ul>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, atque.</li>
-        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed maxime itaque qui explicabo ipsum
-            suscipit vitae neque, nam eos id!</li>
-        <li>Lorem ipsum dolor sit amet.</li>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui iusto aliquid et eligendi nesciunt
-            totam.</li>
-        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod et rerum cupiditate fugiat optio
-            voluptatum perspiciatis officiis hic modi?</li>
-        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic!</li>
-    </ul>
-    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit explicabo ad voluptatem sit sapiente
-        exercitationem officiis dolores adipisci dolorem saepe harum deserunt sequi quaerat ex laboriosam
-        eligendi fuga alias, natus itaque! Modi distinctio doloribus sunt, esse eos mollitia itaque adipisci
-        doloremque praesentium sed ab saepe animi earum in at! Deserunt!</p>
-    <h4>Moreo on this</h4>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam corporis eum architecto soluta
-        veniam hic officiis quibusdam id nemo.</p>
-    <h5>something else</h5>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Link to somewhere </a>Illum rerum
-        voluptatibus in omnis nobis consequatur ad possimus impedit magni corporis!</p>
-    <ul>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, atque.</li>
-        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed maxime itaque qui explicabo ipsum
-            suscipit vitae neque, nam eos id!</li>
-        <li>Lorem ipsum dolor sit amet.</li>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui iusto aliquid et eligendi nesciunt
-            totam.</li>
-        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod et rerum cupiditate fugiat optio
-            voluptatum perspiciatis officiis hic modi?</li>
-        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic!</li>
-    </ul>
-    `,
+    <h5>something else</h5>    `,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "",
         "nextChapter": "",
@@ -877,70 +917,12 @@ export var courseContent = {
         eligendi fuga alias, natus itaque! Modi distinctio doloribus sunt, esse eos mollitia itaque adipisci
         doloremque praesentium sed ab saepe animi earum in at! Deserunt!</p>
     <h4>Moreo on this</h4>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam corporis eum architecto soluta
-        veniam hic officiis quibusdam id nemo.</p>
-    <h5>something else</h5>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Link to somewhere </a>Illum rerum
-        voluptatibus in omnis nobis consequatur ad possimus impedit magni corporis!</p>
-    <ul>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, atque.</li>
-        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed maxime itaque qui explicabo ipsum
-            suscipit vitae neque, nam eos id!</li>
-        <li>Lorem ipsum dolor sit amet.</li>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui iusto aliquid et eligendi nesciunt
-            totam.</li>
-        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod et rerum cupiditate fugiat optio
-            voluptatum perspiciatis officiis hic modi?</li>
-        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic!</li>
-    </ul>
-    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit explicabo ad voluptatem sit sapiente
-        exercitationem officiis dolores adipisci dolorem saepe harum deserunt sequi quaerat ex laboriosam
-        eligendi fuga alias, natus itaque! Modi distinctio doloribus sunt, esse eos mollitia itaque adipisci
-        doloremque praesentium sed ab saepe animi earum in at! Deserunt!</p>
-    <h4>Moreo on this</h4>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam corporis eum architecto soluta
-        veniam hic officiis quibusdam id nemo.</p>
-    <h5>something else</h5>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Link to somewhere </a>Illum rerum
-        voluptatibus in omnis nobis consequatur ad possimus impedit magni corporis!</p>
-    <ul>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, atque.</li>
-        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed maxime itaque qui explicabo ipsum
-            suscipit vitae neque, nam eos id!</li>
-        <li>Lorem ipsum dolor sit amet.</li>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui iusto aliquid et eligendi nesciunt
-            totam.</li>
-        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod et rerum cupiditate fugiat optio
-            voluptatum perspiciatis officiis hic modi?</li>
-        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic!</li>
-    </ul>
-    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit explicabo ad voluptatem sit sapiente
-        exercitationem officiis dolores adipisci dolorem saepe harum deserunt sequi quaerat ex laboriosam
-        eligendi fuga alias, natus itaque! Modi distinctio doloribus sunt, esse eos mollitia itaque adipisci
-        doloremque praesentium sed ab saepe animi earum in at! Deserunt!</p>
-    <h4>Moreo on this</h4>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ipsam corporis eum architecto soluta
-        veniam hic officiis quibusdam id nemo.</p>
-    <h5>something else</h5>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Link to somewhere </a>Illum rerum
-        voluptatibus in omnis nobis consequatur ad possimus impedit magni corporis!</p>
-    <ul>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, atque.</li>
-        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed maxime itaque qui explicabo ipsum
-            suscipit vitae neque, nam eos id!</li>
-        <li>Lorem ipsum dolor sit amet.</li>
-        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui iusto aliquid et eligendi nesciunt
-            totam.</li>
-        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod et rerum cupiditate fugiat optio
-            voluptatum perspiciatis officiis hic modi?</li>
-        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic!</li>
-    </ul>
     `,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "",
         "nextChapter": "",
@@ -956,10 +938,10 @@ export var courseContent = {
         "likes": 32,
         "content": `<p>This is the introduction to HTML course.</p>`,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "",
         "nextChapter": "htmlBeginner/Basics",
@@ -975,10 +957,10 @@ export var courseContent = {
         "likes": 32,
         "content": `<p>This is the introduction to HTML course.</p>`,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "",
         "nextChapter": "htmlBeginner/Basics",
@@ -994,10 +976,10 @@ export var courseContent = {
         "likes": 32,
         "content": `<p>This is the introduction to HTML course.</p>`,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "",
         "nextChapter": "htmlBeginner/Basics",
@@ -1011,12 +993,12 @@ export var courseContent = {
         "heading": "LeetCode: Grade System",
         "publishDate": "21-01-2024",
         "likes": 32,
-        "content": `<p>This is the introduction to HTML course.</p>`,
+        "content": `<p>This is the introduction to Grade System.</p>`,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "",
         "nextChapter": "htmlBeginner/Basics",
@@ -1032,10 +1014,10 @@ export var courseContent = {
         "likes": 32,
         "content": `<p>This is the introduction to HTML course.</p>`,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "",
         "nextChapter": "htmlBeginner/Basics",
@@ -1053,10 +1035,10 @@ export var courseContent = {
         "likes": 32,
         "content": `<p>This is the introduction to HTML course.</p>`,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "",
         "nextChapter": "htmlBeginner/Basics",
@@ -1070,12 +1052,12 @@ export var courseContent = {
         "heading": "Basics of HTML",
         "publishDate": "21-01-2024",
         "likes": 32,
-        "content": `<p>This is the introduction to HTML course.</p>`,
+        "content": `<p>This is the basics to HTML course.</p>`,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "",
         "nextChapter": "htmlBeginner/Basics",
@@ -1091,10 +1073,10 @@ export var courseContent = {
         "likes": 42,
         "content": `<p>This section covers advanced topics in HTML.</p>`,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "htmlBeginner/Basics",
         "nextChapter": "",
@@ -1110,10 +1092,10 @@ export var courseContent = {
         "likes": 42,
         "content": `<p>This section covers advanced topics in HTML.</p>`,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "htmlBeginner/Basics",
         "nextChapter": "",
@@ -1129,10 +1111,10 @@ export var courseContent = {
         "likes": 42,
         "content": `<p>This section covers advanced topics in HTML.</p>`,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "htmlBeginner/Basics",
         "nextChapter": "",
@@ -1148,10 +1130,10 @@ export var courseContent = {
         "likes": 42,
         "content": `<p>This section covers advanced topics in HTML.</p>`,
         "author": {
-            "id": "12345",
-            "name": "John Doe",
+            "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
+            "name": "Jane T.",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher.png",
         },
         "previousChapter": "htmlBeginner/Basics",
         "nextChapter": "",
@@ -1172,7 +1154,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "",
         "nextChapter": "jsComplete/Basics",
@@ -1191,7 +1173,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "",
         "nextChapter": "jsComplete/Basics",
@@ -1210,7 +1192,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "jsComplete/Basics",
         "nextChapter": "",
@@ -1229,7 +1211,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "jsComplete/Basics",
         "nextChapter": "",
@@ -1250,7 +1232,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "",
         "nextChapter": "systemDesign/Basics",
@@ -1269,7 +1251,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "",
         "nextChapter": "systemDesign/Basics",
@@ -1288,7 +1270,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "systemDesign/Basics",
         "nextChapter": "",
@@ -1309,7 +1291,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png"
+            "userProfileSrc": "/images/profile/teacher2.png"
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
         "previousChapter": "",
@@ -1329,7 +1311,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png"
+            "userProfileSrc": "/images/profile/teacher2.png"
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
         "previousChapter": "js-projects/1",
@@ -1349,7 +1331,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png"
+            "userProfileSrc": "/images/profile/teacher2.png"
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
         "previousChapter": "js-projects/2",
@@ -1369,7 +1351,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png"
+            "userProfileSrc": "/images/profile/teacher2.png"
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
         "previousChapter": "js-projects/3",
@@ -1389,7 +1371,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png"
+            "userProfileSrc": "/images/profile/teacher2.png"
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
         "previousChapter": "js-projects/4",
@@ -1409,7 +1391,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png"
+            "userProfileSrc": "/images/profile/teacher2.png"
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
         "previousChapter": "js-projects/5",
@@ -1430,7 +1412,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png"
+            "userProfileSrc": "/images/profile/teacher2.png"
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
         "previousChapter": "",
@@ -1451,7 +1433,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "",
         "nextChapter": "dsa-beginner/default",
@@ -1471,7 +1453,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "",
         "nextChapter": "dsa-medium/default",
@@ -1491,7 +1473,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "",
         "nextChapter": "dsa-beginner/default",
@@ -1511,7 +1493,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "",
         "nextChapter": "dsa-beginner/default",
@@ -1531,7 +1513,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "",
         "nextChapter": "dsa-medium/default",
@@ -1551,7 +1533,7 @@ export var courseContent = {
             "id": "12345",
             "name": "John Doe",
             "role": "Stack Builder",
-            "userProfileSrc": "/images/profile/photo_1.png",
+            "userProfileSrc": "/images/profile/teacher2.png",
         },
         "previousChapter": "",
         "nextChapter": "dsa-beginner/default",
@@ -1563,47 +1545,47 @@ export var courseContentComments = {
     "problemSolvingLeetCode/Introduction": [
         {
             "uid": "xtz",
-            "name": "nit",
+            "name": "Kitty Holmes",
             "commentDate": "22-12-2023",
             "comment": "This is an awesome comment.",
-            "imageSrc": "/images/profile/photo_1.png"
+            "imageSrc": "/images/profile/testUser.png"
         },
         {
-            "uid": "xtz",
-            "name": "nit",
+            "uid": "zhcyWRZpJKZohfqSt6Xihyo4Awq2",
+            "name": "Nitesh Saxena",
             "commentDate": "22-12-2013",
             "comment": "Wow! What an explanation. Really like the way..  is an awesome comment.",
             "imageSrc": "/images/profile/photo_1.png"
         },
         {
             "uid": "xtz",
-            "name": "nit",
+            "name": "Kitty Holmes",
             "commentDate": "22-12-2023",
-            "comment": "This is an awesome comment.",
-            "imageSrc": "/images/profile/photo_1.png"
+            "comment": "This is an tell me more about it lorem comment.",
+            "imageSrc": "/images/profile/testUser.png"
         }
     ],
     "problemSolvingLeetCode/Basics": [
         {
-            "uid": "xtz",
-            "name": "nit",
-            "commentDate": "22-12-2023",
-            "comment": "This is an awesome comment.",
+            "uid": "zhcyWRZpJKZohfqSt6Xihyo4Awq2",
+            "name": "Nitesh Saxena",
+            "commentDate": "22-12-2013",
+            "comment": "Wow! What an explanation. Really like the way..  is an awesome comment.",
             "imageSrc": "/images/profile/photo_1.png"
         },
         {
-            "uid": "xtz",
-            "name": "nit",
+            "uid": "hhjGEzFfz4gcFBUt9qROUwxxI852",
+            "name": "Nitesh S.",
             "commentDate": "22-12-2023",
             "comment": "This is an awesome comment.",
-            "imageSrc": "/images/profile/photo_1.png"
+            "imageSrc": "/images/profile/user.jpg"
         },
         {
             "uid": "xtz",
-            "name": "nit",
+            "name": "Kitty Holmes",
             "commentDate": "22-12-2023",
-            "comment": "This is an awesome comment.",
-            "imageSrc": "/images/profile/photo_1.png"
+            "comment": "What a way to explain... :)",
+            "imageSrc": "/images/profile/testUser.png"
         }
     ]
 

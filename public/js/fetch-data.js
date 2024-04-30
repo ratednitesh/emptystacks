@@ -22,7 +22,7 @@ async function importMockApi() {
     }
 }
 let cachedData = {
-    userData: null,
+    userData: {},
     activities: null,
     enrolledCourses: null,
     topStreams: null,
@@ -34,16 +34,16 @@ export async function getUserPublicData(uid) {
     const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
         // If data is already cached, resolve with the cached data
-        if (cachedData.userData) {
+        if (cachedData.userData[uid]) {
             console.log('Read from cache');
-            resolve(cachedData.userData);
+            resolve(cachedData.userData[uid]);
         } else {
             // Simulate an API call
             mockApi.mockgetUserDataAPICall(uid)
                 .then(response => {
                     // Store the API response in the cachedData object
                     console.log('Resolved');
-                    cachedData.userData = response;
+                    cachedData.userData[uid] = response;
                     resolve(response); // Resolve with the API response
                 })
                 .catch(error => {
@@ -73,16 +73,13 @@ export async function getTopStreams() {
     return new Promise((resolve, reject) => {
         // If data is already cached, resolve with the cached data
         if (cachedData.topStreams) {
-            console.log('Read top streams from cache');
             resolve(cachedData.topStreams);
         } else {
             // Simulate an API call
             mockApi.mockgetTopStreamsAPICall()
                 .then(response => {
                     // Store the API response in the cachedData object
-                    console.log('Top Streams Resolved');
                     cachedData.topStreams = response;
-                    console.log(response);
                     resolve(response); // Resolve with the API response
                 })
                 .catch(error => {
@@ -97,16 +94,13 @@ export async function getTopCourses() {
     return new Promise((resolve, reject) => {
         // If data is already cached, resolve with the cached data
         if (cachedData.topCourses) {
-            console.log('Read enrolled courses from cache');
             resolve(cachedData.topCourses);
         } else {
             // Simulate an API call
             mockApi.mockgetTopCoursesAPICall()
                 .then(response => {
                     // Store the API response in the cachedData object
-                    console.log('Top Courses Resolved');
                     cachedData.topCourses = response;
-                    console.log(response);
                     resolve(response); // Resolve with the API response
                 })
                 .catch(error => {
@@ -131,11 +125,14 @@ export async function generateUserReview(courseId) {
                         <div class="box">
                             <p>${r.review}</p>
                             <div class="user">
+                                <a  onclick="route()" href="/profile/${userInfo.uid}">
                                 <img src="${userInfo.userProfileSrc}" alt="${userInfo.name}">
+                                </a>
                                 <div>
                                     <h2>${userInfo.name}</h2>
                                     ${starsHTML}
                                 </div>
+                               
                             </div>
                         </div>
                     `;

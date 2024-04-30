@@ -1,7 +1,9 @@
 import { publish } from "./event-bus";
 import { getCourseContentAPICalls, getCourseContentCommentsAPICalls, getCourseContentDetailsAPICalls } from "./fetch-data";
-import { pushPopupMessage } from "./setup";
+import { getUid, isUserLoggedIn } from "./firebase-config";
+import { pushPopupMessage, signup_selected } from "./setup";
 let lastChapterId;
+let uid;
 export function loadCourseContent(chapterId) {
     if (lastChapterId != chapterId) {
         lastChapterId = chapterId;
@@ -11,76 +13,121 @@ export function loadCourseContent(chapterId) {
 }
 
 function getCourseContent(chapterId) {
+    const contentHtml = document.querySelector('.text-section');
+    const showComments = document.getElementById("show-comments");
+    const commentHtml = document.querySelector('.comments');
+    const watchVideo = contentHtml.querySelector('.watch-video');
+    const chapterContent = contentHtml.querySelector('.chapter-content');
+
+    if (isUserLoggedIn()) {
+        commentHtml.querySelector(".add-comment").classList.remove('disabled');
+        commentHtml.querySelector(".no-comments").classList.add('disabled');
+        uid = getUid();
+
+    } else {
+        commentHtml.querySelector(".add-comment").classList.add('disabled');
+        commentHtml.querySelector(".no-comments").classList.remove('disabled');
+        document.querySelector('#start-journey-content').addEventListener("click", function () {
+            signup_selected();
+        });
+    }
+
     getCourseContentAPICalls(chapterId).then(
         (chapterData) => {
             if (chapterData) {
-                var contentHtml = document.querySelector('.text-section');
                 contentHtml.querySelector('.heading').innerHTML = chapterData.heading;
                 contentHtml.querySelector('#date').innerHTML = chapterData.publishDate;
                 contentHtml.querySelector('#likes').innerHTML = chapterData.likes + " Likes";
                 contentHtml.querySelector('#author').innerHTML = chapterData.author.name;
-                contentHtml.querySelector('#show-comments').innerHTML = "Comments (" + chapterData.comments + ")";
+                showComments.innerHTML = "Comments (" + chapterData.comments + ")";
+                commentHtml.classList.add('disabled');
+                showComments.classList.remove('disabled');
                 if (chapterData.type == "text") {
-                    contentHtml.querySelector('.watch-video').style.display = "none";
-                    contentHtml.querySelector('.chapter-content').style.display = "block";
-                    contentHtml.querySelector('.chapter-content').innerHTML = chapterData.content;
+                    watchVideo.style.display = "none";
+                    chapterContent.style.display = "block";
+                    chapterContent.innerHTML = chapterData.content;
                 }
                 else {
-                    contentHtml.querySelector('.watch-video').style.display = "block";
-                    contentHtml.querySelector('.chapter-content').style.display = "none";
+                    watchVideo.style.display = "block";
+                    chapterContent.style.display = "none";
                     contentHtml.querySelector('.video').poster = chapterData.thumbnail;
                     contentHtml.querySelector('.description').innerHTML = chapterData.description;
                 }
                 setContentSidebar(chapterData.courseId, chapterData.courseName, chapterId, chapterData.type);
-                document.getElementById("show-comments").addEventListener('click', () => {
-                    getCourseContentCommentsAPICalls(chapterId).then(((commentData) => {
-                        contentHtml.querySelector('#show-comments').style.display = "none";
-                        var commentHtml = document.querySelector('.comments');
-                        commentHtml.style.display = "block";
-                        var comments = commentHtml.querySelector('.show-comments');
-                        for (const comment of commentData) {
-                            const boxDiv = document.createElement("div");
-                            boxDiv.classList.add("box");
-                            const userDiv = document.createElement("div");
-                            userDiv.classList.add("user");
-                            const userImg = document.createElement("img");
-                            userImg.src = comment.imageSrc;
-                            userImg.alt = "";
-                            const userInfoDiv = document.createElement("div");
-                            const userName = document.createElement("h2");
-                            userName.textContent = comment.name;
+                showComments.addEventListener('click', () => {
+                    showComments.classList.add('disabled');
+                    commentHtml.classList.remove('disabled');
+                    getCourseContentCommentsAPICalls(chapterId).then(
+                        ((commentData) => {
+                            var comments = commentHtml.querySelector('.show-comments');
+                            comments.innerHTML = "";
+                            if (commentData) {
+                                for (const comment of commentData) {
+                                    const boxDiv = document.createElement("div");
+                                    boxDiv.classList.add("box");
+                                    const userDiv = document.createElement("div");
+                                    userDiv.classList.add("user");
 
-                            const commentDate = document.createElement("span");
-                            commentDate.textContent = comment.commentDate;
+                                    const userImg = document.createElement("img");
+                                    userImg.src = comment.imageSrc;
+                                    userImg.alt = "";
+                                    const userInfoDiv = document.createElement("div");
+                                    const userName = document.createElement("h2");
+                                    userName.textContent = comment.name;
 
-                            userInfoDiv.appendChild(userName);
-                            userInfoDiv.appendChild(commentDate);
+                                    const commentDate = document.createElement("span");
+                                    commentDate.textContent = comment.commentDate;
 
-                            userDiv.appendChild(userImg);
-                            userDiv.appendChild(userInfoDiv);
+                                    userInfoDiv.appendChild(userName);
+                                    userInfoDiv.appendChild(commentDate);
 
-                            const commentText = document.createElement("p");
-                            commentText.classList.add("text");
-                            commentText.textContent = comment.comment;
+                                    const profileLink = document.createElement("a");
+                                    profileLink.setAttribute("onclick", "route()");
+                                    profileLink.href = "/profile/" + comment.uid;
 
-                            const form = document.createElement("form");
-                            form.action = "";
-                            form.method = "post";
-                            form.classList.add("flex-btn");
+                                    profileLink.appendChild(userImg);
+                                    userDiv.appendChild(profileLink);
+                                    userDiv.appendChild(userInfoDiv);
 
+                                    const commentText = document.createElement("p");
+                                    commentText.classList.add("text");
+                                    commentText.textContent = comment.comment;
+                                    boxDiv.appendChild(userDiv);
+                                    boxDiv.appendChild(commentText);
+                                    if (comment.uid == uid) {
+                                        // Create form element
+                                        const form = document.createElement("form");
+                                        form.setAttribute("action", "");
+                                        form.setAttribute("method", "post");
+                                        form.classList.add("flex-btn");
 
-                            boxDiv.appendChild(userDiv);
-                            boxDiv.appendChild(commentText);
-                            boxDiv.appendChild(form);
+                                        // Create edit button
+                                        var editButton = document.createElement("button");
+                                        editButton.setAttribute("type", "submit");
+                                        editButton.setAttribute("name", "edit-comment");
+                                        editButton.classList.add("inline-option-btn");
+                                        editButton.textContent = "edit comment";
 
-                            comments.appendChild(boxDiv);
-                        }
-                    })).catch(
-                        (e) => {
+                                        // Create delete button
+                                        var deleteButton = document.createElement("button");
+                                        deleteButton.setAttribute("type", "submit");
+                                        deleteButton.setAttribute("name", "delete-comment");
+                                        deleteButton.classList.add("inline-delete-btn");
+                                        deleteButton.textContent = "delete comment";
+
+                                        // Append buttons to form
+                                        form.appendChild(editButton);
+                                        form.appendChild(deleteButton);
+                                        boxDiv.appendChild(form);
+                                    }
+                                    comments.appendChild(boxDiv);
+                                }
+                            }
+                        }))
+                        .catch((e) => {
                             console.log(e);
                             pushPopupMessage(["FAILURE", "Something went wrong, unable to load comments."]);
-                        }
-                    )
+                        });
                 });
             } else {
                 publish('notFoundRoute');
@@ -101,7 +148,7 @@ function setContentSidebar(courseId, courseName, chapterId, type) {
             var contentSidebarHtml = document.querySelector('#contentSidebar');
             contentSidebarHtml.querySelector('.course-title').innerHTML = courseName;
             var ul = contentSidebarHtml.querySelector(".nano-content");
-            ul.innerHTML= "";
+            ul.innerHTML = "";
             for (const [chapter, topics] of Object.entries(chapterDetails)) {
                 const li = document.createElement("li");
                 li.classList.add("menu-options");
@@ -171,11 +218,6 @@ function setContentSidebar(courseId, courseName, chapterId, type) {
         }
     )
 }
-// export function loadContentSidebar() {
-//     if (!initContentSidebarStatus)
-//         initializeContentSideBarListeners();
-// 
-// }
 
 function initializeContentSideBarListeners() {
     let subMenus = document.querySelectorAll(".sub-menu > a");

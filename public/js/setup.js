@@ -185,7 +185,7 @@ function closeMenuOptions(event) {
 export function updateUserPrivateData(userLoggedIn) {
     if (userLoggedIn) {
         let uid = getUid();
-        getUserPrivateData(uid) // TODO: Use it from args
+        getUserPrivateData(uid)
             .then((userData) => {
                 document.getElementById('user-photo-header').src = userData.userProfileSrc;
                 document.getElementById('user-menu-photo').src = userData.userProfileSrc;

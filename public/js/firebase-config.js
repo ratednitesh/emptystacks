@@ -66,8 +66,11 @@ export function isUserLoggedIn() {
         false;
 }
 export function getUid() {
-    console.log(auth.currentUser.uid);
-    return auth.currentUser.uid;
+    if (isUserLoggedIn()) {
+        console.log(auth.currentUser.uid);
+        return auth.currentUser.uid;
+    } else
+        return "";
 }
 export function createNewUser(userToken) {
     return new Promise((resolve, reject) => {

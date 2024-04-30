@@ -1,38 +1,139 @@
-import {  getUserPublicData, updateUserData } from "./fetch-data";
+import { getUserPublicData, updateUserData } from "./fetch-data";
+import { getUid } from "./firebase-config";
 import { getUserPrivateData, pushPopupMessage } from "./setup";
 
-var userPublicProfile = {};
+let staticLoaded = false;
+var myProfile = {};
+const dataFields = ["username", "about-me", "work", "location", "tech-stack", "facebook", "instagram", "linkedin", "github"];
 
 export function initProfile(uid) {
+    let myUid = getUid();
+    if (!staticLoaded)
+        initStaticContent();
+    loadPublicProfile(uid, myUid);
+    if (uid == myUid) {
+        document.querySelectorAll('.profile .private').forEach(function (event) {
+            event.classList.remove("disabled"); //TODO: not completed. continue from here.
+        });
+        loadPrivateProfile(uid);
+    }
+    else {
+        document.querySelectorAll('.profile .private').forEach(function (event) {
+            event.classList.add("disabled"); //TODO: not completed. continue from here.
+        });
+    }
+
+}
+function initStaticContent() {
+    for (const dataField of dataFields) {
+        let field = document.getElementById(dataField);
+        let dataFieldElement;
+        if (dataField == "username") {
+            dataFieldElement = document.createElement("h2");
+            dataFieldElement.classList.add("data-field");
+        }
+        else {
+            dataFieldElement = document.createElement("span");
+            dataFieldElement.classList.add("data-field");
+        }
+        let editIcon = document.createElement("i");
+        editIcon.classList.add("edit", "edit-field", "es-pencil", "private");
+        let checkIcon = document.createElement("i");
+        checkIcon.classList.add("check", "inactive", "edit-field", "es-ok", "private");
+        let crossIcon = document.createElement("i");
+        crossIcon.classList.add("cross", "inactive", "edit-field", "es-cancel", "private");
+        field.appendChild(dataFieldElement);
+        field.appendChild(editIcon);
+        field.appendChild(checkIcon);
+        field.appendChild(crossIcon);
+        (() => {
+            editIcon.addEventListener("click", () => {
+                dataFieldElement.contentEditable = true;
+                dataFieldElement.classList.add("editable");
+                editIcon.classList.toggle('inactive');
+                checkIcon.classList.toggle('inactive');
+                crossIcon.classList.toggle('inactive');
+            })
+            checkIcon.addEventListener("click", () => {
+                //TODO: add validations for fields change
+                myProfile[dataField] = dataFieldElement.innerHTML;
+                updateUserData("uid", myProfile).then(() => {
+                    pushPopupMessage(["SUCCESS", `${dataField} successfully updated.`]);
+                })
+                    .catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to save changes."]); });
+                dataFieldElement.contentEditable = false;
+                dataFieldElement.classList.remove("editable");
+                editIcon.classList.toggle('inactive');
+                checkIcon.classList.toggle('inactive');
+                crossIcon.classList.toggle('inactive');
+            });
+            crossIcon.addEventListener("click", () => {
+                dataFieldElement.innerHTML = myProfile[dataField];
+                dataFieldElement.contentEditable = false;
+                dataFieldElement.classList.remove("editable");
+                editIcon.classList.toggle('inactive');
+                checkIcon.classList.toggle('inactive');
+                crossIcon.classList.toggle('inactive');
+            });
+
+        })();
+
+    }
+    staticLoaded = true;
+}
+
+function loadPublicProfile(uid, myUid) {
+    console.log("loading profile: ");
     console.log(uid);
     getUserPublicData(uid).then((data) => {
-        userPublicProfile = data;
+        console.log("data is here");
+        console.log(data);
+        if (myUid == uid)
+            myProfile = data; //TODO: only on self profile
         setUserProfilePhoto(data.userProfileSrc);
         setUserRole(data.role);
         console.log(data);
-        for (const property in data) {
-            if (property != 'userProfileSrc' && property != 'role') {
-                initUserPublicProfile(property, data[property]);
-                updateUserPublicProfile(property);
-            }
+        for (const dataField of dataFields) {
+            let field = document.getElementById(dataField);
+            let dataFieldElement = field.querySelector('.data-field');
+            dataFieldElement.innerHTML = data[dataField];
         }
-        console.log('profile loaded');
-    }).catch(() => {
+
+        // Read tutor data 
+        if(data.tutorDetails){
+            for (const property in data.tutorDetails.stats) {
+                initUserActivities(property, data.tutorDetails.stats[property]);
+            }
+            createCoursesSection(data.tutorDetails.publishedCourses,'.box-container.published-courses' );
+            document.querySelectorAll('.profile .tutor').forEach(function (event) {
+                event.classList.remove("disabled"); //TODO: not completed. continue from here.
+            });
+        }else{
+            document.querySelectorAll('.profile .tutor').forEach(function (event) {
+                event.classList.add("disabled"); //TODO: not completed. continue from here.
+            });
+        }
+
+    }).catch((e) => {
+        console.log(e);
         pushPopupMessage(["FAILURE", "Something went wrong, unable to load profile."]);
     });
+
+}
+
+function loadPrivateProfile(uid) {
+
     getUserPrivateData(uid).then((data) => {
-        let activities = data.actvities;
-        for (const property in activities) {
-            initUserActivities(property, activities[property]);
+        for (const property in data.activities) {
+            initUserActivities(property, data.activities[property]);
         }
-        console.log('activities loaded');
-        let enrolledCourses = data.enrolledCourses;
-        createEnrolledCourses(enrolledCourses);
+        createCoursesSection(data.enrolledCourses,'.box-container.enrolled-courses' );
     }
     ).catch(() => {
         pushPopupMessage(["FAILURE", "Something went wrong, unable to load user private info."]);
     });
 }
+/* Public Section */
 function setUserProfilePhoto(userProfileSrc) {
     var userPhoto = document.getElementById('user-photo');
     userPhoto.src = userProfileSrc;
@@ -41,59 +142,21 @@ function setUserRole(role) {
     var userRole = document.getElementById('user-role');
     userRole.innerHTML = role;
 }
-function initUserPublicProfile(fieldId, fieldValue) {
-    var field = document.getElementById(fieldId);
-    var dataField = field.querySelector('.data-field');
-    dataField.innerHTML = fieldValue;
-}
-function updateUserPublicProfile(fieldId) {
-    var field = document.getElementById(fieldId);
-    var editButton = field.querySelector('.edit');
-    var confirmButton = field.querySelector('.check');
-    var cancelButton = field.querySelector('.cross');
-    var dataField = field.querySelector('.data-field');
-    editButton.addEventListener("click", () => {
-        dataField.contentEditable = true;
-        dataField.classList.add("editable");
-        editButton.classList.toggle('inactive');
-        confirmButton.classList.toggle('inactive');
-        cancelButton.classList.toggle('inactive');
-    })
-    confirmButton.addEventListener("click", () => {
-        //TODO: add validations.
-        userPublicProfile[fieldId] = dataField.innerHTML;
-        updateUserData("uid",userPublicProfile).then(() => {
-            pushPopupMessage(["SUCCESS", `${fieldId} successfully updated.`]);
-        })
-            .catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to save changes."]); });
-        dataField.contentEditable = false;
-        dataField.classList.remove("editable");
-        editButton.classList.toggle('inactive');
-        confirmButton.classList.toggle('inactive');
-        cancelButton.classList.toggle('inactive');
-    });
-    cancelButton.addEventListener("click", () => {
-        dataField.innerHTML = userPublicProfile[fieldId];
 
-        dataField.contentEditable = false;
-        dataField.classList.remove("editable");
+/* Teacher Section */
 
-        editButton.classList.toggle('inactive');
-        confirmButton.classList.toggle('inactive');
-        cancelButton.classList.toggle('inactive');
-    });
-}
+/* Private Section */
 function initUserActivities(fieldId, fieldValue) {
     var field = document.getElementById(fieldId);
     var dataField = field.querySelector('h2');
     dataField.innerHTML = fieldValue;
 }
-function createEnrolledCourses(enrolledCourses) {
+function createCoursesSection(courses, rootElement) {
     // Select the box-container element
-    const container = document.querySelector('.box-container.enrolled-courses');
-
-    // Iterate over the enrolledCourses array
-    enrolledCourses.forEach(course => {
+    const container = document.querySelector(rootElement);
+    container.innerHTML = "";
+    // Iterate over the courses array
+    courses.forEach(course => {
         // Create a new box div element
         const box = document.createElement('div');
         box.classList.add('box');

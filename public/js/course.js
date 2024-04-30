@@ -6,16 +6,13 @@ let lastCourseId;
 const levelNames = ['Easy', 'Intermediate', 'Expert'];
 
 export function loadCourseDetails(courseId) {
-    console.log(courseId);
-    console.log("courseId");
     if (lastCourseId != courseId) {
         lastCourseId = courseId;
         getCourseData(courseId);
         generateUserReview(courseId).then(
             (reviewsHtml) => {
-                console.log("read course reviews");
-                console.log(reviewsHtml);
                 if (reviewsHtml) {
+                    document.querySelector('.reviews').style.display="block";
                     const boxContainer = document.querySelector('.reviews .box-container');
                     if (boxContainer) {
                         boxContainer.innerHTML = reviewsHtml;
@@ -50,8 +47,7 @@ function getCourseData(courseId) {
                     bar.style.background = 'var(--main-color)';
                 });
                 var tutorData = courseData.author;
-                console.log('tutorData');
-                console.log(tutorData);
+                textCourse.querySelector('#tutor-link').href = "/profile/"+tutorData.id;
                 textCourse.querySelector('#tutor-img').src = tutorData.userProfileSrc;
                 textCourse.querySelector('#tutor-name').innerHTML = tutorData.name;
                 textCourse.querySelector('#tutor-role').innerHTML = tutorData.role;
@@ -83,6 +79,7 @@ function getCourseContentDetails(courseId) {
     getCourseContentDetailsAPICalls(courseId).then(
         (courseData) => {
             var courseDetails = document.querySelector(".course-details .container .accordion");
+            courseDetails.innerHTML ="";
 
             for (const [course, topics] of Object.entries(courseData)) {
                 const accordionItem = document.createElement("div");
