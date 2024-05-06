@@ -41,29 +41,29 @@ export var userPrivateProfile = {
             "total-comments": 12
         },
         "enrolledCourses": [
-            {
-                "thumbnail": "/images/thumbnails/4.jpg",
-                "title": "System Design: Deep Dive",
-                "href": "/course/systemDesign"
+            // {
+            //     "thumbnail": "/images/thumbnails/4.jpg",
+            //     "title": "System Design: Deep Dive",
+            //     "href": "/course/systemDesign"
 
-            },
-            {
-                "thumbnail": "/images/thumbnails/5.jpg",
-                "title": "JAVA: A complete Beginner Guide",
-                "href": "/course/javaBeginner"
+            // },
+            // {
+            //     "thumbnail": "/images/thumbnails/5.jpg",
+            //     "title": "JAVA: A complete Beginner Guide",
+            //     "href": "/course/javaBeginner"
 
-            },
-            {
-                "thumbnail": "/images/thumbnails/3.jpg",
-                "title": "A complete Javascript Guide",
-                "href": "/course/jsComplete"
-            },
-            {
-                "thumbnail": "/images/thumbnails/2.jpg",
-                "title": "HTML: Complete Beginner Guide",
-                "href": "/course/htmlBeginner"
+            // },
+            // {
+            //     "thumbnail": "/images/thumbnails/3.jpg",
+            //     "title": "A complete Javascript Guide",
+            //     "href": "/course/jsComplete"
+            // },
+            // {
+            //     "thumbnail": "/images/thumbnails/2.jpg",
+            //     "title": "HTML: Complete Beginner Guide",
+            //     "href": "/course/htmlBeginner"
 
-            },
+            // },
         ]
     },
     "eDLhJLXv7ChEf6vBCSSbHUphTlV2": {

@@ -1,11 +1,10 @@
-import { publish } from "./event-bus";
-import { generateUserReview, getCourseContentDetailsAPICalls, getCourseDetailsAPICalls } from "./fetch-data";
-import { pushPopupMessage } from "./setup";
+import { pushPopupMessage, publish , getCourseContentDetailsAPICalls} from "./helper";
 
-let lastCourseId;
 const levelNames = ['Easy', 'Intermediate', 'Expert'];
+let lastCourseId;
 
 export function loadCourseDetails(courseId) {
+    // TODO: No action if last course is loaded again. Verify if this logic is correct? 
     if (lastCourseId != courseId) {
         lastCourseId = courseId;
         getCourseData(courseId);
@@ -194,4 +193,99 @@ function getCourseVideoDetails(courseId) {
             pushPopupMessage(["FAILURE", "Something went wrong, unable to load course content details."]);
         }
     );
+}
+
+async function importMockApi() {
+    try {
+        const { mockgetCourseReviewAPICall,mockgetTextCourseAPICall } = await import('/public/test/mock-api.js');
+        
+        return {
+            mockgetCourseReviewAPICall,
+            mockgetTextCourseAPICall
+
+        };
+    } catch (error) {
+        console.error('Error importing mock API:', error);
+        throw error;
+    }
+}
+ async function generateUserReview(courseId) {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        mockApi.mockgetCourseReviewAPICall(courseId).then(
+            (courseReview) => {
+                var reviewsHtml = '';
+                if(!courseReview)
+                resolve();
+                courseReview.forEach((r) => {
+                    var userInfo = r.user;
+                    const starsHTML = generateStarRating(r.rating);
+                    reviewsHtml += `
+                        <div class="box">
+                            <p>${r.review}</p>
+                            <div class="user">
+                                <a  onclick="route()" href="/profile/${userInfo.uid}">
+                                <img src="${userInfo.userProfileSrc}" alt="${userInfo.name}">
+                                </a>
+                                <div>
+                                    <h2>${userInfo.name}</h2>
+                                    ${starsHTML}
+                                </div>
+                               
+                            </div>
+                        </div>
+                    `;
+                });
+                resolve(reviewsHtml);
+            }
+        ).catch(
+            error => {
+                reject(error);
+            }
+        );
+    });
+}
+
+function generateStarRating(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating - fullStars >= 0.5;
+
+    let starsHTML = '';
+
+    // Add full stars
+    for (let i = 0; i < fullStars; i++) {
+        starsHTML += '<i class="es-star"></i>';
+    }
+
+    // Add half star if necessary
+    if (hasHalfStar) {
+        starsHTML += '<i class="es-star-half"></i>';
+    }
+
+    // Add empty stars to fill up to 5
+    const emptyStars = 5 - Math.ceil(rating);
+    for (let i = 0; i < emptyStars; i++) {
+        starsHTML += '<i class="es-star-empty"></i>';
+    }
+
+    // Wrap stars in a div
+    return '<div class="stars">' + starsHTML + '</div>';
+}
+
+async function getCourseDetailsAPICalls(courseId) {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        // If data is already cached, resolve with the cached data
+      
+            // Simulate an API call
+            mockApi.mockgetTextCourseAPICall(courseId)
+                .then(response => {
+                    // TODO: Store the API response in the cachedData object
+                    resolve(response); // Resolve with the API response
+                })
+                .catch(error => {
+                    reject(error); // Reject with the error from the API call
+                });
+        
+    });
 }

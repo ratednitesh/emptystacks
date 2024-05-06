@@ -29,3 +29,24 @@ File System:
 
 #########################
 
+Javascript Files:
+
+Entry Point: 
+        index.js 
+                - Imports all css files
+                - On DomContentLoaded initialize:
+                        - firebase and then-
+                                - eventbus
+                                - staticContent
+                                - Router
+                                - remove preloader
+        firebase-config.js
+                - Setup connection with Firebase (Init)
+                - Auth state Manangement (Init)
+                - Authentication Functions
+                - Login Status Checks/ Getters
+
+        setup.js
+
+
+

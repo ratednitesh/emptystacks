@@ -1,12 +1,10 @@
-import { publish } from "./event-bus";
-import { initAddOn } from "./dependecny-loader";
+import {initAddOn, subscribe, publish } from "./helper";
 
+// const variables
 const filePathPrefix = "/pages/";
 const filePathSuffix = ".html";
 const routes = {
     "/": "home",
-    "/home": "home",
-    "/home/*": "home",
     "/about": "about",
     "/about/*": "about",
     "/courses": "home",
@@ -29,15 +27,13 @@ const routes = {
     404: "notFound"
 };
 const sideBar = document.querySelector('#sideBar');
-const SIDE_BAR_OPTIONS = {
-    "mainSidebar": "mainSidebar",
-    "contentSidebar": "contentSidebar"
-};
+
 let cachedPages = {};
 let previousSideBarPath = "";
 let previousMainBodyPath = "";
 
 export function initRouter() {
+    subscribe('notFoundRoute', notFoundRoute);
     window.onpopstate = handleLocation;
     window.route = route;
     handleLocation();
@@ -48,6 +44,7 @@ const route = (event) => {
     event.preventDefault();
     var element = event.target;
     var newRoute = element.href;
+    // TODO: Should avoid loop logic
     var MAX_TRY = 5;
     while (newRoute == undefined && MAX_TRY > 0) {
         newRoute = element.parentElement.href;
@@ -69,11 +66,11 @@ const handleLocation = async () => {
         previousMainBodyPath = path;
         const route = findMatchingRoute(path);
         if (!cachedPages[route]) {
-            await initAddOn(route);
-            console.log('loaded additional js files');
             const mainBody = await fetch(filePathPrefix + route + filePathSuffix).then((data) => data.text());
             cachedPages[route] = true;
             document.getElementById(route).innerHTML = mainBody;
+            await initAddOn(route);
+            console.log('loaded additional js files');
         }
         for (let key in cachedPages) document.getElementById(key).style.display = (key === route) ? "block" : "none";
         loadMainScripts(path);
@@ -115,8 +112,6 @@ function loadMainScripts(path) {
                 publish('loadHome', 'only-course');
                 break;
             case "/":
-            case "/home":
-                publish('unloadHome');
                 publish('loadHome');
                 break;
             default:
@@ -124,9 +119,6 @@ function loadMainScripts(path) {
         }
     }
 }
-
-
-
 
 function findMatchingRoute(path) {
     const matchingRoute = Object.keys(routes).find(route => {

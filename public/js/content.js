@@ -1,7 +1,6 @@
-import { publish } from "./event-bus";
-import { getCourseContentAPICalls, getCourseContentCommentsAPICalls, getCourseContentDetailsAPICalls } from "./fetch-data";
+import { pushPopupMessage, publish, getCourseContentDetailsAPICalls } from "./helper";
 import { getUid, isUserLoggedIn } from "./firebase-config";
-import { pushPopupMessage, signup_selected } from "./setup";
+import { signup_selected } from "./setup";
 let lastChapterId;
 let uid;
 export function loadCourseContent(chapterId) {
@@ -241,4 +240,53 @@ function initializeContentSideBarListeners() {
         });
     });
     // initContentSidebarStatus = true;
+}
+async function importMockApi() {
+    try {
+        const { 
+             mockgetCourseContentAPICall, mockgetCourseContentCommentsAPICall } = await import('/public/test/mock-api.js');
+        
+        return {
+            mockgetCourseContentAPICall,
+            mockgetCourseContentCommentsAPICall
+        };
+    } catch (error) {
+        console.error('Error importing mock API:', error);
+        throw error;
+    }
+}
+ async function getCourseContentAPICalls(courseId) {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        // If data is already cached, resolve with the cached data
+      
+            // Simulate an API call
+            mockApi.mockgetCourseContentAPICall(courseId)
+                .then(response => {
+                    // TODO: Store the API response in the cachedData object
+                    resolve(response); // Resolve with the API response
+                })
+                .catch(error => {
+                    reject(error); // Reject with the error from the API call
+                });
+        
+    });
+}
+
+ async function getCourseContentCommentsAPICalls(courseId) {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        // If data is already cached, resolve with the cached data
+      
+            // Simulate an API call
+            mockApi.mockgetCourseContentCommentsAPICall(courseId)
+                .then(response => {
+                    // TODO: Store the API response in the cachedData object
+                    resolve(response); // Resolve with the API response
+                })
+                .catch(error => {
+                    reject(error); // Reject with the error from the API call
+                });
+        
+    });
 }

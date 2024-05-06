@@ -1,4 +1,3 @@
-import { initEventBus } from "./event-bus";
 import { initFirebase } from "./firebase-config";
 import { initStaticContent } from "./setup";
 import { initRouter } from "./router";
@@ -25,7 +24,6 @@ import "../css/icon.css";
 
 window.addEventListener('DOMContentLoaded', function () {
   initFirebase().then(() => {
-    initEventBus();
     initStaticContent();
     initRouter();
     document.querySelector('.preloader').classList.add('inactive');

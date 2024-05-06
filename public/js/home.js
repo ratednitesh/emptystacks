@@ -1,189 +1,32 @@
-import { getTopCourses, getTopStreams } from "./fetch-data";
-import { getUid } from "./firebase-config";
-import { signup_selected, getUserPrivateData, loginStatus, pushPopupMessage } from "./setup";
 
-let bannerInterval;
-let initHomeStatus = false, initCoursesStatus = false;
-let isUserLoggedIn = false;
-//  Load and Unload Home 
-export function loadHome(args) {
-    if (args != 'only-course') {
-        if (!initHomeStatus) {
-            initHome();
-            initHomeStatus = true;
-        }
-        document.querySelector('.quick-select').style.display = "block";
-        document.querySelector('.highlight-section').style.display = "block";
-        loadBanner();
-    } else {
-        document.querySelector('.quick-select').style.display = "none";
-        document.querySelector('.highlight-section').style.display = "none";
-    }
-    if (!initCoursesStatus) {
-        initPopularCourses();
-        initCoursesStatus = true;
-    }
-}
-export function unloadHome() {
-    unloadBanner();
-}
-function loadBanner() {
-    let i = 2;
-    bannerInterval = setInterval(() => { showSlide(i++); if (i > 3) i = 1; }, 3500);
-}
-function unloadBanner() {
-    clearInterval(bannerInterval);
-}
-function initHome() {
+import { getUid, isUserLoggedIn } from "./firebase-config";
+import { signup_selected, getUserPrivateData } from "./setup";
+import { pushPopupMessage } from './helper';
+
+const bookContainer = document.querySelector('.box.private .book .enrolled-courses-home');
+const homeOptionPrivate = document.querySelectorAll('.quick-select .box-container .private');
+const homeOptionOnlyPublic = document.querySelectorAll('.quick-select .box-container .only-public');
+const slideshow = document.querySelector(".slideshow");
+const noEnroll = document.querySelector(".no-enroll");
+const nextBtn = document.querySelector(".next");
+const prevBtn = document.querySelector(".prev");
+
+let bannerInterval, isBannerLoaded = false;
+let enrolledCourses = [], enrolledCourseIndex = -1;
+// Initializers and Listeners: Home 
+export function initHome() {
     initBanner();
+    initPopularCourses();
     initQuickSelect();
 }
+// Initializer and Listeners: Banner
 function initBanner() {
     showSlide(1);
     document.getElementById('slide-1').addEventListener('click', () => { showSlide(1); });
     document.getElementById('slide-2').addEventListener('click', () => { showSlide(2); });
     document.getElementById('slide-3').addEventListener('click', () => { showSlide(3); });
 }
-
-function initQuickSelect() {
-    var startJourneyHome = document.querySelector('#start-journey-home');
-    startJourneyHome.addEventListener("click", function () {
-        signup_selected();
-    });
-    isUserLoggedIn = loginStatus();
-    updateQuickSelectOptions();
-    if (isUserLoggedIn)
-        initQuickCourses();
-    initStreams();
-}
-
-
-function initStreams() {
-    // Get the Stream container
-
-    getTopStreams().then(
-        (streams) => {
-            const streamContainer = document.getElementById('stream-options');
-            streams.forEach(stream => {
-                // Create the anchor tag
-                const anchorTag = document.createElement('a');
-                anchorTag.href = '#';
-
-                // Create the icon element
-                const iconElement = document.createElement('i');
-                iconElement.classList.add(stream.icon);
-
-                // Create the span element for the text
-                const spanElement = document.createElement('span');
-                spanElement.textContent = stream.text;
-
-                // Append the icon and span elements to the anchor tag
-                anchorTag.appendChild(iconElement);
-                anchorTag.appendChild(spanElement);
-
-                // Append the anchor tag to the flex container
-                streamContainer.appendChild(anchorTag);
-            });
-        }
-    ).catch(
-        () => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load streams."]); }
-    );
-    // Loop through the streams array and create anchor tags for each item
-
-
-}
-
-function initQuickCourses() {
-    getUserPrivateData(getUid())
-        .then(
-            (data) => {
-                var quickCourses = data.enrolledCourses;
-                console.log(quickCourses);
-                // Reference to the book container
-                const bookContainer = document.querySelector('.box.private .book');
-
-                // Iterate over quickCourses array
-                quickCourses.forEach((course) => {
-                    // Create cover div
-                    const coverDiv = document.createElement('div');
-                    coverDiv.classList.add('cover', 'hidden', 'fade');
-
-                    // Create anchor tag
-                    const anchorTag = document.createElement('a');
-                    anchorTag.href = course.href;
-                    anchorTag.setAttribute('onclick', 'route()');
-
-                    // Create image tag
-                    const imageTag = document.createElement('img');
-                    imageTag.src = course.thumbnail;
-                    imageTag.classList.add('thumb');
-                    imageTag.alt = "Course Name";
-
-                    // Create paragraph tag for course title
-                    const paragraphTag = document.createElement('p');
-                    paragraphTag.textContent = course.title;
-
-                    // Append image and paragraph tags to anchor tag
-                    anchorTag.appendChild(imageTag);
-                    anchorTag.appendChild(paragraphTag);
-
-                    // Append anchor tag to cover div
-                    coverDiv.appendChild(anchorTag);
-
-                    // Append cover div to book container before slideshow div
-                    bookContainer.insertBefore(coverDiv, bookContainer.querySelector('.slideshow'));
-                });
-                const enrolledCourses = document.querySelectorAll(".book .cover");
-                // enrolledCourses.forEach((enrolledCourse, i=0)=>{console.log(enrolledCourse.style);console.log(i);enrolledCourse.style.zIndex=i++;});
-                let index = 0;
-                if (enrolledCourses.length != 0)
-                    enrolledCourses[index].classList.add("visible");
-                // enrolledCourses[index].style.display="block";
-
-                const nextBtn = document.querySelector(".next");
-                const prevBtn = document.querySelector(".prev");
-                if (nextBtn != null)
-                    nextBtn.addEventListener("click", (_) => {
-                        enrolledCourses[index].classList.replace('visible', 'hidden');
-                        if (index == enrolledCourses.length - 1) {
-                            index = -1;
-                        }
-                        enrolledCourses[++index].classList.replace('hidden', 'visible');
-                    });
-                if (prevBtn != null)
-                    prevBtn.addEventListener("click", (_) => {
-
-                        enrolledCourses[index].classList.replace('visible', 'hidden');
-                        if (index == 0) {
-                            index = enrolledCourses.length;
-                        }
-                        enrolledCourses[--index].classList.replace('hidden', 'visible');
-
-                    });
-
-            }
-        ).catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load top courses."]); });
-}
-
-export function updateQuickSelectOptions() {
-
-    let homeOptionPrivate = document.querySelectorAll('.quick-select .box-container .private');
-    homeOptionPrivate.forEach((node) => { if (!isUserLoggedIn) node.style.display = "none"; else node.style.display = "block" });
-    let homeOptionOnlyPublic = document.querySelectorAll('.quick-select .box-container .only-public');
-    homeOptionOnlyPublic.forEach((node) => { if (isUserLoggedIn) node.style.display = "none"; else node.style.display = "block" });
-}
-
-function showSlide(index) {
-    let slides = document.querySelectorAll('.banner-slide');
-    let dots = document.querySelectorAll(".slider .circle");
-    if (index > slides.length)
-        index = 1;
-    if (index < 1)
-        index = slides.length;
-    dots.forEach((node, i) => { if (index - 1 == i) node.classList.replace('es-circle-empty', 'es-circle'); else node.classList.replace('es-circle', 'es-circle-empty'); })
-    slides.forEach((node, i) => { if (index - 1 == i) node.style.display = "block"; else node.style.display = "none"; })
-}
-
+// Initializer and Listeners: Popular Courses
 function initPopularCourses() {
     getTopCourses().then(
         (coursesData) => {
@@ -226,12 +69,242 @@ function initPopularCourses() {
             const viewMoreCourses = document.querySelector("#view-more-courses");
             viewMoreCourses.addEventListener(
                 'click', () => {
+                    // TODO: Enhance this
                     viewMoreCourses.style.display = "none";
                     document.querySelector("#that-all").style.display = "block";
                 }
             );
 
         }
-    ).catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load top courses."]); });
+    ).catch((e) => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load popular courses."]); throw e; });
 
+}
+// Initializer and Listeners: Quick Select
+function initQuickSelect() {
+    // Init Start Jouney option on Home
+    var startJourneyHome = document.querySelector('#start-journey-home');
+    startJourneyHome.addEventListener("click", function () {
+        signup_selected();
+    });
+    // Init streams
+    initStreams();
+    // Show / Hide  Quick select options based on user login status
+    updateQuickSelectOptions();
+    // Prev/ Next Enrolled Courses Listeners
+    initQuickCourses();
+}
+// Initializer and Listeners: Streams
+function initStreams() {
+    // Get the Stream container
+    getTopStreams().then(
+        (streams) => {
+            const streamContainer = document.getElementById('stream-options');
+            streams.forEach(stream => {
+                // Create the anchor tag
+                const anchorTag = document.createElement('a');
+                anchorTag.href = '#';
+
+                // Create the icon element
+                const iconElement = document.createElement('i');
+                iconElement.classList.add(stream.icon);
+
+                // Create the span element for the text
+                const spanElement = document.createElement('span');
+                spanElement.textContent = stream.text;
+
+                // Append the icon and span elements to the anchor tag
+                anchorTag.appendChild(iconElement);
+                anchorTag.appendChild(spanElement);
+
+                // Append the anchor tag to the flex container
+                streamContainer.appendChild(anchorTag);
+            });
+        }
+    ).catch(
+        () => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load streams."]); }
+    );
+    // Loop through the streams array and create anchor tags for each item
+
+
+}
+// Initializer and Listeners: Enrolled Courses
+function initQuickCourses() {
+    if (nextBtn != null)
+        nextBtn.addEventListener("click", (_) => {
+            showSelectedEnrolledCourse(enrolledCourseIndex, enrolledCourseIndex + 1);
+        });
+    if (prevBtn != null)
+        prevBtn.addEventListener("click", (_) => {
+            showSelectedEnrolledCourse(enrolledCourseIndex, enrolledCourseIndex - 1);
+        });
+}
+
+//  Load Home / Courses
+export function loadHome(args) {
+    if (args == 'only-course') {
+        document.querySelector('.quick-select').style.display = "none";
+        document.querySelector('.highlight-section').style.display = "none";
+    } else {
+        document.querySelector('.quick-select').style.display = "block";
+        document.querySelector('.highlight-section').style.display = "block";
+        if (!isBannerLoaded) {
+            loadBanner();
+            isBannerLoaded = true;
+        }
+    }
+}
+// Unload Home / Courses
+export function unloadHome() {
+    unloadBanner();
+}
+// Load Banner 
+function loadBanner() {
+    let i = 2;
+    bannerInterval = setInterval(() => { showSlide(i++); if (i > 3) i = 1; }, 3500);
+}
+// Unload Banner
+function unloadBanner() {
+    clearInterval(bannerInterval);
+    isBannerLoaded = false;
+}
+
+// On auth state change, call this function to update show/ hide section
+export function updateQuickSelectOptions() {
+    homeOptionPrivate.forEach((node) => { if (!isUserLoggedIn()) node.style.display = "none"; else node.style.display = "block" });
+    homeOptionOnlyPublic.forEach((node) => { if (isUserLoggedIn()) node.style.display = "none"; else node.style.display = "block" });
+    updateEnrolledCourses();
+}
+// On auth State change, Update enrolled Courses 
+function updateEnrolledCourses() {
+    if (isUserLoggedIn())
+        getUserPrivateData(getUid())
+            .then(
+                (data) => {
+                    var quickCourses = data.enrolledCourses;
+                    // Reference to the book container
+                    bookContainer.innerHTML = "";
+                    // Iterate over quickCourses array
+                    quickCourses.forEach((course) => {
+                        // Create cover div
+                        const coverDiv = document.createElement('div');
+                        coverDiv.classList.add('cover', 'hidden', 'fade');
+                        // Create anchor tag
+                        const anchorTag = document.createElement('a');
+                        anchorTag.href = course.href;
+                        anchorTag.setAttribute('onclick', 'route()');
+                        // Create image tag
+                        const imageTag = document.createElement('img');
+                        imageTag.src = course.thumbnail;
+                        imageTag.classList.add('thumb');
+                        imageTag.alt = "Course Name";
+
+                        // Create paragraph tag for course title
+                        const paragraphTag = document.createElement('p');
+                        paragraphTag.textContent = course.title;
+
+                        // Append image and paragraph tags to anchor tag
+                        anchorTag.appendChild(imageTag);
+                        anchorTag.appendChild(paragraphTag);
+
+                        // Append anchor tag to cover div
+                        coverDiv.appendChild(anchorTag);
+
+                        // Append cover div to book container before slideshow div
+                        bookContainer.appendChild(coverDiv);
+                    });
+                    enrolledCourses = document.querySelectorAll(".book .cover");
+                    enrolledCourseIndex = 0;
+                    if (enrolledCourses.length != 0){
+                        enrolledCourses[0].classList.replace('hidden', 'visible');
+                        slideshow.classList.remove('disabled')
+                        noEnroll.classList.add('disabled');
+                    }
+                    else{
+                        console.log("TODO: Add a logic to display a message that no courses are enrolled. Hide prev/ next button");
+                        slideshow.classList.add('disabled');
+                        noEnroll.classList.remove('disabled');
+                    }
+                }
+            ).catch(() => {
+                pushPopupMessage(["FAILURE", "Something went wrong, unable to load enrolled courses."]);
+            });
+    else {
+        bookContainer.innerHTML = "";
+        enrolledCourses = [];
+        enrolledCourseIndex = -1;
+    }
+}
+// Show hide selected enrolled course
+function showSelectedEnrolledCourse(oldIndex, newIndex) {
+    if (oldIndex != -1) {
+        enrolledCourses[oldIndex].classList.replace('visible', 'hidden');
+        if (newIndex == enrolledCourses.length) {
+            newIndex = 0;
+        }
+        else if (newIndex == -1) {
+            newIndex = enrolledCourses.length - 1;
+        }
+        enrolledCourses[newIndex].classList.replace('hidden', 'visible');
+        enrolledCourseIndex = newIndex;
+    }
+}
+// Show hide banner slide based on selected index.
+function showSlide(index) {
+    let slides = document.querySelectorAll('.banner-slide');
+    let dots = document.querySelectorAll(".slider .circle");
+    if (index > slides.length)
+        index = 1;
+    if (index < 1)
+        index = slides.length;
+    dots.forEach((node, i) => { if (index - 1 == i) node.classList.replace('es-circle-empty', 'es-circle'); else node.classList.replace('es-circle', 'es-circle-empty'); })
+    slides.forEach((node, i) => { if (index - 1 == i) node.style.display = "block"; else node.style.display = "none"; })
+}
+
+// TODO: Potentially need to remove following function */
+async function importMockApi() {
+    try {
+        const { mockgetTopStreamsAPICall, mockgetTopCoursesAPICall } = await import('/public/test/mock-api.js');
+        return {
+            mockgetTopStreamsAPICall,
+            mockgetTopCoursesAPICall,
+
+        };
+    } catch (error) {
+        console.error('Error importing mock API:', error);
+        throw error;
+    }
+}
+async function getTopStreams() {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        // If data is already cached, resolve with the cached data
+
+        // Simulate an API call
+        mockApi.mockgetTopStreamsAPICall()
+            .then(response => {
+                //TODO: Store the API response in the cachedData object
+                resolve(response); // Resolve with the API response
+            })
+            .catch(error => {
+                reject(error); // Reject with the error from the API call
+            });
+
+    });
+}
+async function getTopCourses() {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        // If data is already cached, resolve with the cached data
+
+        // Simulate an API call
+        mockApi.mockgetTopCoursesAPICall()
+            .then(response => {
+                // TODO: Store the API response in the cachedData object
+                resolve(response); // Resolve with the API response
+            })
+            .catch(error => {
+                reject(error); // Reject with the error from the API call
+            });
+
+    });
 }

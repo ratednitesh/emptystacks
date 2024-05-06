@@ -1,6 +1,6 @@
-import { getUserPublicData, updateUserData } from "./fetch-data";
 import { getUid } from "./firebase-config";
-import { getUserPrivateData, pushPopupMessage } from "./setup";
+import { getUserPrivateData } from "./setup";
+import { pushPopupMessage } from "./helper";
 
 let staticLoaded = false;
 var myProfile = {};
@@ -81,7 +81,6 @@ function initStaticContent() {
     }
     staticLoaded = true;
 }
-
 function loadPublicProfile(uid, myUid) {
     console.log("loading profile: ");
     console.log(uid);
@@ -120,7 +119,6 @@ function loadPublicProfile(uid, myUid) {
     });
 
 }
-
 function loadPrivateProfile(uid) {
 
     getUserPrivateData(uid).then((data) => {
@@ -188,5 +186,43 @@ function createCoursesSection(courses, rootElement) {
         container.appendChild(box);
     });
 }
-
-
+async function importMockApi() {
+    try {
+        const {  mockgetUserDataAPICall, mockUpdateUserDataAPICall } = await import('/public/test/mock-api.js');
+        return {
+            mockgetUserDataAPICall,
+            mockUpdateUserDataAPICall
+        };
+    } catch (error) {
+        console.error('Error importing mock API:', error);
+        throw error;
+    }
+}
+async function getUserPublicData(uid) {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+       
+            // Simulate an API call
+            mockApi.mockgetUserDataAPICall(uid)
+                .then(response => {
+                    //TODO: Store the API response in the cachedData object
+                    resolve(response); // Resolve with the API response
+                })
+                .catch(error => {
+                    reject(error); // Reject with the error from the API call
+                });
+    });
+}
+async function updateUserData(uid, newData) {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        // Simulate an asynchronous operation (e.g., updating data on the server)
+        mockApi.mockUpdateUserDataAPICall(uid, newData)
+            .then(() => {
+                resolve(); // Resolve the Promise once the data is updated
+            })
+            .catch(error => {
+                reject(error); // Reject with the error from the API call
+            });
+    });
+}

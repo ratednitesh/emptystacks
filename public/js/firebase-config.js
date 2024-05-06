@@ -15,7 +15,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 const auth = getAuth();
 const googleProvider = new GoogleAuthProvider();
-
+let userSignedIn = false;
 export function initFirebase() {
     // Login State Manangement 
     return new Promise((resolve, reject) => {
@@ -25,14 +25,28 @@ export function initFirebase() {
                 console.log(user);
                 console.log(user.displayName);
                 console.log(user.photoURL);
-                // user = auth.currentUser;
+                userSignedIn= true;
             }
-            else
+            else{
                 console.log('User "NOT" Logged In');
+                userSignedIn = false;
+            }
             resolve();
         });
     });
 }
+/** Login Status Getter */
+export function isUserLoggedIn() {
+    return userSignedIn;
+}
+export function getUid() {
+    if (isUserLoggedIn()) {
+        console.log(auth.currentUser.uid);
+        return auth.currentUser.uid;
+    } else
+        return "";
+}
+
 /*** AUTHENTICATION ***/
 export function googleSignIn() {
     return new Promise((resolve, reject) => {
@@ -58,19 +72,6 @@ export function firebaseSignOut() {
     return new Promise((resolve, reject) => {
         auth.signOut().then(() => { resolve(); });
     });
-}
-export function isUserLoggedIn() {
-    if (auth.currentUser)
-        return true;
-    else
-        false;
-}
-export function getUid() {
-    if (isUserLoggedIn()) {
-        console.log(auth.currentUser.uid);
-        return auth.currentUser.uid;
-    } else
-        return "";
 }
 export function createNewUser(userToken) {
     return new Promise((resolve, reject) => {
