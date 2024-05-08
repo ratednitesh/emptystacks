@@ -1,158 +1,160 @@
 import { pushPopupMessage, publish, getCourseContentDetailsAPICalls } from "./helper";
 import { getUid, isUserLoggedIn } from "./firebase-config";
 import { signup_selected } from "./setup";
+
+const contentSidebarHtml = document.querySelector('#contentSidebar');
+const ul = contentSidebarHtml.querySelector(".nano-content");
+const contentHtml = document.querySelector('.text-section');
+const showComments = document.getElementById("show-comments");
+const commentHtml = document.querySelector('.comments');
+const watchVideo = contentHtml.querySelector('.watch-video');
+const chapterContent = contentHtml.querySelector('.chapter-content');
 let lastChapterId;
-let uid;
-export function loadCourseContent(chapterId) {
+export function initContent() {
+    document.querySelector('#start-journey-content').addEventListener("click", () => {
+        signup_selected();
+    });
+    showComments.addEventListener('click', () => {
+        showComments.classList.add('disabled');
+        commentHtml.classList.remove('disabled');
+        getCourseContentCommentsAPICalls(lastChapterId).then(
+            ((commentData) => {
+                var comments = commentHtml.querySelector('.show-comments');
+                comments.innerHTML = "";
+                if (commentData) {
+                    for (const comment of commentData) {
+                        const boxDiv = document.createElement("div");
+                        boxDiv.classList.add("box");
+                        const userDiv = document.createElement("div");
+                        userDiv.classList.add("user");
+
+                        const userImg = document.createElement("img");
+                        userImg.src = comment.imageSrc;
+                        userImg.alt = "";
+                        const userInfoDiv = document.createElement("div");
+                        const userName = document.createElement("h2");
+                        userName.textContent = comment.name;
+
+                        const commentDate = document.createElement("span");
+                        commentDate.textContent = comment.commentDate;
+
+                        userInfoDiv.appendChild(userName);
+                        userInfoDiv.appendChild(commentDate);
+
+                        const profileLink = document.createElement("a");
+                        profileLink.setAttribute("onclick", "route()");
+                        profileLink.href = "/profile/" + comment.uid;
+
+                        profileLink.appendChild(userImg);
+                        userDiv.appendChild(profileLink);
+                        userDiv.appendChild(userInfoDiv);
+
+                        const commentText = document.createElement("p");
+                        commentText.classList.add("text");
+                        commentText.textContent = comment.comment;
+                        boxDiv.appendChild(userDiv);
+                        boxDiv.appendChild(commentText);
+                        let uid = getUid();
+                        if (comment.uid == uid) {
+                            // Create form element
+                            const form = document.createElement("form");
+                            form.setAttribute("action", "");
+                            form.setAttribute("method", "post");
+                            form.classList.add("flex-btn");
+
+                            // Create edit button
+                            var editButton = document.createElement("button");
+                            editButton.setAttribute("type", "submit");
+                            editButton.setAttribute("name", "edit-comment");
+                            editButton.classList.add("inline-option-btn");
+                            editButton.textContent = "edit comment";
+
+                            // Create delete button
+                            var deleteButton = document.createElement("button");
+                            deleteButton.setAttribute("type", "submit");
+                            deleteButton.setAttribute("name", "delete-comment");
+                            deleteButton.classList.add("inline-delete-btn");
+                            deleteButton.textContent = "delete comment";
+
+                            // Append buttons to form
+                            form.appendChild(editButton);
+                            form.appendChild(deleteButton);
+                            boxDiv.appendChild(form);
+                        }
+                        comments.appendChild(boxDiv);
+                    }
+                }
+            }))
+            .catch((e) => {
+                console.log(e);
+                pushPopupMessage(["FAILURE", "Something went wrong, unable to load comments."]);
+            });
+    });
+}
+
+// load course content
+export function loadContent(chapterId) {
     if (lastChapterId != chapterId) {
         lastChapterId = chapterId;
-        getCourseContent(chapterId);
+        if (isUserLoggedIn()) {
+            commentHtml.querySelector(".add-comment").classList.remove('disabled');
+            commentHtml.querySelector(".no-comments").classList.add('disabled');
 
-    }
-}
-
-function getCourseContent(chapterId) {
-    const contentHtml = document.querySelector('.text-section');
-    const showComments = document.getElementById("show-comments");
-    const commentHtml = document.querySelector('.comments');
-    const watchVideo = contentHtml.querySelector('.watch-video');
-    const chapterContent = contentHtml.querySelector('.chapter-content');
-
-    if (isUserLoggedIn()) {
-        commentHtml.querySelector(".add-comment").classList.remove('disabled');
-        commentHtml.querySelector(".no-comments").classList.add('disabled');
-        uid = getUid();
-
-    } else {
-        commentHtml.querySelector(".add-comment").classList.add('disabled');
-        commentHtml.querySelector(".no-comments").classList.remove('disabled');
-        document.querySelector('#start-journey-content').addEventListener("click", function () {
-            signup_selected();
-        });
-    }
-
-    getCourseContentAPICalls(chapterId).then(
-        (chapterData) => {
-            if (chapterData) {
-                contentHtml.querySelector('.heading').innerHTML = chapterData.heading;
-                contentHtml.querySelector('#date').innerHTML = chapterData.publishDate;
-                contentHtml.querySelector('#likes').innerHTML = chapterData.likes + " Likes";
-                contentHtml.querySelector('#author').innerHTML = chapterData.author.name;
-                showComments.innerHTML = "Comments (" + chapterData.comments + ")";
-                commentHtml.classList.add('disabled');
-                showComments.classList.remove('disabled');
-                if (chapterData.type == "text") {
-                    watchVideo.style.display = "none";
-                    chapterContent.style.display = "block";
-                    chapterContent.innerHTML = chapterData.content;
-                }
-                else {
-                    watchVideo.style.display = "block";
-                    chapterContent.style.display = "none";
-                    contentHtml.querySelector('.video').poster = chapterData.thumbnail;
-                    contentHtml.querySelector('.description').innerHTML = chapterData.description;
-                }
-                setContentSidebar(chapterData.courseId, chapterData.courseName, chapterId, chapterData.type);
-                showComments.addEventListener('click', () => {
-                    showComments.classList.add('disabled');
-                    commentHtml.classList.remove('disabled');
-                    getCourseContentCommentsAPICalls(chapterId).then(
-                        ((commentData) => {
-                            var comments = commentHtml.querySelector('.show-comments');
-                            comments.innerHTML = "";
-                            if (commentData) {
-                                for (const comment of commentData) {
-                                    const boxDiv = document.createElement("div");
-                                    boxDiv.classList.add("box");
-                                    const userDiv = document.createElement("div");
-                                    userDiv.classList.add("user");
-
-                                    const userImg = document.createElement("img");
-                                    userImg.src = comment.imageSrc;
-                                    userImg.alt = "";
-                                    const userInfoDiv = document.createElement("div");
-                                    const userName = document.createElement("h2");
-                                    userName.textContent = comment.name;
-
-                                    const commentDate = document.createElement("span");
-                                    commentDate.textContent = comment.commentDate;
-
-                                    userInfoDiv.appendChild(userName);
-                                    userInfoDiv.appendChild(commentDate);
-
-                                    const profileLink = document.createElement("a");
-                                    profileLink.setAttribute("onclick", "route()");
-                                    profileLink.href = "/profile/" + comment.uid;
-
-                                    profileLink.appendChild(userImg);
-                                    userDiv.appendChild(profileLink);
-                                    userDiv.appendChild(userInfoDiv);
-
-                                    const commentText = document.createElement("p");
-                                    commentText.classList.add("text");
-                                    commentText.textContent = comment.comment;
-                                    boxDiv.appendChild(userDiv);
-                                    boxDiv.appendChild(commentText);
-                                    if (comment.uid == uid) {
-                                        // Create form element
-                                        const form = document.createElement("form");
-                                        form.setAttribute("action", "");
-                                        form.setAttribute("method", "post");
-                                        form.classList.add("flex-btn");
-
-                                        // Create edit button
-                                        var editButton = document.createElement("button");
-                                        editButton.setAttribute("type", "submit");
-                                        editButton.setAttribute("name", "edit-comment");
-                                        editButton.classList.add("inline-option-btn");
-                                        editButton.textContent = "edit comment";
-
-                                        // Create delete button
-                                        var deleteButton = document.createElement("button");
-                                        deleteButton.setAttribute("type", "submit");
-                                        deleteButton.setAttribute("name", "delete-comment");
-                                        deleteButton.classList.add("inline-delete-btn");
-                                        deleteButton.textContent = "delete comment";
-
-                                        // Append buttons to form
-                                        form.appendChild(editButton);
-                                        form.appendChild(deleteButton);
-                                        boxDiv.appendChild(form);
-                                    }
-                                    comments.appendChild(boxDiv);
-                                }
-                            }
-                        }))
-                        .catch((e) => {
-                            console.log(e);
-                            pushPopupMessage(["FAILURE", "Something went wrong, unable to load comments."]);
-                        });
-                });
-            } else {
-                publish('notFoundRoute');
-            }
+        } else {
+            commentHtml.querySelector(".add-comment").classList.add('disabled');
+            commentHtml.querySelector(".no-comments").classList.remove('disabled');
         }
-    )
-        .catch(
-            (e) => {
-                console.log(e);
-                pushPopupMessage(["FAILURE", "Something went wrong, unable to load course."]);
+
+        getCourseContentAPICalls(chapterId).then(
+            (chapterData) => {
+                if (chapterData) {
+                    contentHtml.querySelector('.heading').innerHTML = chapterData.heading;
+                    contentHtml.querySelector('#date').innerHTML = chapterData.publishDate;
+                    contentHtml.querySelector('#likes').innerHTML = chapterData.likes + " Likes";
+                    contentHtml.querySelector('#author').innerHTML = chapterData.author.name;
+                    showComments.innerHTML = "Comments (" + chapterData.comments + ")";
+                    commentHtml.classList.add('disabled');
+                    showComments.classList.remove('disabled');
+                    if (chapterData.type == "text") {
+                        watchVideo.style.display = "none";
+                        chapterContent.style.display = "block";
+                        chapterContent.innerHTML = chapterData.content;
+                    }
+                    else {
+                        watchVideo.style.display = "block";
+                        chapterContent.style.display = "none";
+                        contentHtml.querySelector('.video').poster = chapterData.thumbnail;
+                        contentHtml.querySelector('.description').innerHTML = chapterData.description;
+                    }
+                    loadContentSidebar(chapterData.courseId, chapterData.courseName, chapterId, chapterData.type);
+
+                } else {
+                    lastChapterId = 'notFoundRoute';
+                    publish('notFoundRoute');
+                }
             }
         )
+            .catch(
+                (e) => {
+                    console.log(e);
+                    pushPopupMessage(["FAILURE", "Something went wrong, unable to load course."]);
+                }
+            )
+    }
+    else if (lastChapterId == 'notFoundRoute')
+        publish('notFoundRoute');
 }
 
-function setContentSidebar(courseId, courseName, chapterId, type) {
+// load content sidebar
+function loadContentSidebar(courseId, courseName, chapterId, type) {
     getCourseContentDetailsAPICalls(courseId).then(
         (chapterDetails) => {
-            var contentSidebarHtml = document.querySelector('#contentSidebar');
             contentSidebarHtml.querySelector('.course-title').innerHTML = courseName;
-            var ul = contentSidebarHtml.querySelector(".nano-content");
             ul.innerHTML = "";
             for (const [chapter, topics] of Object.entries(chapterDetails)) {
                 const li = document.createElement("li");
                 li.classList.add("menu-options");
                 if (type == "text") {
-
                     if (typeof topics === 'object') {
                         li.classList.add("sub-menu");
                         const a = document.createElement("a");
@@ -208,7 +210,6 @@ function setContentSidebar(courseId, courseName, chapterId, type) {
                 }
             }
             initializeContentSideBarListeners();
-
         }
     ).catch(
         (e) => {
@@ -218,6 +219,7 @@ function setContentSidebar(courseId, courseName, chapterId, type) {
     )
 }
 
+// Initialize listeners on sidebar ( post load content sidebar)
 function initializeContentSideBarListeners() {
     let subMenus = document.querySelectorAll(".sub-menu > a");
     subMenus.forEach(function (link) {
@@ -234,18 +236,18 @@ function initializeContentSideBarListeners() {
             } else {
                 link.nextElementSibling.style.display = "none";
             }
-
             // Prevent the click event from propagating up the DOM hierarchy
-            e.stopPropagation();
+            e.stopPropagation(); // TODO: may be needed at all places as well.
         });
     });
-    // initContentSidebarStatus = true;
 }
+
+// TODO: Potentially need to remove following function */
 async function importMockApi() {
     try {
-        const { 
-             mockgetCourseContentAPICall, mockgetCourseContentCommentsAPICall } = await import('/public/test/mock-api.js');
-        
+        const {
+            mockgetCourseContentAPICall, mockgetCourseContentCommentsAPICall } = await import('/public/test/mock-api.js');
+
         return {
             mockgetCourseContentAPICall,
             mockgetCourseContentCommentsAPICall
@@ -255,38 +257,37 @@ async function importMockApi() {
         throw error;
     }
 }
- async function getCourseContentAPICalls(courseId) {
+async function getCourseContentAPICalls(courseId) {
     const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
         // If data is already cached, resolve with the cached data
-      
-            // Simulate an API call
-            mockApi.mockgetCourseContentAPICall(courseId)
-                .then(response => {
-                    // TODO: Store the API response in the cachedData object
-                    resolve(response); // Resolve with the API response
-                })
-                .catch(error => {
-                    reject(error); // Reject with the error from the API call
-                });
-        
+
+        // Simulate an API call
+        mockApi.mockgetCourseContentAPICall(courseId)
+            .then(response => {
+                // TODO: Store the API response in the cachedData object
+                resolve(response); // Resolve with the API response
+            })
+            .catch(error => {
+                reject(error); // Reject with the error from the API call
+            });
+
     });
 }
-
- async function getCourseContentCommentsAPICalls(courseId) {
+async function getCourseContentCommentsAPICalls(courseId) {
     const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
         // If data is already cached, resolve with the cached data
-      
-            // Simulate an API call
-            mockApi.mockgetCourseContentCommentsAPICall(courseId)
-                .then(response => {
-                    // TODO: Store the API response in the cachedData object
-                    resolve(response); // Resolve with the API response
-                })
-                .catch(error => {
-                    reject(error); // Reject with the error from the API call
-                });
-        
+
+        // Simulate an API call
+        mockApi.mockgetCourseContentCommentsAPICall(courseId)
+            .then(response => {
+                // TODO: Store the API response in the cachedData object
+                resolve(response); // Resolve with the API response
+            })
+            .catch(error => {
+                reject(error); // Reject with the error from the API call
+            });
+
     });
 }

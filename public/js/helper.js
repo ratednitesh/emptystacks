@@ -44,19 +44,22 @@ export async function initAddOn(page) {
 
             else if (page == "profile")
                 import('./profile.js').then(module => {
-                    subscribe('initProfile', module.initProfile);
+                    module.initProfile();
+                    subscribe('loadProfile', module.loadProfile);
                     resolve();
                 });
 
             else if (page == "course")
                 import('./course.js').then(module => {
-                    subscribe('loadCourseDetails', module.loadCourseDetails);
+                    module.initCoursePage();
+                    subscribe('loadCoursePage', module.loadCoursePage);
                     resolve();
                 });
             else if (page == "content")
                 import('./content.js').then(module => {
                     console.log("loading content");
-                    subscribe('loadCourseContent', module.loadCourseContent);
+                    module.initContent();
+                    subscribe('loadContent', module.loadContent);
                     resolve();
                 });
             else
@@ -69,7 +72,7 @@ export async function initAddOn(page) {
 }
 async function importMockApi() {
     try {
-        const {    
+        const {
             mockgetCourseContentDetailsAPICall } = await import('/public/test/mock-api.js');
         return {
             mockgetCourseContentDetailsAPICall,
@@ -83,16 +86,16 @@ export async function getCourseContentDetailsAPICalls(courseId) {
     const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
         // If data is already cached, resolve with the cached data
-      
-            // Simulate an API call
-            mockApi.mockgetCourseContentDetailsAPICall(courseId)
-                .then(response => {
-                    // TODO: Store the API response in the cachedData object
-                    resolve(response); // Resolve with the API response
-                })
-                .catch(error => {
-                    reject(error); // Reject with the error from the API call
-                });
-        
+
+        // Simulate an API call
+        mockApi.mockgetCourseContentDetailsAPICall(courseId)
+            .then(response => {
+                // TODO: Store the API response in the cachedData object
+                resolve(response); // Resolve with the API response
+            })
+            .catch(error => {
+                reject(error); // Reject with the error from the API call
+            });
+
     });
 }

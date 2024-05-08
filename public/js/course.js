@@ -1,35 +1,44 @@
-import { pushPopupMessage, publish , getCourseContentDetailsAPICalls} from "./helper";
+import { pushPopupMessage, publish, getCourseContentDetailsAPICalls } from "./helper";
 
+const textCourse = document.querySelector('.text-course');
+const expandButton = document.getElementById("expand-button");
+const courseDetails = document.querySelector(".course-details .container .accordion");
+const videoDetails = document.querySelector(".video-container .box-container");
+const boxContainer = document.querySelector('.reviews .box-container');
 const levelNames = ['Easy', 'Intermediate', 'Expert'];
 let lastCourseId;
 
-export function loadCourseDetails(courseId) {
-    // TODO: No action if last course is loaded again. Verify if this logic is correct? 
+// Initializers and Listeners: Course Page 
+export function initCoursePage() {
+    expandButton.addEventListener('click', () => {
+        var accordionItems = document.querySelectorAll('.accordion-item');
+        var expandItems = document.querySelectorAll('.expand');
+        accordionItems.forEach(function (item) {
+            item.classList.toggle('active');
+        });
+        expandItems.forEach(function (expandItem) {
+            expandItem.classList.toggle('es-angle-up');
+            expandItem.classList.toggle('es-angle-down');
+        });
+        expandButton.textContent = expandButton.textContent === "Minimize All" ? "Expand All" : "Minimize All";
+    });
+}
+
+// Load course page
+export function loadCoursePage(courseId) {
     if (lastCourseId != courseId) {
         lastCourseId = courseId;
         getCourseData(courseId);
-        generateUserReview(courseId).then(
-            (reviewsHtml) => {
-                if (reviewsHtml) {
-                    document.querySelector('.reviews').style.display="block";
-                    const boxContainer = document.querySelector('.reviews .box-container');
-                    if (boxContainer) {
-                        boxContainer.innerHTML = reviewsHtml;
-                    }
-                }else
-                document.querySelector('.reviews').style.display="none";
-            }
-        ).catch(
-            (e) => { console.log(e); pushPopupMessage(["FAILURE", "Something went wrong, unable to load course reviews."]); }
-        );
-    }
+
+    } else if (lastCourseId == 'notFoundRoute')
+        publish('notFoundRoute');
 }
 
+// Load course Data
 function getCourseData(courseId) {
     getCourseDetailsAPICalls(courseId).then(
         (courseData) => {
             if (courseData) {
-                var textCourse = document.querySelector('.text-course');
                 textCourse.querySelectorAll('.chapters').forEach((event) => {
                     event.innerHTML = courseData.chapterCount;
                 });
@@ -46,7 +55,7 @@ function getCourseData(courseId) {
                     bar.style.background = 'var(--main-color)';
                 });
                 var tutorData = courseData.author;
-                textCourse.querySelector('#tutor-link').href = "/profile/"+tutorData.id;
+                textCourse.querySelector('#tutor-link').href = "/profile/" + tutorData.id;
                 textCourse.querySelector('#tutor-img').src = tutorData.userProfileSrc;
                 textCourse.querySelector('#tutor-name').innerHTML = tutorData.name;
                 textCourse.querySelector('#tutor-role').innerHTML = tutorData.role;
@@ -60,7 +69,9 @@ function getCourseData(courseId) {
                     document.querySelector(".course-details").style.display = "none";
                     getCourseVideoDetails(courseId);
                 }
+                getCourseReviews(courseId);
             } else {
+                lastCourseId = 'notFoundRoute';
                 publish('notFoundRoute');
             }
         }
@@ -73,17 +84,14 @@ function getCourseData(courseId) {
         )
 }
 
-
+// Load text course Details 
 function getCourseContentDetails(courseId) {
     getCourseContentDetailsAPICalls(courseId).then(
         (courseData) => {
-            var courseDetails = document.querySelector(".course-details .container .accordion");
-            courseDetails.innerHTML ="";
-
+            courseDetails.innerHTML = "";
             for (const [course, topics] of Object.entries(courseData)) {
                 const accordionItem = document.createElement("div");
                 accordionItem.classList.add("accordion-item");
-
                 const accordionHeader = document.createElement("div");
                 accordionHeader.classList.add("accordion-header");
                 const headerTitle = document.createElement("h2");
@@ -91,7 +99,6 @@ function getCourseContentDetails(courseId) {
                 headerIcon.classList.add("es-circle-empty", "bullet");
                 headerTitle.appendChild(headerIcon);
                 headerTitle.innerHTML += ` ${course}`;
-                
                 if (typeof topics === "string") {
                     const headingLink = document.createElement("a");
                     headingLink.href = topics;
@@ -120,7 +127,6 @@ function getCourseContentDetails(courseId) {
                         courseList.appendChild(topicLink);
                         accordionContent.appendChild(courseList);
                     }
-
                     accordionItem.appendChild(accordionContent);
                     accordionItem.classList.add("active");
                 }
@@ -131,37 +137,10 @@ function getCourseContentDetails(courseId) {
                 header.addEventListener('click', function () {
                     var item = this.parentNode;
                     item.classList.toggle('active');
-                    if (this.children[0].children[1].classList[1] == 'es-angle-down')
-                        this.children[0].children[1].classList.replace('es-angle-down', 'es-angle-up');
-                    else
-                        this.children[0].children[1].classList.replace('es-angle-up', 'es-angle-down');
+                    this.children[0].children[1].classList.toggle('es-angle-up');
+                    this.children[0].children[1].classList.toggle('es-angle-down');
                 });
             });
-            document.getElementById("expand-button").addEventListener('click', () => {
-                var expandItems = document.querySelectorAll('.expand');
-                var accordionItems = document.querySelectorAll('.accordion-item');
-                accordionItems.forEach(function (item) {
-                    item.classList.add('active');
-                });
-                expandItems.forEach(function (expandItem) {
-                    expandItem.classList.replace('es-angle-down', 'es-angle-up');
-                });
-                document.getElementById("collapse-button").hidden = false;
-                document.getElementById("expand-button").hidden = true;
-            });
-            document.getElementById("collapse-button").addEventListener('click', () => {
-                var accordionItems = document.querySelectorAll('.accordion-item');
-                var expandItems = document.querySelectorAll('.expand');
-                accordionItems.forEach(function (item) {
-                    item.classList.remove('active');
-                });
-                expandItems.forEach(function (expandItem) {
-                    expandItem.classList.replace('es-angle-up', 'es-angle-down');
-                });
-                document.getElementById("collapse-button").hidden = true;
-                document.getElementById("expand-button").hidden = false;
-            });
-
         }
     )
         .catch(
@@ -172,20 +151,19 @@ function getCourseContentDetails(courseId) {
         )
 }
 
+// Load video course details
 function getCourseVideoDetails(courseId) {
     getCourseContentDetailsAPICalls(courseId).then(
         (courseVideoDetails) => {
-            var playlistHtml = "";
+            videoDetails.innerHTML = "";
             for (const [title, cvd] of Object.entries(courseVideoDetails)) {
-                var videoHtml = `<a href="${cvd.href}"  onclick="route()" class="box">
-                <i class="es-play-lg"></i>
-                <img src="${cvd.thumbnail}"alt="">
-                <h2>${title}</h2>
-                </a>`;
-                playlistHtml += videoHtml
+                const videoHtml = document.createElement("a");
+                videoHtml.href = cvd.href;
+                videoHtml.setAttribute("onclick", "route()");
+                videoHtml.classList.add("box");
+                videoHtml.innerHTML = `<i class="es-play-lg"></i><img src="${cvd.thumbnail}"alt=""><h2>${title}</h2>`;
+                videoDetails.appendChild(videoHtml);
             };
-            var videoDetails = document.querySelector(".video-container .box-container");
-            videoDetails.innerHTML = playlistHtml;
         }
     ).catch(
         (e) => {
@@ -195,10 +173,68 @@ function getCourseVideoDetails(courseId) {
     );
 }
 
+// Load course reviews
+function getCourseReviews(courseId) {
+    getCourseReviewsAPICall(courseId).then(
+        (courseReview) => {
+            if (courseReview) {
+                document.querySelector('.reviews').style.display = "block";
+                boxContainer.innerHTML ="";
+                courseReview.forEach((r) => {
+                    var userInfo = r.user;
+                    const reviewBox = document.createElement('div');
+                    reviewBox.classList.add('box');
+                    const reviewParagraph = document.createElement('p');
+                    reviewParagraph.textContent = r.review;
+                    const userDiv = document.createElement('div');
+                    userDiv.classList.add('user');
+                    const profileLink = document.createElement('a');
+                    profileLink.href = `/profile/${userInfo.uid}`;
+                    profileLink.setAttribute("onclick", "route()");
+                    const userImage = document.createElement('img');
+                    userImage.src = userInfo.userProfileSrc;
+                    userImage.alt = userInfo.name;
+                    const userContentDiv = document.createElement('div');
+                    const userName = document.createElement('h2');
+                    userName.textContent = userInfo.name;
+                    const starsContent = document.createElement('div');
+                    starsContent.innerHTML = generateStarRating(r.rating);
+
+                    profileLink.appendChild(userImage);
+                    userDiv.appendChild(profileLink);
+                    userContentDiv.appendChild(userName);
+                    userContentDiv.appendChild(starsContent);
+                    userDiv.appendChild(userContentDiv);
+                    reviewBox.appendChild(reviewParagraph);
+                    reviewBox.appendChild(userDiv);
+                    boxContainer.appendChild(reviewBox);
+                })
+            } else
+                document.querySelector('.reviews').style.display = "none";
+        }
+    ).catch(
+        (e) => {  pushPopupMessage(["FAILURE", "Something went wrong, unable to load course reviews."]); throw e; }
+    );
+}
+
+// Generate stars in review
+function generateStarRating(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating - fullStars >= 0.5;
+
+    return '<div class="stars">' +
+        '<i class="es-star"></i>'.repeat(fullStars) +
+        (hasHalfStar ? '<i class="es-star-half"></i>' : '') +
+        '<i class="es-star-empty"></i>'.repeat(5 - Math.ceil(rating)) +
+        '</div>';
+
+}
+
+// TODO: Potentially need to remove following function */
 async function importMockApi() {
     try {
-        const { mockgetCourseReviewAPICall,mockgetTextCourseAPICall } = await import('/public/test/mock-api.js');
-        
+        const { mockgetCourseReviewAPICall, mockgetTextCourseAPICall } = await import('/public/test/mock-api.js');
+
         return {
             mockgetCourseReviewAPICall,
             mockgetTextCourseAPICall
@@ -209,83 +245,32 @@ async function importMockApi() {
         throw error;
     }
 }
- async function generateUserReview(courseId) {
+async function getCourseReviewsAPICall(courseId) {
     const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
-        mockApi.mockgetCourseReviewAPICall(courseId).then(
-            (courseReview) => {
-                var reviewsHtml = '';
-                if(!courseReview)
-                resolve();
-                courseReview.forEach((r) => {
-                    var userInfo = r.user;
-                    const starsHTML = generateStarRating(r.rating);
-                    reviewsHtml += `
-                        <div class="box">
-                            <p>${r.review}</p>
-                            <div class="user">
-                                <a  onclick="route()" href="/profile/${userInfo.uid}">
-                                <img src="${userInfo.userProfileSrc}" alt="${userInfo.name}">
-                                </a>
-                                <div>
-                                    <h2>${userInfo.name}</h2>
-                                    ${starsHTML}
-                                </div>
-                               
-                            </div>
-                        </div>
-                    `;
-                });
-                resolve(reviewsHtml);
-            }
-        ).catch(
-            error => {
+        mockApi.mockgetCourseReviewAPICall(courseId).then(response => {
+            // TODO: Store the API response in the cachedData object
+            resolve(response);
+        })
+            .catch(error => {
                 reject(error);
-            }
-        );
+            });
     });
 }
-
-function generateStarRating(rating) {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating - fullStars >= 0.5;
-
-    let starsHTML = '';
-
-    // Add full stars
-    for (let i = 0; i < fullStars; i++) {
-        starsHTML += '<i class="es-star"></i>';
-    }
-
-    // Add half star if necessary
-    if (hasHalfStar) {
-        starsHTML += '<i class="es-star-half"></i>';
-    }
-
-    // Add empty stars to fill up to 5
-    const emptyStars = 5 - Math.ceil(rating);
-    for (let i = 0; i < emptyStars; i++) {
-        starsHTML += '<i class="es-star-empty"></i>';
-    }
-
-    // Wrap stars in a div
-    return '<div class="stars">' + starsHTML + '</div>';
-}
-
 async function getCourseDetailsAPICalls(courseId) {
     const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
         // If data is already cached, resolve with the cached data
-      
-            // Simulate an API call
-            mockApi.mockgetTextCourseAPICall(courseId)
-                .then(response => {
-                    // TODO: Store the API response in the cachedData object
-                    resolve(response); // Resolve with the API response
-                })
-                .catch(error => {
-                    reject(error); // Reject with the error from the API call
-                });
-        
+
+        // Simulate an API call
+        mockApi.mockgetTextCourseAPICall(courseId)
+            .then(response => {
+                // TODO: Store the API response in the cachedData object
+                resolve(response); // Resolve with the API response
+            })
+            .catch(error => {
+                reject(error); // Reject with the error from the API call
+            });
+
     });
 }

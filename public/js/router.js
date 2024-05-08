@@ -99,13 +99,13 @@ function loadMainScripts(path) {
 
     if (matchCoursePath) {
         publish('unloadHome');
-        publish('loadCourseDetails', matchCoursePath[1]);
+        publish('loadCoursePage', matchCoursePath[1]);
     } else if (matchProfilepath) {
         publish('unloadHome');
-        publish('initProfile', matchProfilepath[1]);
+        publish('loadProfile', matchProfilepath[1]);
     } else if (matchContentpath) {
         publish('unloadHome');
-        publish('loadCourseContent', matchContentpath[1]);
+        publish('loadContent', matchContentpath[1]);
     } else {
         switch (path) {
             case "/courses":

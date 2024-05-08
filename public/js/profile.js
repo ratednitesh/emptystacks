@@ -2,29 +2,11 @@ import { getUid } from "./firebase-config";
 import { getUserPrivateData } from "./setup";
 import { pushPopupMessage } from "./helper";
 
-let staticLoaded = false;
 var myProfile = {};
 const dataFields = ["username", "about-me", "work", "location", "tech-stack", "facebook", "instagram", "linkedin", "github"];
 
-export function initProfile(uid) {
-    let myUid = getUid();
-    if (!staticLoaded)
-        initStaticContent();
-    loadPublicProfile(uid, myUid);
-    if (uid == myUid) {
-        document.querySelectorAll('.profile .private').forEach(function (event) {
-            event.classList.remove("disabled"); //TODO: not completed. continue from here.
-        });
-        loadPrivateProfile(uid);
-    }
-    else {
-        document.querySelectorAll('.profile .private').forEach(function (event) {
-            event.classList.add("disabled"); //TODO: not completed. continue from here.
-        });
-    }
-
-}
-function initStaticContent() {
+// Initializers and Listeners: Profile 
+export function initProfile() {
     for (const dataField of dataFields) {
         let field = document.getElementById(dataField);
         let dataFieldElement;
@@ -75,29 +57,40 @@ function initStaticContent() {
                 checkIcon.classList.toggle('inactive');
                 crossIcon.classList.toggle('inactive');
             });
-
         })();
-
     }
-    staticLoaded = true;
 }
-function loadPublicProfile(uid, myUid) {
-    console.log("loading profile: ");
-    console.log(uid);
+
+// Load profile
+export function loadProfile(uid){
+    let myUid = getUid();
+    if (uid == myUid) {
+        document.querySelectorAll('.profile .private').forEach(function (event) {
+            event.classList.remove("disabled"); 
+        });
+        loadPublicProfile(uid, 1);
+        loadPrivateProfile(uid);
+    }
+    else {
+        document.querySelectorAll('.profile .private').forEach(function (event) {
+            event.classList.add("disabled"); 
+        });
+        loadPublicProfile(uid, 0);
+    }
+}
+
+// load public profile
+function loadPublicProfile(uid, isMyProfile) {
     getUserPublicData(uid).then((data) => {
-        console.log("data is here");
-        console.log(data);
-        if (myUid == uid)
-            myProfile = data; //TODO: only on self profile
+        if (isMyProfile)
+            myProfile = data; 
         setUserProfilePhoto(data.userProfileSrc);
         setUserRole(data.role);
-        console.log(data);
         for (const dataField of dataFields) {
             let field = document.getElementById(dataField);
             let dataFieldElement = field.querySelector('.data-field');
             dataFieldElement.innerHTML = data[dataField];
         }
-
         // Read tutor data 
         if(data.tutorDetails){
             for (const property in data.tutorDetails.stats) {
@@ -105,20 +98,23 @@ function loadPublicProfile(uid, myUid) {
             }
             createCoursesSection(data.tutorDetails.publishedCourses,'.box-container.published-courses' );
             document.querySelectorAll('.profile .tutor').forEach(function (event) {
-                event.classList.remove("disabled"); //TODO: not completed. continue from here.
+                event.classList.remove("disabled"); 
             });
         }else{
             document.querySelectorAll('.profile .tutor').forEach(function (event) {
-                event.classList.add("disabled"); //TODO: not completed. continue from here.
+                event.classList.add("disabled"); 
             });
         }
-
+        // TODO:  publish('notFoundRoute');
+        
     }).catch((e) => {
         console.log(e);
         pushPopupMessage(["FAILURE", "Something went wrong, unable to load profile."]);
     });
 
 }
+
+// load private profile
 function loadPrivateProfile(uid) {
 
     getUserPrivateData(uid).then((data) => {
@@ -140,8 +136,6 @@ function setUserRole(role) {
     var userRole = document.getElementById('user-role');
     userRole.innerHTML = role;
 }
-
-/* Teacher Section */
 
 /* Private Section */
 function initUserActivities(fieldId, fieldValue) {
@@ -186,6 +180,8 @@ function createCoursesSection(courses, rootElement) {
         container.appendChild(box);
     });
 }
+
+// TODO: Potentially need to remove following function */
 async function importMockApi() {
     try {
         const {  mockgetUserDataAPICall, mockUpdateUserDataAPICall } = await import('/public/test/mock-api.js');
