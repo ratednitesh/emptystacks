@@ -254,48 +254,6 @@
     text-decoration: underline;
 }
 
-
-/* .cd-form .cd-error-message {
-    display: inline-block;
-    position: absolute;
-    left: -5px;
-    bottom: -35px;
-    background: rgba(215, 102, 102, 0.9);
-    padding: 0.8em;
-    z-index: 2;
-    color: #FFF;
-    font-size: 13px;
-    font-size: 0.8125rem;
-    border-radius: 0.25em;
-    /* prevent click and touch events */
-/* pointer-events: none;
-    visibility: hidden;
-    opacity: 0;
-    -webkit-transition: opacity 0.2s 0, visibility 0 0.2s;
-    -moz-transition: opacity 0.2s 0, visibility 0 0.2s;
-    transition: opacity 0.2s 0, visibility 0 0.2s;
-} */
-
-/* .cd-form .cd-error-message::after {
-    /* triangle */
-/* content: "";
-    position: absolute;
-    left: 22px;
-    bottom: 100%;
-    height: 0;
-    width: 0;
-    border-bottom: 8px solid rgba(215, 102, 102, 0.9);
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-} */
-
-/* .cd-form .cd-error-message.is-visible {
-    opacity: 1;
-    visibility: visible;
-    -webkit-transition: opacity 0.2s 0, visibility 0 0;
-    -moz-transition: opacity 0.2s 0, visibility 0 0;
-    transition: opacity 0.2s 0, visibility 0 0;
-} */
 .cd-form .icons {
     margin-left: auto;
     justify-content: space-evenly;
@@ -328,13 +286,4 @@
     text-indent: 100%;
     white-space: nowrap;
     overflow: hidden;
-}
-
-
-#cd-login, #cd-signup, #cd-reset-password {
-    display: none;
-}
-
-#cd-login.is-selected, #cd-signup.is-selected, #cd-reset-password.is-selected {
-    display: block;
 }

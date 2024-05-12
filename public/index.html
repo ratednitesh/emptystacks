@@ -41,7 +41,7 @@
                     <div id="menu-btn" class="header-icon  es-nav"></div>
                     <div id="user-btn">
                         <div id="guest-photo-header" class="header-icon es-user "></div>
-                        <img id="user-photo-header" alt="">
+                        <img id="user-photo-header" class="disabled" alt="">
                     </div>
                 </div>
                 <div class="menus-modal">
@@ -53,9 +53,11 @@
                             <button class="btn" id="start-journey">Start Your Journey</button>
                         </div>
                         <div class="profile private">
-                            <img id="user-menu-photo" alt="">
-                            <h2 id="user-menu-name"></h2>
-                            <span id="user-menu-mail"></span>
+                            <a id="header-profile-link" onclick="route()">
+                                <img id="user-menu-photo" alt="">
+                                <h2 id="user-menu-name"></h2>
+                                <span id="user-menu-mail"></span>
+                            </a>
                         </div>
                         <div class="menu private">
                             <a id="profile-link" onclick="route()"><i class="es-user"></i><span>My
@@ -83,12 +85,14 @@
     </header>
     <!-- side-bar section starts  -->
     <nav id="sideBar">
-        <div id="mainSidebar">
+        <div id="mainSidebar" class="disabled">
             <div class="side-bar">
                 <div class="profile">
-                    <img id="user-photo-sb" alt="">
-                    <h2 id="user-name-sb"></h2>
-                    <span id="user-role-sb"></span>
+                    <a id="sb-profile-link" onclick="route()">
+                        <img id="user-photo-sb" alt="">
+                        <h2 id="user-name-sb"></h2>
+                        <span id="user-role-sb"></span>
+                    </a>
                 </div>
                 <nav class="navbar">
                     <a href="/" onclick="route()"><i class="es-home"></i><span>Home</span></i></a>
@@ -102,7 +106,7 @@
                 </nav>
             </div>
         </div>
-        <div id="contentSidebar">
+        <div id="contentSidebar" class="disabled">
             <!-- side bar section starts -->
             <div class="side-bar">
                 <h2 class="course-title"></h2>
@@ -197,7 +201,7 @@
                     </p>
                 </form>
             </div> <!-- cd-signup -->
-            <div id="cd-reset-password"> <!-- reset password form -->
+            <div id="cd-reset-password" class="disabled"> <!-- reset password form -->
                 <p class="cd-form-message">Lost your password? Please enter your email address. You will receive a link
                     to create a new password.</p>
                 <form class="cd-form">

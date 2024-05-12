@@ -133,9 +133,6 @@
     color: var(--white);
 }
 
-#user-photo-header {
-    display: none;
-}
 
 .header .flex .menus.active {
     transform: scale(1);

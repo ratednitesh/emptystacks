@@ -96,15 +96,7 @@ export function initContent() {
 export function loadContent(chapterId) {
     if (lastChapterId != chapterId) {
         lastChapterId = chapterId;
-        if (isUserLoggedIn()) {
-            commentHtml.querySelector(".add-comment").classList.remove('disabled');
-            commentHtml.querySelector(".no-comments").classList.add('disabled');
-
-        } else {
-            commentHtml.querySelector(".add-comment").classList.add('disabled');
-            commentHtml.querySelector(".no-comments").classList.remove('disabled');
-        }
-
+        hideComments();
         getCourseContentAPICalls(chapterId).then(
             (chapterData) => {
                 if (chapterData) {
@@ -113,16 +105,15 @@ export function loadContent(chapterId) {
                     contentHtml.querySelector('#likes').innerHTML = chapterData.likes + " Likes";
                     contentHtml.querySelector('#author').innerHTML = chapterData.author.name;
                     showComments.innerHTML = "Comments (" + chapterData.comments + ")";
-                    commentHtml.classList.add('disabled');
-                    showComments.classList.remove('disabled');
+                    
                     if (chapterData.type == "text") {
-                        watchVideo.style.display = "none";
-                        chapterContent.style.display = "block";
+                        watchVideo.classList.add('disabled');
+                        chapterContent.classList.remove('disabled');
                         chapterContent.innerHTML = chapterData.content;
                     }
                     else {
-                        watchVideo.style.display = "block";
-                        chapterContent.style.display = "none";
+                        watchVideo.classList.remove('disabled');
+                        chapterContent.classList.add('disabled');
                         contentHtml.querySelector('.video').poster = chapterData.thumbnail;
                         contentHtml.querySelector('.description').innerHTML = chapterData.description;
                     }
@@ -145,6 +136,18 @@ export function loadContent(chapterId) {
         publish('notFoundRoute');
 }
 
+export function hideComments(){
+    commentHtml.classList.add('disabled');
+    showComments.classList.remove('disabled');
+    if (isUserLoggedIn()) {
+        commentHtml.querySelector(".add-comment").classList.remove('disabled');
+        commentHtml.querySelector(".no-comments").classList.add('disabled');
+
+    } else {
+        commentHtml.querySelector(".add-comment").classList.add('disabled');
+        commentHtml.querySelector(".no-comments").classList.remove('disabled');
+    }
+}
 // load content sidebar
 function loadContentSidebar(courseId, courseName, chapterId, type) {
     getCourseContentDetailsAPICalls(courseId).then(
@@ -161,8 +164,8 @@ function loadContentSidebar(courseId, courseName, chapterId, type) {
                         a.href = "javascript:void(0);";
                         a.innerHTML = `<span>${chapter}</span><i class="arrow es-angle-double-right pull-right"></i>`;
                         const subUl = document.createElement("ul");
+                        subUl.classList.add('disabled');
                         for (const [topic, link] of Object.entries(topics)) {
-
                             const subLi = document.createElement("li");
                             const subA = document.createElement("a");
                             subLi.classList.add("sub-menu-options");
@@ -173,7 +176,7 @@ function loadContentSidebar(courseId, courseName, chapterId, type) {
                             subUl.appendChild(subLi);
                             if ("/content/" + chapterId == link) {
                                 subLi.classList.add("active");
-                                subUl.style.display = "block";
+                                subUl.classList.remove('disabled');
                             }
                         }
                         li.appendChild(a);
@@ -227,14 +230,14 @@ function initializeContentSideBarListeners() {
             // Close all other sub-menus
             document.querySelectorAll(".sidebar .sub-menu ul").forEach(function (submenu) {
                 if (submenu !== link.nextElementSibling) {
-                    submenu.style.display = "none";
+                    submenu.classList.add('disabled');
                 }
             });
             // Toggle the visibility of the clicked sub-menu
-            if (link.nextElementSibling.style.display == "" || link.nextElementSibling.style.display == "none") {
-                link.nextElementSibling.style.display = "block";
+            if (link.nextElementSibling.classList.contains('disabled')) {
+                link.nextElementSibling.classList.remove('disabled');
             } else {
-                link.nextElementSibling.style.display = "none";
+                link.nextElementSibling.classList.add('disabled');
             }
             // Prevent the click event from propagating up the DOM hierarchy
             e.stopPropagation(); // TODO: may be needed at all places as well.

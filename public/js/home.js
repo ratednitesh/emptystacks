@@ -70,8 +70,8 @@ function initPopularCourses() {
             viewMoreCourses.addEventListener(
                 'click', () => {
                     // TODO: Enhance this
-                    viewMoreCourses.style.display = "none";
-                    document.querySelector("#that-all").style.display = "block";
+                    viewMoreCourses.classList.add('disabled');
+                    document.querySelector("#that-all").classList.remove('disabled');
                 }
             );
 
@@ -142,11 +142,11 @@ function initQuickCourses() {
 //  Load Home / Courses
 export function loadHome(args) {
     if (args == 'only-course') {
-        document.querySelector('.quick-select').style.display = "none";
-        document.querySelector('.highlight-section').style.display = "none";
+        document.querySelector('.quick-select').classList.add('disabled');
+        document.querySelector('.highlight-section').classList.add('disabled');
     } else {
-        document.querySelector('.quick-select').style.display = "block";
-        document.querySelector('.highlight-section').style.display = "block";
+        document.querySelector('.quick-select').classList.remove('disabled');
+        document.querySelector('.highlight-section').classList.remove('disabled');
         if (!isBannerLoaded) {
             loadBanner();
             isBannerLoaded = true;
@@ -170,8 +170,8 @@ function unloadBanner() {
 
 // On auth state change, call this function to update show/ hide section
 export function updateQuickSelectOptions() {
-    homeOptionPrivate.forEach((node) => { if (!isUserLoggedIn()) node.style.display = "none"; else node.style.display = "block" });
-    homeOptionOnlyPublic.forEach((node) => { if (isUserLoggedIn()) node.style.display = "none"; else node.style.display = "block" });
+    homeOptionPrivate.forEach((node) => { if (!isUserLoggedIn()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
+    homeOptionOnlyPublic.forEach((node) => { if (isUserLoggedIn()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
     updateEnrolledCourses();
 }
 // On auth State change, Update enrolled Courses 
@@ -187,7 +187,7 @@ function updateEnrolledCourses() {
                     quickCourses.forEach((course) => {
                         // Create cover div
                         const coverDiv = document.createElement('div');
-                        coverDiv.classList.add('cover', 'hidden', 'fade');
+                        coverDiv.classList.add('cover', 'disabled', 'fade');
                         // Create anchor tag
                         const anchorTag = document.createElement('a');
                         anchorTag.href = course.href;
@@ -215,7 +215,7 @@ function updateEnrolledCourses() {
                     enrolledCourses = document.querySelectorAll(".book .cover");
                     enrolledCourseIndex = 0;
                     if (enrolledCourses.length != 0){
-                        enrolledCourses[0].classList.replace('hidden', 'visible');
+                        enrolledCourses[0].classList.remove('disabled');
                         slideshow.classList.remove('disabled')
                         noEnroll.classList.add('disabled');
                     }
@@ -237,14 +237,14 @@ function updateEnrolledCourses() {
 // Show hide selected enrolled course
 function showSelectedEnrolledCourse(oldIndex, newIndex) {
     if (oldIndex != -1) {
-        enrolledCourses[oldIndex].classList.replace('visible', 'hidden');
+        enrolledCourses[oldIndex].classList.add( 'disabled');
         if (newIndex == enrolledCourses.length) {
             newIndex = 0;
         }
         else if (newIndex == -1) {
             newIndex = enrolledCourses.length - 1;
         }
-        enrolledCourses[newIndex].classList.replace('hidden', 'visible');
+        enrolledCourses[newIndex].classList.remove( 'disabled');
         enrolledCourseIndex = newIndex;
     }
 }
@@ -257,7 +257,7 @@ function showSlide(index) {
     if (index < 1)
         index = slides.length;
     dots.forEach((node, i) => { if (index - 1 == i) node.classList.replace('es-circle-empty', 'es-circle'); else node.classList.replace('es-circle', 'es-circle-empty'); })
-    slides.forEach((node, i) => { if (index - 1 == i) node.style.display = "block"; else node.style.display = "none"; })
+    slides.forEach((node, i) => { if (index - 1 == i) node.classList.remove('disabled'); else node.classList.add('disabled'); })
 }
 
 // TODO: Potentially need to remove following function */

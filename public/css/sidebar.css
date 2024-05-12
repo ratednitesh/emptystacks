@@ -119,16 +119,15 @@
     animation-duration: .5s;
 }
 
-.sidebar .sub-menu ul {
-    display: none;
-}
-
 .sidebar .menu-options.active span {
     color: var(--main-color);
 }
 
 .sub-menu-options.active a{
     color: var(--main-color);
+}
+.side-bar .navbar .sub-menu-options a{
+   padding-left: 4rem;
 }
 .sidebar .menu-options.video-list.active{
     background-color: var(--light-bg);

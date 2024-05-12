@@ -74,6 +74,7 @@ section {
 
 .disabled{
     /* TODO: change this to visibility: hidden  */
+    visibility: hidden !important; 
     display: none !important; 
 }
 

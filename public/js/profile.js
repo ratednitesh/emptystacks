@@ -63,6 +63,7 @@ export function initProfile() {
 
 // Load profile
 export function loadProfile(uid){
+    console.log('here');
     let myUid = getUid();
     if (uid == myUid) {
         document.querySelectorAll('.profile .private').forEach(function (event) {
@@ -78,7 +79,6 @@ export function loadProfile(uid){
         loadPublicProfile(uid, 0);
     }
 }
-
 // load public profile
 function loadPublicProfile(uid, isMyProfile) {
     getUserPublicData(uid).then((data) => {

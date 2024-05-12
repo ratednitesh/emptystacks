@@ -158,9 +158,6 @@
 .text-course .row .col .details .course-attributes span {
     color: var(--light-color);
 }
-.course-details{
-    display: none;
-}
 
 .course-details .container {
     display: flex;
@@ -258,9 +255,6 @@
     margin-right: 2rem;
 }
 
-.video-container{
-    display: none;
-}
 .video-container .box-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));

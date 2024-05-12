@@ -1,6 +1,4 @@
-.highlight-section{
-    display: none;
-}
+
 .highlight-section .box-container .slider {
     text-align: center;
     font-size: 1.5rem;
@@ -13,7 +11,6 @@
 }
 
 .highlight-section .box-container .banner-slide {
-    display: none;
     width: 100%;
     animation-name: fade-in;
     animation-duration: 3s;
@@ -22,9 +19,7 @@
     border-radius: .5rem;
     /* transition: opacity 3s ease;  */
 }
-.quick-select{
-    display: none;
-}
+
 
 .quick-select .box-container {
     display: grid;
@@ -134,17 +129,11 @@
     margin-bottom: 1rem;
     background-color: var(--light-bg);
     top: 0;
-    display: none;
 }
 
-.quick-select .box-container .box .book .hidden {
-    display: none;
-}
-
-.quick-select .box-container .box .book .visible {
+.quick-select .box-container .box .book {
     animation-name: fade-in;
     animation-duration: .5s;
-    display: block;
 }
 
 .quick-select .box-container .box .book img {

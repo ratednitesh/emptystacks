@@ -72,25 +72,26 @@ const handleLocation = async () => {
             await initAddOn(route);
             console.log('loaded additional js files');
         }
-        for (let key in cachedPages) document.getElementById(key).style.display = (key === route) ? "block" : "none";
+        for (let key in cachedPages) document.getElementById(key).classList.toggle('disabled', key !== route);
         loadMainScripts(path);
         const currentSidebar = route === "content" ? "contentSidebar" : "mainSidebar";
         if (previousSideBarPath != currentSidebar) {
             previousSideBarPath = currentSidebar;
             if (currentSidebar == "mainSidebar") {
-                document.getElementById('mainSidebar').style.display = "block";
-                document.getElementById('contentSidebar').style.display = "none";
+                document.getElementById('mainSidebar').classList.remove('disabled');
+                document.getElementById('contentSidebar').classList.add('disabled');
                 sideBar.classList.remove('active');
                 document.body.classList.remove('active');
             }
             else {
-                document.getElementById('mainSidebar').style.display = "none";
-                document.getElementById('contentSidebar').style.display = "block";
+                document.getElementById('mainSidebar').classList.add('disabled');
+                document.getElementById('contentSidebar').classList.remove('disabled');
                 sideBar.classList.add('active');
                 document.body.classList.add('active');
             };
         }
-    }
+    }else
+    console.log(previousMainBodyPath);
 };
 function loadMainScripts(path) {
     const matchCoursePath = path.match(/^\/course\/([\w/-]+)$/);
@@ -130,4 +131,11 @@ function findMatchingRoute(path) {
         }
     });
     return routes[matchingRoute] || routes[404];
+}
+export function reloadProfilePage(){
+    // TODO: This can be generic solution to all auth state changes
+    const matchProfilepath = previousMainBodyPath.match(/^\/profile\/([\w/-]+)$/);
+    if (matchProfilepath) {
+        publish('loadProfile', matchProfilepath[1]);
+    }
 }

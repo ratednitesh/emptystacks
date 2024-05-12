@@ -28,8 +28,3 @@
         opacity: 0.5;
     }
 }
-
-.preloader.inactive {
-    display: none;
-}
-

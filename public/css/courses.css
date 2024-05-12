@@ -59,6 +59,5 @@
 .courses .more-btn p{
    color: var(--light-color);
    font-size: 1.5rem;
-   display: none;
    letter-spacing: 0.2rem;
 }

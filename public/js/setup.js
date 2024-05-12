@@ -2,6 +2,7 @@ import { getUid } from "./firebase-config";
 import { publish } from "./helper";
 import { createNewUser, emailPasswordSignIn, firebaseSignOut, googleSignIn, isUserLoggedIn, tryPasswordResetEmail } from "./firebase-config";
 import { pushPopupMessage } from "./helper";
+import { reloadProfilePage } from "./router";
 
 // Header Button
 const toggleBtn = document.querySelector('#toggle-btn');
@@ -195,7 +196,6 @@ function modalListeners() {
             }
         }
         form_login.querySelector('input[type="email"]').classList.toggle("has-error");
-        // form_login.querySelector(".cd-error-message span").classList.toggle("is-visible");
     });
 
     form_signup.querySelector('input[type="submit"]').addEventListener("click", function (event) {
@@ -293,24 +293,24 @@ function modalListeners() {
 }
 function login_selected() {
     form_modal.classList.add("is-visible");
-    form_login.classList.add("is-selected");
-    form_signup.classList.remove("is-selected");
-    form_forgot_password.classList.remove("is-selected");
+    form_login.classList.remove("disabled");
+    form_signup.classList.add("disabled");
+    form_forgot_password.classList.add("disabled");
     tab_login.classList.add("selected");
     tab_signup.classList.remove("selected");
 }
 export function signup_selected() {
     form_modal.classList.add("is-visible");
-    form_login.classList.remove("is-selected");
-    form_signup.classList.add("is-selected");
-    form_forgot_password.classList.remove("is-selected");
+    form_login.classList.add("disabled");
+    form_signup.classList.remove("disabled");
+    form_forgot_password.classList.add("disabled");
     tab_login.classList.remove("selected");
     tab_signup.classList.add("selected");
 }
 function forgot_password_selected() {
-    form_login.classList.remove("is-selected");
-    form_signup.classList.remove("is-selected");
-    form_forgot_password.classList.add("is-selected");
+    form_login.classList.add("disabled");
+    form_signup.classList.add("disabled");
+    form_forgot_password.classList.remove("disabled");
 }
 function loginSuccess() {
     form_modal.classList.remove("is-visible");
@@ -320,9 +320,8 @@ function loginSuccess() {
 function signOut() {
     firebaseSignOut().then(() => {
         if (!isUserLoggedIn()) {
+            updateAuthDependentSections();
             pushPopupMessage(["SUCCESS", "Logout successful!"]);
-            updateUserPrivateData();
-            publish('updateQuickSelectOptions', false);
         } else {
             pushPopupMessage(["FAILURE", "Sign out Failed!"])
         }
@@ -334,8 +333,7 @@ function signIn(provider, userToken) {
             if (isUserLoggedIn()) {
                 console.log("User Logged In");
                 loginSuccess();
-                updateUserPrivateData();
-                publish('updateQuickSelectOptions', true);
+                updateAuthDependentSections();
                 pushPopupMessage(["SUCCESS", "Login successful!"])
             }
         }).catch(() => {
@@ -346,8 +344,7 @@ function signIn(provider, userToken) {
             if (isUserLoggedIn()) {
                 console.log("User Logged In");
                 loginSuccess();
-                updateUserPrivateData();
-                publish('updateQuickSelectOptions', true);
+                updateAuthDependentSections();
                 pushPopupMessage(["SUCCESS", "Login successful!"])
             }
         }).catch(() => {
@@ -360,8 +357,7 @@ function signUp(userToken) {
         if (isUserLoggedIn()) {
             console.log("User Logged In");
             loginSuccess();
-            updateUserPrivateData();
-            publish('updateQuickSelectOptions', true);
+            updateAuthDependentSections();
             pushPopupMessage(["SUCCESS", "Registration successful!"]);
             setTimeout(() => { pushPopupMessage(["SUCCESS", `A verification link is sent to ${userToken.email}`]) }, 5000);
         }
@@ -377,6 +373,12 @@ function forgotPassword(email) {
     });
 }
 
+function updateAuthDependentSections() {
+    updateUserPrivateData();
+    publish('updateQuickSelectOptions');
+    publish('hideComments');
+    reloadProfilePage();
+}
 // Update user info on auth status change on header and main sidebar.
 export function updateUserPrivateData() {
     if (isUserLoggedIn()) {
@@ -387,20 +389,22 @@ export function updateUserPrivateData() {
                 document.getElementById('user-menu-photo').src = userData.userProfileSrc;
                 document.getElementById('user-menu-name').innerHTML = userData.username;
                 document.getElementById('user-menu-mail').innerHTML = userData.mailId;
-                profileMenuOnlyPublic.forEach((node) => { node.style.display = "none" });
-                profileMenuPrivate.forEach((node) => { node.style.display = "block" });
-                document.getElementById('user-photo-header').style.display = "block";
-                document.getElementById('guest-photo-header').style.display = "none";
+                profileMenuOnlyPublic.forEach((node) => { node.classList.add('disabled') });
+                profileMenuPrivate.forEach((node) => { node.classList.remove('disabled') });
+                document.getElementById('user-photo-header').classList.remove('disabled');
+                document.getElementById('guest-photo-header').classList.add('disabled');
                 document.getElementById('profile-link').href = "/profile/" + uid;
+                document.getElementById('header-profile-link').href = "/profile/" + uid;
+                document.getElementById('sb-profile-link').href = "/profile/" + uid;
                 sideBar.querySelector('#user-photo-sb').src = userData.userProfileSrc;
                 sideBar.querySelector('#user-name-sb').innerHTML = userData.username;
                 sideBar.querySelector('#user-role-sb').innerHTML = userData.role;
             }).catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load user profile."]); })
     } else {
-        profileMenuPrivate.forEach((node) => { node.style.display = "none" });
-        profileMenuOnlyPublic.forEach((node) => { node.style.display = "block" });
-        document.getElementById('user-photo-header').style.display = "none";
-        document.getElementById('guest-photo-header').style.display = "block";
+        profileMenuPrivate.forEach((node) => { node.classList.add('disabled') });
+        profileMenuOnlyPublic.forEach((node) => { node.classList.remove('disabled') });
+        document.getElementById('user-photo-header').classList.add('disabled');
+        document.getElementById('guest-photo-header').classList.remove('disabled')
         document.getElementById('guest-menu-photo').src = "/images/profile/guest-user.svg";
         sideBar.querySelector('#user-photo-sb').src = "/images/profile/guest-user.svg";
         sideBar.querySelector('#user-name-sb').innerHTML = 'Hello Guest!';

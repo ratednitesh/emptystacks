@@ -40,7 +40,6 @@
     font-size: 1.6rem;
     color: var(--black);
     border-bottom: var(--border);
-    display: none;
 }
 
 .text-section .chapter-details .chapter-content a {

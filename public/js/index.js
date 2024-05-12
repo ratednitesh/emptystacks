@@ -26,6 +26,6 @@ window.addEventListener('DOMContentLoaded', function () {
   initFirebase().then(() => {
     initStaticContent();
     initRouter();
-    document.querySelector('.preloader').classList.add('inactive');
+    document.querySelector('.preloader').classList.add('disabled');
   });
 });

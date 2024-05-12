@@ -60,13 +60,13 @@ function getCourseData(courseId) {
                 textCourse.querySelector('#tutor-name').innerHTML = tutorData.name;
                 textCourse.querySelector('#tutor-role').innerHTML = tutorData.role;
                 if (courseData.type == "text") {
-                    document.querySelector(".course-details").style.display = "block";
-                    document.querySelector(".video-container").style.display = "none";
+                    document.querySelector(".course-details").classList.remove('disabled');
+                    document.querySelector(".video-container").classList.add('disabled');
                     getCourseContentDetails(courseId);
                 }
                 else {
-                    document.querySelector(".video-container").style.display = "block";
-                    document.querySelector(".course-details").style.display = "none";
+                    document.querySelector(".video-container").classList.remove('disabled');
+                    document.querySelector(".course-details").classList.add('disabled');
                     getCourseVideoDetails(courseId);
                 }
                 getCourseReviews(courseId);
@@ -178,7 +178,7 @@ function getCourseReviews(courseId) {
     getCourseReviewsAPICall(courseId).then(
         (courseReview) => {
             if (courseReview) {
-                document.querySelector('.reviews').style.display = "block";
+                document.querySelector('.reviews').classList.remove('disabled');
                 boxContainer.innerHTML ="";
                 courseReview.forEach((r) => {
                     var userInfo = r.user;
@@ -210,7 +210,8 @@ function getCourseReviews(courseId) {
                     boxContainer.appendChild(reviewBox);
                 })
             } else
-                document.querySelector('.reviews').style.display = "none";
+               document.querySelector('.reviews').classList.add('disabled');
+
         }
     ).catch(
         (e) => {  pushPopupMessage(["FAILURE", "Something went wrong, unable to load course reviews."]); throw e; }

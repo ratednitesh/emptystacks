@@ -60,6 +60,7 @@ export async function initAddOn(page) {
                     console.log("loading content");
                     module.initContent();
                     subscribe('loadContent', module.loadContent);
+                    subscribe('hideComments', module.hideComments);
                     resolve();
                 });
             else
