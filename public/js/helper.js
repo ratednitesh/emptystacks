@@ -10,23 +10,53 @@ export function publish(eventName, data) {
         eventListeners[eventName].forEach(callback => callback(data));
     }
 }
-export function pushPopupMessage(data) {
+const statusCodes = {
+    200: "Registration Successful!",
+    201:"Login Successful!",
+    202: "Successfully Updated: ",
+    203: "Processing Request...",
+    204: "Logout Successful",
+    205: "A verification link is sent to ",
+    206: "A password reset email has been sent!",
+
+    301: "Please agree to Terms & Conditions!",
+    302: "Username is required!",
+    303: "Email Id is required!",
+    304: "Email Id is not valid!",
+    305: "Password is required!",
+    306: "Password must be at least 8 characters long.",
+    307: "Password cannot be more than 25 charaters.",
+308:"",
+309:"Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
+
+    500: "Something went wrong, please try again later",
+    501: "Something went wrong, unable to load: ",
+    502: "Something went wrong, unable to save changes",
+    503: "Sign In Failed!",
+    504: "Sign out Failed!",
+    505: "Registration Failed!",
+    506: "Sorry, This feature is not supported currently."
+}
+export function notification(statusCode, message) {
     let el = document.createElement('DIV');
     el.classList.add('popup');
-    el.innerHTML = data[1];
+    el.innerHTML = statusCodes[statusCode];
+    if (message != undefined)
+        el.innerHTML += message;
     let color;
-    switch (data[0]) {
-        case 'SUCCESS': color = "#38c464"; break;
-        case 'FAILURE': color = "#c5503b"; break;
-        case 'WARNING': color = "#eab735"; break;
-        case 'INFO': color = "#33a6e8";
-    }
+    if (statusCode >= 500)
+        color = "#c5503b";
+    else if (statusCode > 300)
+        color = "#eab735";
+    else if (statusCode >= 200)
+        color = "#38c464";
     el.style.backgroundColor = color;
     document.body.appendChild(el);
     setTimeout(() => {
         el.remove();
     }, 5000);
 }
+
 export async function initAddOn(page) {
     return new Promise((resolve, reject) => {
         try {
@@ -53,6 +83,7 @@ export async function initAddOn(page) {
                 import('./course.js').then(module => {
                     module.initCoursePage();
                     subscribe('loadCoursePage', module.loadCoursePage);
+                    subscribe('disableSignOutUserOptionsForCourse', module.disableSignOutUserOptionsForCourse);
                     resolve();
                 });
             else if (page == "content")

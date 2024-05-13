@@ -1,4 +1,4 @@
-import { pushPopupMessage, publish, getCourseContentDetailsAPICalls } from "./helper";
+import { publish, getCourseContentDetailsAPICalls, notification } from "./helper";
 import { getUid, isUserLoggedIn } from "./firebase-config";
 import { signup_selected } from "./setup";
 
@@ -25,6 +25,8 @@ export function initContent() {
                     for (const comment of commentData) {
                         const boxDiv = document.createElement("div");
                         boxDiv.classList.add("box");
+                        const userParentDiv = document.createElement("div");
+                        userParentDiv.classList.add("user-parent");
                         const userDiv = document.createElement("div");
                         userDiv.classList.add("user");
 
@@ -52,42 +54,36 @@ export function initContent() {
                         const commentText = document.createElement("p");
                         commentText.classList.add("text");
                         commentText.textContent = comment.comment;
-                        boxDiv.appendChild(userDiv);
-                        boxDiv.appendChild(commentText);
+                        userParentDiv.appendChild(userDiv);
                         let uid = getUid();
                         if (comment.uid == uid) {
-                            // Create form element
-                            const form = document.createElement("form");
-                            form.setAttribute("action", "");
-                            form.setAttribute("method", "post");
-                            form.classList.add("flex-btn");
+                            // Create edit div element
+                            var editDiv= document.createElement("div");
+                            editDiv.classList.add("edit-my-comments")
 
                             // Create edit button
-                            var editButton = document.createElement("button");
-                            editButton.setAttribute("type", "submit");
-                            editButton.setAttribute("name", "edit-comment");
-                            editButton.classList.add("inline-option-btn");
-                            editButton.textContent = "edit comment";
+                            var editButton = document.createElement("i");
+                            editButton.classList.add("es-pencil");
 
                             // Create delete button
-                            var deleteButton = document.createElement("button");
-                            deleteButton.setAttribute("type", "submit");
-                            deleteButton.setAttribute("name", "delete-comment");
-                            deleteButton.classList.add("inline-delete-btn");
-                            deleteButton.textContent = "delete comment";
-
-                            // Append buttons to form
-                            form.appendChild(editButton);
-                            form.appendChild(deleteButton);
-                            boxDiv.appendChild(form);
+                            var deleteButton = document.createElement("i");
+                            deleteButton.classList.add("es-trash");
+                            editButton.addEventListener("click", () => { console.log("now you can edit comment")});
+                            deleteButton.addEventListener("click", () => { console.log("comment deleted.")});
+                            // Append buttons to div
+                            editDiv.appendChild(editButton);
+                            editDiv.appendChild(deleteButton);
+                            userParentDiv.appendChild(editDiv);
                         }
+                        boxDiv.appendChild(userParentDiv);
+                        boxDiv.appendChild(commentText);
                         comments.appendChild(boxDiv);
                     }
                 }
             }))
             .catch((e) => {
                 console.log(e);
-                pushPopupMessage(["FAILURE", "Something went wrong, unable to load comments."]);
+                notification(501, 'comments');
             });
     });
 }
@@ -128,7 +124,7 @@ export function loadContent(chapterId) {
             .catch(
                 (e) => {
                     console.log(e);
-                    pushPopupMessage(["FAILURE", "Something went wrong, unable to load course."]);
+                    notification(501, 'course');
                 }
             )
     }
@@ -162,7 +158,7 @@ function loadContentSidebar(courseId, courseName, chapterId, type) {
                         li.classList.add("sub-menu");
                         const a = document.createElement("a");
                         a.href = "javascript:void(0);";
-                        a.innerHTML = `<span>${chapter}</span><i class="arrow es-angle-double-right pull-right"></i>`;
+                        a.innerHTML = `<span>${chapter}</span><i class="arrow es-angle-double-down pull-right"></i>`;
                         const subUl = document.createElement("ul");
                         subUl.classList.add('disabled');
                         for (const [topic, link] of Object.entries(topics)) {
@@ -177,6 +173,7 @@ function loadContentSidebar(courseId, courseName, chapterId, type) {
                             if ("/content/" + chapterId == link) {
                                 subLi.classList.add("active");
                                 subUl.classList.remove('disabled');
+                                a.innerHTML = `<span>${chapter}</span><i class="arrow es-angle-double-up pull-right"></i>`;
                             }
                         }
                         li.appendChild(a);
@@ -217,7 +214,7 @@ function loadContentSidebar(courseId, courseName, chapterId, type) {
     ).catch(
         (e) => {
             console.log(e);
-            pushPopupMessage(["FAILURE", "Something went wrong, unable to load Sidebar."]);
+            notification(501, 'sidebar');
         }
     )
 }

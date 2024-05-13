@@ -28,6 +28,11 @@
     margin-bottom: 2rem;
     padding: 2rem;
 }
+.comments .show-comments .user-parent {
+    display: flex;
+    align-items:flex-start;
+    justify-content: space-between;
+}
 .comments .show-comments .user {
     display: flex;
     align-items: center;
@@ -74,4 +79,10 @@
     width: 2rem;
     background-color: var(--light-bg);
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.edit-my-comments{
+    color: var(--black);
+    font-size: 1.4rem;
+    cursor: pointer;
 }

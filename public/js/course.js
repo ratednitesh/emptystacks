@@ -1,10 +1,13 @@
-import { pushPopupMessage, publish, getCourseContentDetailsAPICalls } from "./helper";
+import { isUserLoggedIn } from "./firebase-config";
+import { notification, publish, getCourseContentDetailsAPICalls } from "./helper";
 
 const textCourse = document.querySelector('.text-course');
 const expandButton = document.getElementById("expand-button");
+const saveCourse = document.getElementById("save-course");
 const courseDetails = document.querySelector(".course-details .container .accordion");
 const videoDetails = document.querySelector(".video-container .box-container");
 const boxContainer = document.querySelector('.reviews .box-container');
+const allBars = document.querySelectorAll('.signal-bars .bar');
 const levelNames = ['Easy', 'Intermediate', 'Expert'];
 let lastCourseId;
 
@@ -28,8 +31,8 @@ export function initCoursePage() {
 export function loadCoursePage(courseId) {
     if (lastCourseId != courseId) {
         lastCourseId = courseId;
+        disableSignOutUserOptionsForCourse();
         getCourseData(courseId);
-
     } else if (lastCourseId == 'notFoundRoute')
         publish('notFoundRoute');
 }
@@ -50,8 +53,11 @@ function getCourseData(courseId) {
                 const level = courseData.level;
                 const n = 4 - level; // Calculate the value of n based on the level
                 textCourse.querySelector('#course-level').innerHTML = levelNames[level - 1];
-                const bars = document.querySelectorAll('.signal-bars .bar:nth-last-child(n+' + n + ')');
-                bars.forEach(bar => {
+                allBars.forEach(bar => {
+                    bar.style.background = '#fff';
+                });
+                const selectedBars = document.querySelectorAll('.signal-bars .bar:nth-last-child(n+' + n + ')');
+                selectedBars.forEach(bar => {
                     bar.style.background = 'var(--main-color)';
                 });
                 var tutorData = courseData.author;
@@ -79,7 +85,7 @@ function getCourseData(courseId) {
         .catch(
             (e) => {
                 console.log(e);
-                pushPopupMessage(["FAILURE", "Something went wrong, unable to load course."]);
+                notification(501, 'course');
             }
         )
 }
@@ -146,7 +152,7 @@ function getCourseContentDetails(courseId) {
         .catch(
             (e) => {
                 console.log(e);
-                pushPopupMessage(["FAILURE", "Something went wrong, unable to load course content details."]);
+                notification(501, 'content details');
             }
         )
 }
@@ -168,18 +174,23 @@ function getCourseVideoDetails(courseId) {
     ).catch(
         (e) => {
             console.log(e);
-            pushPopupMessage(["FAILURE", "Something went wrong, unable to load course content details."]);
+            notification(501, 'course content details');
         }
     );
 }
-
+export function disableSignOutUserOptionsForCourse() {
+    if (isUserLoggedIn())
+        saveCourse.classList.remove('disabled');
+    else
+        saveCourse.classList.add('disabled');
+}
 // Load course reviews
 function getCourseReviews(courseId) {
     getCourseReviewsAPICall(courseId).then(
         (courseReview) => {
             if (courseReview) {
                 document.querySelector('.reviews').classList.remove('disabled');
-                boxContainer.innerHTML ="";
+                boxContainer.innerHTML = "";
                 courseReview.forEach((r) => {
                     var userInfo = r.user;
                     const reviewBox = document.createElement('div');
@@ -210,11 +221,13 @@ function getCourseReviews(courseId) {
                     boxContainer.appendChild(reviewBox);
                 })
             } else
-               document.querySelector('.reviews').classList.add('disabled');
+                document.querySelector('.reviews').classList.add('disabled');
 
         }
     ).catch(
-        (e) => {  pushPopupMessage(["FAILURE", "Something went wrong, unable to load course reviews."]); throw e; }
+        () => {
+            notification(501, 'course reviews');
+        }
     );
 }
 

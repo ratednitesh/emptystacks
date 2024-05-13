@@ -1,4 +1,5 @@
 import {initAddOn, subscribe, publish } from "./helper";
+import { removeMenuOptions } from "./setup";
 
 // const variables
 const filePathPrefix = "/pages/";
@@ -42,6 +43,7 @@ export function initRouter() {
 const route = (event) => {
     event = event || window.event;
     event.preventDefault();
+    removeMenuOptions();
     var element = event.target;
     var newRoute = element.href;
     // TODO: Should avoid loop logic

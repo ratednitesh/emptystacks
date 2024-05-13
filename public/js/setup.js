@@ -1,7 +1,6 @@
 import { getUid } from "./firebase-config";
-import { publish } from "./helper";
+import { notification, publish } from "./helper";
 import { createNewUser, emailPasswordSignIn, firebaseSignOut, googleSignIn, isUserLoggedIn, tryPasswordResetEmail } from "./firebase-config";
-import { pushPopupMessage } from "./helper";
 import { reloadProfilePage } from "./router";
 
 // Header Button
@@ -75,6 +74,14 @@ function headerListeners() {
         removeMenuOptions();
         signOut();
     };
+
+    let privateMenuOptions = document.querySelectorAll(".menu .private");
+    privateMenuOptions.forEach(function (link) {
+        console.log('hello');
+        link.addEventListener("click", function (e) {
+            removeMenuOptions();
+        })
+    });
 }
 function enableDarkMode() {
     toggleBtn.classList.replace('es-sun', 'es-moon');
@@ -96,7 +103,7 @@ function toggleMenuOptions() {
     profile.classList.toggle('active');
     menusModal.classList.toggle('is-visible');
 }
-function removeMenuOptions() {
+export function removeMenuOptions() {
     menusModal.classList.remove('is-visible');
     profile.classList.remove('active');
 }
@@ -190,7 +197,7 @@ function modalListeners() {
                 form_login_pass.classList.add("has-error");
             else {
                 form_login_pass.classList.add("has-no-error");
-                pushPopupMessage(['SUCCESS', 'Processing request...']);
+                notification(203);
                 let userToken = createUserToken('', email, password);
                 signIn('emailAddress', userToken);
             }
@@ -217,12 +224,12 @@ function modalListeners() {
                 else {
                     form_signup_pass.classList.add("has-no-error");
                     if (form_signup.querySelector('#accept-terms').checked) {
-                        pushPopupMessage(['SUCCESS', 'Processing request...']);
+                        notification(203);
                         let userToken = createUserToken(username, email, password);
                         signUp(userToken);
                     }
                     else
-                        pushPopupMessage(['FAILURE', 'Please agree to Terms & Conditions!']);
+                        notification(301);
                 }
             }
         }
@@ -235,7 +242,7 @@ function modalListeners() {
             form_forgot_password.querySelector('#reset-email').classList.add("has-error");
         else {
             form_forgot_password.querySelector('#reset-email').classList.add("has-no-error");
-            pushPopupMessage(['SUCCESS', 'Processing request...']);
+            notification(203);
             forgotPassword(email);
         }
     });
@@ -287,9 +294,9 @@ function modalListeners() {
     };
 
     document.querySelectorAll('.google-btn').forEach((event) => event.addEventListener("click", () => { signIn('Google') }));
-    document.querySelectorAll('.facebook-btn').forEach((event) => event.addEventListener("click", () => { pushPopupMessage(['FAILURE', 'Sorry, Facebook login not supported at the moment!']) }));
-    document.querySelectorAll('.apple-btn').forEach((event) => event.addEventListener("click", () => { pushPopupMessage(['FAILURE', 'Sorry, Apple login not supported at the moment!']) }));
-    document.querySelectorAll('.github-btn').forEach((event) => event.addEventListener("click", () => { pushPopupMessage(['FAILURE', 'Sorry, GitHub login not supported at the moment!']) }));
+    document.querySelectorAll('.facebook-btn').forEach((event) => event.addEventListener("click", () => { notification(506) }));
+    document.querySelectorAll('.apple-btn').forEach((event) => event.addEventListener("click", () => { notification(506) }));
+    document.querySelectorAll('.github-btn').forEach((event) => event.addEventListener("click", () => { notification(506) }));
 }
 function login_selected() {
     form_modal.classList.add("is-visible");
@@ -321,9 +328,9 @@ function signOut() {
     firebaseSignOut().then(() => {
         if (!isUserLoggedIn()) {
             updateAuthDependentSections();
-            pushPopupMessage(["SUCCESS", "Logout successful!"]);
+            notification(204);
         } else {
-            pushPopupMessage(["FAILURE", "Sign out Failed!"])
+            notification(504);
         }
     });
 }
@@ -334,10 +341,10 @@ function signIn(provider, userToken) {
                 console.log("User Logged In");
                 loginSuccess();
                 updateAuthDependentSections();
-                pushPopupMessage(["SUCCESS", "Login successful!"])
+                notification(201);
             }
         }).catch(() => {
-            pushPopupMessage(["FAILURE", "Sign In Failed!"])
+            notification(503);
         });
     } else if (provider == 'emailAddress') {
         emailPasswordSignIn(userToken).then(() => {
@@ -345,10 +352,10 @@ function signIn(provider, userToken) {
                 console.log("User Logged In");
                 loginSuccess();
                 updateAuthDependentSections();
-                pushPopupMessage(["SUCCESS", "Login successful!"])
+                notification(201);
             }
         }).catch(() => {
-            pushPopupMessage(["FAILURE", "Sign In Failed!"])
+            notification(503);
         });
     }
 }
@@ -358,18 +365,18 @@ function signUp(userToken) {
             console.log("User Logged In");
             loginSuccess();
             updateAuthDependentSections();
-            pushPopupMessage(["SUCCESS", "Registration successful!"]);
-            setTimeout(() => { pushPopupMessage(["SUCCESS", `A verification link is sent to ${userToken.email}`]) }, 5000);
+            notification(200);
+            setTimeout(() => { notification(205, userToken.email) }, 5000);
         }
     }).catch(() => {
-        pushPopupMessage(["FAILURE", "Registration Failed!"])
+        notification(505);
     });
 }
 function forgotPassword(email) {
     tryPasswordResetEmail(email).then(
-        () => { pushPopupMessage(["SUCCESS", "A password reset email has been sent!"]) }
+        () => { notification(206) }
     ).catch(() => {
-        pushPopupMessage(["FAILURE", "Something went wrong, please try again later!"])
+        notification(500);
     });
 }
 
@@ -377,6 +384,7 @@ function updateAuthDependentSections() {
     updateUserPrivateData();
     publish('updateQuickSelectOptions');
     publish('hideComments');
+    publish('disableSignOutUserOptionsForCourse')
     reloadProfilePage();
 }
 // Update user info on auth status change on header and main sidebar.
@@ -399,7 +407,7 @@ export function updateUserPrivateData() {
                 sideBar.querySelector('#user-photo-sb').src = userData.userProfileSrc;
                 sideBar.querySelector('#user-name-sb').innerHTML = userData.username;
                 sideBar.querySelector('#user-role-sb').innerHTML = userData.role;
-            }).catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load user profile."]); })
+            }).catch(() => { notification(501, 'user profile') })
     } else {
         profileMenuPrivate.forEach((node) => { node.classList.add('disabled') });
         profileMenuOnlyPublic.forEach((node) => { node.classList.remove('disabled') });
@@ -414,7 +422,7 @@ export function updateUserPrivateData() {
 /* Local helper function for validations / create user tokens etc. */
 function validateUsername(username) {
     if (username.trim() === '') {
-        pushPopupMessage(['FAILURE', 'Username is required.']);
+        notification(302);
         return false;
     }
     return true;
@@ -423,10 +431,10 @@ function validateEmail(email) {
     // Basic email validation using a regular expression
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email.trim() === '') {
-        pushPopupMessage(['FAILURE', 'email id is required.']);
+        notification(303);
         return false;
     } else if (!emailRegex.test(email)) {
-        pushPopupMessage(['FAILURE', 'Email ID is not valid']);
+        notification(304);
         return false;
     }
 
@@ -438,21 +446,21 @@ function validatePassword(password) {
     var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
 
     if (password.trim() === '') {
-        pushPopupMessage(['FAILURE', 'Password is required.']);
+        notification(305);
         return false;
     } else if (password.length < 8) {
-        pushPopupMessage(['FAILURE', 'Password must be at least 8 characters long.']);
+        notification(306);
         return false;
     } else if (!passwordRegex.test(password)) {
         var invalidSpecialChars = Array.from(password).filter(char => !allowedSpecialCharacters.includes(char)).join('').replace(/[a-zA-Z0-9]/g, '');
         if (invalidSpecialChars.length != 0) {
-            pushPopupMessage(['FAILURE', `${invalidSpecialChars} - not part of allowed special characters: ${allowedSpecialCharacters}`]);
+            notification(308, `${invalidSpecialChars} - not part of allowed special characters: ${allowedSpecialCharacters}`);
             return false;
         }
-        pushPopupMessage(['FAILURE', 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.']);
+        notification(309);
         return false;
     } else if (password.length > 25) {
-        pushPopupMessage(['FAILURE', 'Password cannot be more than 25 characters.']);
+        notification(307);
         return false;
     }
     return true;

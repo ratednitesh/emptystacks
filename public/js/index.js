@@ -20,7 +20,7 @@ import "../css/textcourse.css";
 import "../css/textsection.css";
 import "../css/watchvideo.css";
 import "../css/footer.css";
-import "../css/icon.css";
+import "../css/es.css";
 
 window.addEventListener('DOMContentLoaded', function () {
   initFirebase().then(() => {

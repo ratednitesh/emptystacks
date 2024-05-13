@@ -1,7 +1,7 @@
 
 import { getUid, isUserLoggedIn } from "./firebase-config";
 import { signup_selected, getUserPrivateData } from "./setup";
-import { pushPopupMessage } from './helper';
+import { notification } from './helper';
 
 const bookContainer = document.querySelector('.box.private .book .enrolled-courses-home');
 const homeOptionPrivate = document.querySelectorAll('.quick-select .box-container .private');
@@ -76,7 +76,9 @@ function initPopularCourses() {
             );
 
         }
-    ).catch((e) => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load popular courses."]); throw e; });
+    ).catch((e) => {
+        notification(501, 'popular courses');
+    });
 
 }
 // Initializer and Listeners: Quick Select
@@ -121,7 +123,9 @@ function initStreams() {
             });
         }
     ).catch(
-        () => { pushPopupMessage(["FAILURE", "Something went wrong, unable to load streams."]); }
+        () => {
+            notification(501, 'streams');
+        }
     );
     // Loop through the streams array and create anchor tags for each item
 
@@ -214,19 +218,19 @@ function updateEnrolledCourses() {
                     });
                     enrolledCourses = document.querySelectorAll(".book .cover");
                     enrolledCourseIndex = 0;
-                    if (enrolledCourses.length != 0){
+                    if (enrolledCourses.length != 0) {
                         enrolledCourses[0].classList.remove('disabled');
                         slideshow.classList.remove('disabled')
                         noEnroll.classList.add('disabled');
                     }
-                    else{
+                    else {
                         console.log("TODO: Add a logic to display a message that no courses are enrolled. Hide prev/ next button");
                         slideshow.classList.add('disabled');
                         noEnroll.classList.remove('disabled');
                     }
                 }
             ).catch(() => {
-                pushPopupMessage(["FAILURE", "Something went wrong, unable to load enrolled courses."]);
+                notification(501, 'enrolled courses');
             });
     else {
         bookContainer.innerHTML = "";
@@ -237,14 +241,14 @@ function updateEnrolledCourses() {
 // Show hide selected enrolled course
 function showSelectedEnrolledCourse(oldIndex, newIndex) {
     if (oldIndex != -1) {
-        enrolledCourses[oldIndex].classList.add( 'disabled');
+        enrolledCourses[oldIndex].classList.add('disabled');
         if (newIndex == enrolledCourses.length) {
             newIndex = 0;
         }
         else if (newIndex == -1) {
             newIndex = enrolledCourses.length - 1;
         }
-        enrolledCourses[newIndex].classList.remove( 'disabled');
+        enrolledCourses[newIndex].classList.remove('disabled');
         enrolledCourseIndex = newIndex;
     }
 }

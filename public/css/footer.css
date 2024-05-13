@@ -12,6 +12,8 @@
     z-index: 1000;
 }
 
-.footer span {
+.footer span a{
     text-decoration: underline;
+    color: var(--main-color);
+    letter-spacing: .1rem;
 }

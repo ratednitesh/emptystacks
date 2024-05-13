@@ -1,6 +1,6 @@
 import { getUid } from "./firebase-config";
 import { getUserPrivateData } from "./setup";
-import { pushPopupMessage } from "./helper";
+import { notification } from "./helper";
 
 var myProfile = {};
 const dataFields = ["username", "about-me", "work", "location", "tech-stack", "facebook", "instagram", "linkedin", "github"];
@@ -40,9 +40,9 @@ export function initProfile() {
                 //TODO: add validations for fields change
                 myProfile[dataField] = dataFieldElement.innerHTML;
                 updateUserData("uid", myProfile).then(() => {
-                    pushPopupMessage(["SUCCESS", `${dataField} successfully updated.`]);
+                    notification(202, dataField);
                 })
-                    .catch(() => { pushPopupMessage(["FAILURE", "Something went wrong, unable to save changes."]); });
+                    .catch(() => { notification(502); });
                 dataFieldElement.contentEditable = false;
                 dataFieldElement.classList.remove("editable");
                 editIcon.classList.toggle('inactive');
@@ -62,19 +62,19 @@ export function initProfile() {
 }
 
 // Load profile
-export function loadProfile(uid){
+export function loadProfile(uid) {
     console.log('here');
     let myUid = getUid();
     if (uid == myUid) {
         document.querySelectorAll('.profile .private').forEach(function (event) {
-            event.classList.remove("disabled"); 
+            event.classList.remove("disabled");
         });
         loadPublicProfile(uid, 1);
         loadPrivateProfile(uid);
     }
     else {
         document.querySelectorAll('.profile .private').forEach(function (event) {
-            event.classList.add("disabled"); 
+            event.classList.add("disabled");
         });
         loadPublicProfile(uid, 0);
     }
@@ -83,7 +83,7 @@ export function loadProfile(uid){
 function loadPublicProfile(uid, isMyProfile) {
     getUserPublicData(uid).then((data) => {
         if (isMyProfile)
-            myProfile = data; 
+            myProfile = data;
         setUserProfilePhoto(data.userProfileSrc);
         setUserRole(data.role);
         for (const dataField of dataFields) {
@@ -92,24 +92,24 @@ function loadPublicProfile(uid, isMyProfile) {
             dataFieldElement.innerHTML = data[dataField];
         }
         // Read tutor data 
-        if(data.tutorDetails){
+        if (data.tutorDetails) {
             for (const property in data.tutorDetails.stats) {
                 initUserActivities(property, data.tutorDetails.stats[property]);
             }
-            createCoursesSection(data.tutorDetails.publishedCourses,'.box-container.published-courses' );
+            createCoursesSection(data.tutorDetails.publishedCourses, '.box-container.published-courses');
             document.querySelectorAll('.profile .tutor').forEach(function (event) {
-                event.classList.remove("disabled"); 
+                event.classList.remove("disabled");
             });
-        }else{
+        } else {
             document.querySelectorAll('.profile .tutor').forEach(function (event) {
-                event.classList.add("disabled"); 
+                event.classList.add("disabled");
             });
         }
         // TODO:  publish('notFoundRoute');
-        
+
     }).catch((e) => {
         console.log(e);
-        pushPopupMessage(["FAILURE", "Something went wrong, unable to load profile."]);
+        notification(501, 'profile');
     });
 
 }
@@ -121,10 +121,10 @@ function loadPrivateProfile(uid) {
         for (const property in data.activities) {
             initUserActivities(property, data.activities[property]);
         }
-        createCoursesSection(data.enrolledCourses,'.box-container.enrolled-courses' );
+        createCoursesSection(data.enrolledCourses, '.box-container.enrolled-courses');
     }
     ).catch(() => {
-        pushPopupMessage(["FAILURE", "Something went wrong, unable to load user private info."]);
+        notification(501, 'user private profile');
     });
 }
 /* Public Section */
@@ -184,7 +184,7 @@ function createCoursesSection(courses, rootElement) {
 // TODO: Potentially need to remove following function */
 async function importMockApi() {
     try {
-        const {  mockgetUserDataAPICall, mockUpdateUserDataAPICall } = await import('/public/test/mock-api.js');
+        const { mockgetUserDataAPICall, mockUpdateUserDataAPICall } = await import('/public/test/mock-api.js');
         return {
             mockgetUserDataAPICall,
             mockUpdateUserDataAPICall
@@ -197,16 +197,16 @@ async function importMockApi() {
 async function getUserPublicData(uid) {
     const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
-       
-            // Simulate an API call
-            mockApi.mockgetUserDataAPICall(uid)
-                .then(response => {
-                    //TODO: Store the API response in the cachedData object
-                    resolve(response); // Resolve with the API response
-                })
-                .catch(error => {
-                    reject(error); // Reject with the error from the API call
-                });
+
+        // Simulate an API call
+        mockApi.mockgetUserDataAPICall(uid)
+            .then(response => {
+                //TODO: Store the API response in the cachedData object
+                resolve(response); // Resolve with the API response
+            })
+            .catch(error => {
+                reject(error); // Reject with the error from the API call
+            });
     });
 }
 async function updateUserData(uid, newData) {
