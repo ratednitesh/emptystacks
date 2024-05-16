@@ -1,4 +1,4 @@
-import { getUid } from "./firebase-config";
+import { getUid, getUserToken } from "./firebase-config";
 import { notification, publish } from "./helper";
 import { createNewUser, emailPasswordSignIn, firebaseSignOut, googleSignIn, isUserLoggedIn, tryPasswordResetEmail } from "./firebase-config";
 import { reloadProfilePage } from "./router";
@@ -42,7 +42,7 @@ export function initStaticContent() {
     initGlobalEventsListeners();
     initUserModal();
     // Load logged in user data
-    updateUserPrivateData();
+    loadUserPrivateData();
 }
 // Header Initializers and Listeners: 
 function initHeaders() {
@@ -338,10 +338,12 @@ function signIn(provider, userToken) {
     if (provider == 'Google') {
         googleSignIn().then(() => {
             if (isUserLoggedIn()) {
-                console.log("User Logged In");
-                loginSuccess();
-                updateAuthDependentSections();
-                notification(201);
+                registerUserAPI(getUid(), getUserToken()).then(() => {
+                    console.log("User Logged In");
+                    loginSuccess();
+                    updateAuthDependentSections();
+                    notification(201);
+                }).catch(() => { notification(505); });
             }
         }).catch(() => {
             notification(503);
@@ -362,11 +364,13 @@ function signIn(provider, userToken) {
 function signUp(userToken) {
     createNewUser(userToken).then(() => {
         if (isUserLoggedIn()) {
-            console.log("User Logged In");
-            loginSuccess();
-            updateAuthDependentSections();
-            notification(200);
-            setTimeout(() => { notification(205, userToken.email) }, 5000);
+            registerUserAPI(getUid(), userToken).then(() => {
+                loginSuccess();
+                updateAuthDependentSections();
+                notification(200);
+                setTimeout(() => { notification(205, userToken.email) }, 5000);
+                console.log("User Logged In");
+            }).catch(() => { notification(505); });
         }
     }).catch(() => {
         notification(505);
@@ -381,14 +385,14 @@ function forgotPassword(email) {
 }
 
 function updateAuthDependentSections() {
-    updateUserPrivateData();
+    loadUserPrivateData();
     publish('updateQuickSelectOptions');
     publish('hideComments');
     publish('disableSignOutUserOptionsForCourse')
     reloadProfilePage();
 }
 // Update user info on auth status change on header and main sidebar.
-export function updateUserPrivateData() {
+export function loadUserPrivateData() {
     if (isUserLoggedIn()) {
         let uid = getUid();
         getUserPrivateData(uid)
@@ -470,33 +474,66 @@ function createUserToken(username, email, password) {
     var userToken = {
         username: username,
         password: password,
-        email: email
+        email: email,
+        userProfileSrc: "/images/profile/no-photo.svg"
         // Add other relevant information as needed
     };
     return userToken;
 }
 
-/* TODO: Potentially need to remove following function */
+// TODO: Potentially need to remove following function */
+async function importMockApi() {
+    try {
+        const { mockgetUserPrivateDataAPICall, mockCreateUserDataAPICall } = await import('/public/test/mock-api.js');
+        return {
+            mockgetUserPrivateDataAPICall,
+            mockCreateUserDataAPICall
+        };
+    } catch (error) {
+        console.error('Error importing mock API:', error);
+        throw error;
+    }
+}
 export async function getUserPrivateData(uid) {
+    const mockApi = await importMockApi();
     return new Promise((resolve, reject) => {
         // <Removed bugging cache> If data is already cached, resolve with the cached data
         // if (cachedPrivateDate) {
         //     console.log('Read private from cache');
         //     resolve(cachedPrivateDate);
         // } else {
-        import('/public/test/mock-api.js').then(mockApi => {
-            // Simulate an API call
-            mockApi.mockgetUserPrivateDataAPICall(uid)
-                .then(response => {
-                    // TODO: Store the API response in the cachedData object
-                    console.log('Resolved');
-                    // cachedPrivateDate = response;
-                    resolve(response); // Resolve with the API response
-                })
-                .catch(error => {
-                    reject(error); // Reject with the error from the API call
-                });
-        });
-        // }
+        // Simulate an API call
+        mockApi.mockgetUserPrivateDataAPICall(uid)
+            .then(response => {
+                // TODO: Store the API response in the cachedData object
+                console.log('Resolved');
+                // cachedPrivateDate = response;
+                resolve(response); // Resolve with the API response
+            })
+            .catch(error => {
+                reject(error); // Reject with the error from the API call
+            });
+    });
+}
+
+// create user data in collections on registeration
+/*
+ userPRivateProfile
+ userPublicProfile
+*/
+async function registerUserAPI(uid, newData) {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        mockApi.mockCreateUserDataAPICall(uid, newData)
+            .then(() => {
+                // TODO: Store the API response in the cachedData object
+                console.log('Data Created.');
+                // cachedPrivateDate = response;
+                resolve(); // Resolve with the API response
+            })
+            .catch(() => {
+                console.log("not rejecting the request but uid already exists.");
+                resolve();
+            });
     });
 }

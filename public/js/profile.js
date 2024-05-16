@@ -1,6 +1,6 @@
 import { getUid } from "./firebase-config";
 import { getUserPrivateData } from "./setup";
-import { notification } from "./helper";
+import { notification, updateUserData } from "./helper";
 
 var myProfile = {};
 const dataFields = ["username", "about-me", "work", "location", "tech-stack", "facebook", "instagram", "linkedin", "github"];
@@ -184,10 +184,10 @@ function createCoursesSection(courses, rootElement) {
 // TODO: Potentially need to remove following function */
 async function importMockApi() {
     try {
-        const { mockgetUserDataAPICall, mockUpdateUserDataAPICall } = await import('/public/test/mock-api.js');
+        const { mockgetUserDataAPICall } = await import('/public/test/mock-api.js');
         return {
             mockgetUserDataAPICall,
-            mockUpdateUserDataAPICall
+            
         };
     } catch (error) {
         console.error('Error importing mock API:', error);
@@ -203,19 +203,6 @@ async function getUserPublicData(uid) {
             .then(response => {
                 //TODO: Store the API response in the cachedData object
                 resolve(response); // Resolve with the API response
-            })
-            .catch(error => {
-                reject(error); // Reject with the error from the API call
-            });
-    });
-}
-async function updateUserData(uid, newData) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // Simulate an asynchronous operation (e.g., updating data on the server)
-        mockApi.mockUpdateUserDataAPICall(uid, newData)
-            .then(() => {
-                resolve(); // Resolve the Promise once the data is updated
             })
             .catch(error => {
                 reject(error); // Reject with the error from the API call

@@ -1,5 +1,6 @@
-import { isUserLoggedIn } from "./firebase-config";
-import { notification, publish, getCourseContentDetailsAPICalls } from "./helper";
+import { getUid, isUserLoggedIn } from "./firebase-config";
+import { notification, publish, getCourseContentDetailsAPICalls, updateUserData } from "./helper";
+import { getUserPrivateData } from "./setup";
 
 const textCourse = document.querySelector('.text-course');
 const expandButton = document.getElementById("expand-button");
@@ -8,8 +9,10 @@ const courseDetails = document.querySelector(".course-details .container .accord
 const videoDetails = document.querySelector(".video-container .box-container");
 const boxContainer = document.querySelector('.reviews .box-container');
 const allBars = document.querySelectorAll('.signal-bars .bar');
+const startButton = document.getElementById('content-link');
 const levelNames = ['Easy', 'Intermediate', 'Expert'];
 let lastCourseId;
+let courseToken;
 
 // Initializers and Listeners: Course Page 
 export function initCoursePage() {
@@ -25,13 +28,31 @@ export function initCoursePage() {
         });
         expandButton.textContent = expandButton.textContent === "Minimize All" ? "Expand All" : "Minimize All";
     });
+    saveCourse.addEventListener('click', () => {
+        // call save course api if is user logged in
+        if (isUserLoggedIn()) {
+            saveCourse.classList.add('disabled');
+            getUserPrivateData(getUid()).then((userData) => {
+                if (!userData.enrolledCourses.some(course => course.href === courseToken.href)) {
+                    userData.activities["saved-courses"]++;
+                    userData.enrolledCourses.push(courseToken);
+                    console.log(userData);
+                    updateUserData("uid", userData).then(() => {
+                        notification(208);
+                        // TODO: Refresh activities and enrolled courses everywhere else.
+                    }).catch((e) => { console.log(e); notification(502); });
+                }
+            }).catch((e) => { console.log(e); notification(501, 'user profile') });
+        }
+    });
 }
 
 // Load course page
 export function loadCoursePage(courseId) {
+    saveCourse.classList.add('disabled');
+    startButton.innerText = "Start Course";
     if (lastCourseId != courseId) {
         lastCourseId = courseId;
-        disableSignOutUserOptionsForCourse();
         getCourseData(courseId);
     } else if (lastCourseId == 'notFoundRoute')
         publish('notFoundRoute');
@@ -42,8 +63,23 @@ function getCourseData(courseId) {
     getCourseDetailsAPICalls(courseId).then(
         (courseData) => {
             if (courseData) {
+                let uid = getUid();
+                if (uid) {
+                    getUserPrivateData(uid).then((userData) => {
+                        var coursehref = "/course/" + courseId;
+                        console.log(coursehref);
+                        let matchingCourse = userData.enrolledCourses.find(course => course.href === coursehref);
+                        if (matchingCourse) {
+                            saveCourse.classList.add('disabled');
+                            if(matchingCourse.chaptersCompleted > 0)
+                                startButton.innerText = "Resume Course";
+                        } else
+                            saveCourse.classList.remove('disabled');
+                    })
+                }
+
                 textCourse.querySelectorAll('.chapters').forEach((event) => {
-                    event.innerHTML = courseData.chapterCount;
+                    event.innerHTML = courseData.chapterCount + " Chapters";
                 });
                 textCourse.querySelector('#thumbnail').src = courseData.thumbnail;
                 textCourse.querySelector('#publishDate').innerHTML = courseData.publishDate;
@@ -65,6 +101,7 @@ function getCourseData(courseId) {
                 textCourse.querySelector('#tutor-img').src = tutorData.userProfileSrc;
                 textCourse.querySelector('#tutor-name').innerHTML = tutorData.name;
                 textCourse.querySelector('#tutor-role').innerHTML = tutorData.role;
+                createCourseToken(courseData);
                 if (courseData.type == "text") {
                     document.querySelector(".course-details").classList.remove('disabled');
                     document.querySelector(".video-container").classList.add('disabled');
@@ -243,7 +280,15 @@ function generateStarRating(rating) {
         '</div>';
 
 }
-
+function createCourseToken(courseData) {
+    courseToken = {
+        thumbnail: courseData.thumbnail,
+        title: courseData.courseName,
+        href: "/course/" + lastCourseId,
+        nextChapter: courseData.href,
+        chaptersCompleted: 0,
+    };
+}
 // TODO: Potentially need to remove following function */
 async function importMockApi() {
     try {

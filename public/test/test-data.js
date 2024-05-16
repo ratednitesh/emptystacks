@@ -2,7 +2,7 @@ export var userPrivateProfile = {
     "zhcyWRZpJKZohfqSt6Xihyo4Awq2": {
         "username": "Nitesh Saxena",
         "userProfileSrc": "/images/profile/photo_1.png",
-        "mailId": "nitesh_91@outlook.com",
+        "mailId": "ratednitesh@gmail.com",
         "role": "Stack Explorer",
         "activities": {
             "saved-courses": 4,
@@ -13,27 +13,33 @@ export var userPrivateProfile = {
             {
                 "thumbnail": "/images/thumbnails/1.jpg",
                 "title": "Solving LeetCode Questions",
-                "href": "/course/problemSolvingLeetCode"
-                // TODO: Percentage Completion and last chapter href.
+                "href": "/course/problemSolvingLeetCode",
+                "nextChapter": "/content/problemSolvingLeetCode/getStarted", //TODO: Put first chapter by default.
+                "chaptersCompleted":2,
+                
 
             },
             {
                 "thumbnail": "/images/thumbnails/2.jpg",
                 "title": "HTML: Complete Beginner Guide",
-                "href": "/course/htmlBeginner"
+                "href": "/course/htmlBeginner",
+                "nextChapter": "/content/htmlBeginner/Introduction", 
+                "chaptersCompleted":0,
 
             },
             {
                 "thumbnail": "/images/thumbnails/3.jpg",
                 "title": "A complete Javascript Guide",
-                "href": "/course/jsComplete"
+                "href": "/course/jsComplete",
+                "nextChapter": "/content/jsComplete/Introduction", 
+                "chaptersCompleted":1,
             }
         ]
     },
     "hhjGEzFfz4gcFBUt9qROUwxxI852": {
         "username": "Nitesh S.",
         "userProfileSrc": "/images/profile/user.jpg",
-        "mailId": "nitesh_91@outlook.com",
+        "mailId": "niteshmode@gmail.com",
         "role": "Stack Explorer",
         "activities": {
             "saved-courses": 4,
@@ -80,25 +86,32 @@ export var userPrivateProfile = {
             {
                 "thumbnail": "/images/thumbnails/4.jpg",
                 "title": "System Design: Deep Dive",
-                "href": "/course/systemDesign"
+                "href": "/course/systemDesign",
+                "nextChapter": "/content/systemDesign/Introduction", 
+                "chaptersCompleted":0,
 
             },
             {
                 "thumbnail": "/images/thumbnails/5.jpg",
                 "title": "JAVA: A complete Beginner Guide",
-                "href": "/course/javaBeginner"
+                "href": "/course/javaBeginner",
+                "nextChapter": "/content/javaBeginner/Introduction", 
+                "chaptersCompleted":0,
 
             },
             {
                 "thumbnail": "/images/thumbnails/3.jpg",
                 "title": "A complete Javascript Guide",
-                "href": "/course/jsComplete"
+                "href": "/course/jsComplete",
+                "nextChapter": "/content/jsComplete/Introduction", 
+                "chaptersCompleted":0,
             },
             {
                 "thumbnail": "/images/thumbnails/2.jpg",
                 "title": "HTML: Complete Beginner Guide",
-                "href": "/course/htmlBeginner"
-
+                "href": "/course/htmlBeginner",
+                "nextChapter": "/content/htmlBeginner/Introduction", 
+                "chaptersCompleted":0,
             },
         ]
     }
@@ -341,7 +354,7 @@ export var courseDetails = {
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 2,
         "href": "/content/problemSolvingLeetCode/Introduction",
-        "chapterCount": "9 Chapters",
+        "chapterCount": 9,
         "thumbnail": "/images/thumbnails/1.jpg",
         "author": {
             "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
@@ -357,7 +370,7 @@ export var courseDetails = {
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 1,
         "href": "/content/htmlBeginner/Introduction",
-        "chapterCount": "6 Chapters",
+        "chapterCount": 6,
         "thumbnail": "/images/thumbnails/2.jpg",
         "author": {
             "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
@@ -373,7 +386,7 @@ export var courseDetails = {
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 1,
         "href": "/content/jsComplete/Introduction",
-        "chapterCount": "14 Chapters",
+        "chapterCount": 14,
         "thumbnail": "/images/thumbnails/3.jpg",
         "author": {
             "id": "12345",
@@ -389,7 +402,7 @@ export var courseDetails = {
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 1,
         "href": "/content/systemDesign/Introduction",
-        "chapterCount": "14 Chapters",
+        "chapterCount": 14,
         "thumbnail": "/images/thumbnails/4.jpg",
         "author": {
             "id": "12345",
@@ -405,7 +418,7 @@ export var courseDetails = {
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 1,
         "href": "/content/javaBeginner/default",
-        "chapterCount": "14 Chapters",
+        "chapterCount": 14,
         "thumbnail": "/images/thumbnails/5.jpg",
         "author": {
             "id": "12345",
@@ -421,7 +434,7 @@ export var courseDetails = {
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 1,
         "href": "/content/dsa-beginner/default",
-        "chapterCount": "14 Chapters",
+        "chapterCount": 14,
         "thumbnail": "/images/thumbnails/6.jpg",
         "author": {
             "id": "12345",
@@ -453,7 +466,7 @@ export var courseDetails = {
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 1,
         "href": "/content/dsa-medium/default",
-        "chapterCount": "14 Chapters",
+        "chapterCount": 14,
         "thumbnail": "/images/thumbnails/8.jpg",
         "author": {
             "id": "12345",
@@ -469,7 +482,7 @@ export var courseDetails = {
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 1,
         "href": "/content/javaMedium/Introduction",
-        "chapterCount": "14 Chapters",
+        "chapterCount": 14,
         "thumbnail": "/images/thumbnails/9.jpg",
         "author": {
             "id": "12345",
@@ -485,7 +498,7 @@ export var courseDetails = {
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 1,
         "href": "/content/dsa-expert/default",
-        "chapterCount": "14 Chapters",
+        "chapterCount": 14,
         "thumbnail": "/images/thumbnails/10.jpg",
         "author": {
             "id": "12345",
@@ -501,7 +514,7 @@ export var courseDetails = {
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 1,
         "href": "/content/javaExpert/Introduction",
-        "chapterCount": "14 Chapters",
+        "chapterCount": 14,
         "thumbnail": "/images/thumbnails/3.jpg",
         "author": {
             "id": "12345",
@@ -517,7 +530,7 @@ export var courseDetails = {
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 1,
         "href": "/content/javaProjects/1",
-        "chapterCount": "14 Chapters",
+        "chapterCount": 14,
         "thumbnail": "/images/thumbnails/5.jpg",
         "author": {
             "id": "12345",
@@ -551,7 +564,7 @@ export var courseContentDetails = {
     },
     "js-projects": {
         "Javascript: Advanced Projects (part 01)": {
-            "videoId": "course2v1",
+            "videoId": "course2v1", //TODO: do we even need these?
             "thumbnail": "/images/thumbnails/7.jpg",
             "href": "/content/js-projects/1"
         },
@@ -1283,7 +1296,7 @@ export var courseContent = {
         "courseName": "Javascript: Advanced Projects",
         "courseId": "js-projects",
         "type": "video",
-        "videoId": "course2v1",
+        "videoId": "https://www.youtube.com/embed/aku2j6VjT74?si=9g7GT5XrQfXJY2wu",
         "thumbnail": "/images/thumbnails/7.jpg",
         "heading": "Javascript: Advanced Projects (part 01)",
         "publishDate": "22-12-2023",
@@ -1303,7 +1316,7 @@ export var courseContent = {
         "courseName": "Javascript: Advanced Projects",
         "courseId": "js-projects",
         "type": "video",
-        "videoId": "course2v2",
+        "videoId": "https://www.youtube.com/embed/aku2j6VjT74?si=9g7GT5XrQfXJY2wu",
         "thumbnail": "/images/thumbnails/7.jpg",
         "heading": "Javascript: Advanced Projects (part 02)",
         "publishDate": "22-12-2023",
@@ -1323,7 +1336,7 @@ export var courseContent = {
         "courseName": "Javascript: Advanced Projects",
         "courseId": "js-projects",
         "type": "video",
-        "videoId": "course2v3",
+        "videoId": "https://www.youtube.com/embed/aku2j6VjT74?si=9g7GT5XrQfXJY2wu",
         "thumbnail": "/images/thumbnails/7.jpg",
         "heading": "Javascript: Advanced Projects (part 03)",
         "publishDate": "22-12-2023",
@@ -1343,7 +1356,7 @@ export var courseContent = {
         "courseName": "Javascript: Advanced Projects",
         "courseId": "js-projects",
         "type": "video",
-        "videoId": "course2v4",
+        "videoId": "https://www.youtube.com/embed/aku2j6VjT74?si=9g7GT5XrQfXJY2wu",
         "thumbnail": "/images/thumbnails/7.jpg",
         "heading": "Javascript: Advanced Projects (part 04)",
         "publishDate": "22-12-2023",
@@ -1363,7 +1376,7 @@ export var courseContent = {
         "courseName": "Javascript: Advanced Projects",
         "courseId": "js-projects",
         "type": "video",
-        "videoId": "course2v5",
+        "videoId": "https://www.youtube.com/embed/aku2j6VjT74?si=9g7GT5XrQfXJY2wu",
         "thumbnail": "/images/thumbnails/7.jpg",
         "heading": "Javascript: Advanced Projects (part 05)",
         "publishDate": "22-12-2023",
@@ -1383,7 +1396,7 @@ export var courseContent = {
         "courseName": "Javascript: Advanced Projects",
         "courseId": "js-projects",
         "type": "video",
-        "videoId": "course2v6",
+        "videoId": "https://www.youtube.com/embed/aku2j6VjT74?si=9g7GT5XrQfXJY2wu",
         "thumbnail": "/images/thumbnails/7.jpg",
         "heading": "Javascript: Advanced Projects (part 06)",
         "publishDate": "22-12-2023",
@@ -1404,7 +1417,7 @@ export var courseContent = {
         "courseName": "Java: Advanced Projects",
         "courseId": "javaProjects",
         "type": "video",
-        "videoId": "course2v1",
+        "videoId": "https://www.youtube.com/embed/aku2j6VjT74?si=9g7GT5XrQfXJY2wu",
         "thumbnail": "/images/thumbnails/5.jpg",
         "heading": "Java: Advanced Projects (part 01)",
         "publishDate": "22-12-2023",

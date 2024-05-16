@@ -1,4 +1,4 @@
-import { courseContent, courseContentComments, courseContentDetails, courseDetails, courseReviews, topCourses, topStreams, userPrivateProfile, userPublic, userPublicProfile } from "../test/test-data";
+import { courseContent, courseContentComments, courseContentDetails, courseDetails, courseReviews, topCourses, topStreams, userPrivateProfile, userPublicProfile } from "../test/test-data";
 
 export function mockgetUserPrivateDataAPICall(uid) {
     return new Promise((resolve, reject) => {
@@ -57,7 +57,7 @@ export function mockgetTopCoursesAPICall() {
     });
 }
 
-export function mockgetTextCourseAPICall(courseId){
+export function mockgetTextCourseAPICall(courseId) {
     return new Promise((resolve, reject) => {
         // Simulate a delay of 1 second
         setTimeout(() => {
@@ -68,7 +68,7 @@ export function mockgetTextCourseAPICall(courseId){
     });
 }
 // TODO: Potentially we can remove this.
-export function mockgetUserInfoAPICall(userId){
+export function mockgetUserInfoAPICall(userId) {
     return new Promise((resolve, reject) => {
         // Simulate a delay of 1 second
         setTimeout(() => {
@@ -77,7 +77,7 @@ export function mockgetUserInfoAPICall(userId){
         }, 1000); // 1000 milliseconds delay (1 second)
     });
 }
-export function mockgetCourseReviewAPICall(courseId){
+export function mockgetCourseReviewAPICall(courseId) {
     return new Promise((resolve, reject) => {
         // Simulate a delay of 1 second
         setTimeout(() => {
@@ -88,7 +88,7 @@ export function mockgetCourseReviewAPICall(courseId){
     });
 }
 
-export function mockgetCourseContentDetailsAPICall(courseId){
+export function mockgetCourseContentDetailsAPICall(courseId) {
     return new Promise((resolve, reject) => {
         // Simulate a delay of 1 second
         setTimeout(() => {
@@ -98,7 +98,7 @@ export function mockgetCourseContentDetailsAPICall(courseId){
         }, 1000); // 1000 milliseconds delay (1 second)
     });
 }
-export function mockgetCourseContentAPICall(courseId){
+export function mockgetCourseContentAPICall(courseId) {
     return new Promise((resolve, reject) => {
         // Simulate a delay of 1 second
         setTimeout(() => {
@@ -108,7 +108,7 @@ export function mockgetCourseContentAPICall(courseId){
         }, 1000); // 1000 milliseconds delay (1 second)
     });
 }
-export function mockgetCourseContentCommentsAPICall(courseId){
+export function mockgetCourseContentCommentsAPICall(courseId) {
     return new Promise((resolve, reject) => {
         // Simulate a delay of 1 second
         setTimeout(() => {
@@ -117,4 +117,53 @@ export function mockgetCourseContentCommentsAPICall(courseId){
             resolve(courseContentComments[courseId]); // Resolve the Promise with the dummy data
         }, 1000); // 1000 milliseconds delay (1 second)
     });
+}
+// Creating User Profile
+export function mockCreateUserDataAPICall(uid, newData) {
+    // Simulate some asynchronous operation (e.g., updating data on the server)
+    return new Promise((resolve, reject) => {
+        // Simulate a delay of 1 second
+
+        setTimeout(() => {
+            if (uid in userPublicProfile) {
+                reject();
+            } else {
+                userPublicProfile[uid] = {
+                    "username": newData.username,
+                    "about-me": "I am a curious little kid.",
+                    "work": "",
+                    "location": "",
+                    "tech-stack": "",
+                    "facebook": "",
+                    "instagram": "",
+                    "linkedin": "",
+                    "github": "",
+                    "userProfileSrc": newData.userProfileSrc,
+                    "role": "Stack Explorer"
+                };
+                userPrivateProfile[uid] = {
+                    "username": newData.username,
+                    "userProfileSrc": newData.userProfileSrc,
+                    "mailId": newData.email,
+                    "role": "Stack Explorer",
+                    "activities": {
+                        "saved-courses": 0,
+                        "liked-tutorials": 0,
+                        "total-comments": 0,
+                    },
+                    "enrolledCourses": []
+                };
+                console.log("User Profile created on the server:");
+                resolve(); // Resolve the Promise
+
+            }
+            // Simulate a successful response
+            // Update userPublicProfile after successful API call
+
+        }, 1000); // 1000 milliseconds delay (1 second)
+    });
+}
+
+export function mockIsValidUid(uid) {
+
 }

@@ -18,6 +18,8 @@ const statusCodes = {
     204: "Logout Successful",
     205: "A verification link is sent to ",
     206: "A password reset email has been sent!",
+    207: "Link Copied! ",
+    208: "Course Saved! ",
 
     301: "Please agree to Terms & Conditions!",
     302: "Username is required!",
@@ -105,9 +107,9 @@ export async function initAddOn(page) {
 async function importMockApi() {
     try {
         const {
-            mockgetCourseContentDetailsAPICall } = await import('/public/test/mock-api.js');
+            mockgetCourseContentDetailsAPICall, mockUpdateUserDataAPICall } = await import('/public/test/mock-api.js');
         return {
-            mockgetCourseContentDetailsAPICall,
+            mockgetCourseContentDetailsAPICall,mockUpdateUserDataAPICall
         };
     } catch (error) {
         console.error('Error importing mock API:', error);
@@ -129,5 +131,30 @@ export async function getCourseContentDetailsAPICalls(courseId) {
                 reject(error); // Reject with the error from the API call
             });
 
+    });
+}
+
+export function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            console.log('Text copied to clipboard successfully');
+            console.log(text);
+        })
+        .catch(err => {
+            console.error('Error copying text to clipboard:', err);
+        });
+}
+
+export async function updateUserData(uid, newData) {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        // Simulate an asynchronous operation (e.g., updating data on the server)
+        mockApi.mockUpdateUserDataAPICall(uid, newData)
+            .then(() => {
+                resolve(); // Resolve the Promise once the data is updated
+            })
+            .catch(error => {
+                reject(error); // Reject with the error from the API call
+            });
     });
 }

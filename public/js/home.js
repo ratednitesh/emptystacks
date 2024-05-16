@@ -194,7 +194,7 @@ function updateEnrolledCourses() {
                         coverDiv.classList.add('cover', 'disabled', 'fade');
                         // Create anchor tag
                         const anchorTag = document.createElement('a');
-                        anchorTag.href = course.href;
+                        anchorTag.href = course.nextChapter;
                         anchorTag.setAttribute('onclick', 'route()');
                         // Create image tag
                         const imageTag = document.createElement('img');
@@ -229,7 +229,8 @@ function updateEnrolledCourses() {
                         noEnroll.classList.remove('disabled');
                     }
                 }
-            ).catch(() => {
+            ).catch((e) => {
+                console.log(e);
                 notification(501, 'enrolled courses');
             });
     else {

@@ -1,4 +1,4 @@
-import {initAddOn, subscribe, publish } from "./helper";
+import {initAddOn, subscribe, publish, copyToClipboard } from "./helper";
 import { removeMenuOptions } from "./setup";
 
 // const variables
@@ -140,4 +140,7 @@ export function reloadProfilePage(){
     if (matchProfilepath) {
         publish('loadProfile', matchProfilepath[1]);
     }
+}
+export function copyPathToClipboard(){
+    copyToClipboard("www.emptystacks.com"+previousMainBodyPath);
 }

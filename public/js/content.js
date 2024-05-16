@@ -1,6 +1,7 @@
 import { publish, getCourseContentDetailsAPICalls, notification } from "./helper";
 import { getUid, isUserLoggedIn } from "./firebase-config";
 import { signup_selected } from "./setup";
+import { copyPathToClipboard } from "./router";
 
 const contentSidebarHtml = document.querySelector('#contentSidebar');
 const ul = contentSidebarHtml.querySelector(".nano-content");
@@ -9,6 +10,7 @@ const showComments = document.getElementById("show-comments");
 const commentHtml = document.querySelector('.comments');
 const watchVideo = contentHtml.querySelector('.watch-video');
 const chapterContent = contentHtml.querySelector('.chapter-content');
+const shareButton = document.getElementById('share');
 let lastChapterId;
 export function initContent() {
     document.querySelector('#start-journey-content').addEventListener("click", () => {
@@ -86,6 +88,10 @@ export function initContent() {
                 notification(501, 'comments');
             });
     });
+    shareButton.addEventListener('click', ()=>{
+        copyPathToClipboard();
+        notification(207);
+    })
 }
 
 // load course content
@@ -110,7 +116,8 @@ export function loadContent(chapterId) {
                     else {
                         watchVideo.classList.remove('disabled');
                         chapterContent.classList.add('disabled');
-                        contentHtml.querySelector('.video').poster = chapterData.thumbnail;
+                        // contentHtml.querySelector('.video').poster = chapterData.thumbnail;
+                        contentHtml.querySelector('.video').src= chapterData.videoId;
                         contentHtml.querySelector('.description').innerHTML = chapterData.description;
                     }
                     loadContentSidebar(chapterData.courseId, chapterData.courseName, chapterId, chapterData.type);

@@ -25,9 +25,9 @@ export function initFirebase() {
                 console.log(user);
                 console.log(user.displayName);
                 console.log(user.photoURL);
-                userSignedIn= true;
+                userSignedIn = true;
             }
-            else{
+            else {
                 console.log('User "NOT" Logged In');
                 userSignedIn = false;
             }
@@ -47,6 +47,12 @@ export function getUid() {
         return "";
 }
 
+export function getUserToken() {
+    if (isUserLoggedIn()) {
+        return { "username": auth.currentUser.displayName, "email": auth.currentUser.email, "userProfileSrc": auth.currentUser.photoURL }
+    }
+    else return "";
+}
 /*** AUTHENTICATION ***/
 export function googleSignIn() {
     return new Promise((resolve, reject) => {

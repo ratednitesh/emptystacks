@@ -7,6 +7,7 @@
 
 .watch-video .video-details .video {
     width: 100%;
+    aspect-ratio: 1.77;
     border-radius: .5rem;
     margin-bottom: 1rem;
 }
