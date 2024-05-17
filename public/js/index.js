@@ -8,7 +8,7 @@ import "../css/buttons.css";
 import "../css/profile.css";
 import "../css/header.css";
 import "../css/sidebar.css";
-import "../css/usermodal.css";
+import "../css/modals.css";
 import "../css/about.css";
 import "../css/comment.css";
 import "../css/contact.css";
@@ -21,6 +21,7 @@ import "../css/textsection.css";
 import "../css/watchvideo.css";
 import "../css/footer.css";
 import "../css/es.css";
+import "../css/streams.css";
 
 window.addEventListener('DOMContentLoaded', function () {
   initFirebase().then(() => {

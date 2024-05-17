@@ -88,6 +88,8 @@ function initQuickSelect() {
     startJourneyHome.addEventListener("click", function () {
         signup_selected();
     });
+    document.querySelector(".home-reg-tutor").addEventListener('click', () =>
+        document.querySelector(".reg-tutor-modal").classList.add('is-visible'));
     // Init streams
     initStreams();
     // Show / Hide  Quick select options based on user login status
@@ -104,7 +106,8 @@ function initStreams() {
             streams.forEach(stream => {
                 // Create the anchor tag
                 const anchorTag = document.createElement('a');
-                anchorTag.href = '#';
+                anchorTag.href = '/streams/'+stream.text;
+                anchorTag.setAttribute("onclick", "route()");
 
                 // Create the icon element
                 const iconElement = document.createElement('i');
@@ -208,6 +211,17 @@ function updateEnrolledCourses() {
 
                         // Append image and paragraph tags to anchor tag
                         anchorTag.appendChild(imageTag);
+                        // Progress bar
+                        const progressDiv = document.createElement('div');
+                        progressDiv.classList.add('progress-bar-container');
+                        const progressBar = document.createElement('div');
+                        progressBar.classList.add('progress-bar');
+                        let percent = (course.chaptersCompleted / course.totalChapters) * 100;
+                        console.log(percent);
+                        progressBar.style.width = percent + '%';
+                        progressDiv.appendChild(progressBar);
+                        anchorTag.appendChild(progressDiv);
+
                         anchorTag.appendChild(paragraphTag);
 
                         // Append anchor tag to cover div

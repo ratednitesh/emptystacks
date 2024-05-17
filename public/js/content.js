@@ -11,6 +11,8 @@ const commentHtml = document.querySelector('.comments');
 const watchVideo = contentHtml.querySelector('.watch-video');
 const chapterContent = contentHtml.querySelector('.chapter-content');
 const shareButton = document.getElementById('share');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
 let lastChapterId;
 export function initContent() {
     document.querySelector('#start-journey-content').addEventListener("click", () => {
@@ -60,7 +62,7 @@ export function initContent() {
                         let uid = getUid();
                         if (comment.uid == uid) {
                             // Create edit div element
-                            var editDiv= document.createElement("div");
+                            var editDiv = document.createElement("div");
                             editDiv.classList.add("edit-my-comments")
 
                             // Create edit button
@@ -70,8 +72,8 @@ export function initContent() {
                             // Create delete button
                             var deleteButton = document.createElement("i");
                             deleteButton.classList.add("es-trash");
-                            editButton.addEventListener("click", () => { console.log("now you can edit comment")});
-                            deleteButton.addEventListener("click", () => { console.log("comment deleted.")});
+                            editButton.addEventListener("click", () => { console.log("now you can edit comment") });
+                            deleteButton.addEventListener("click", () => { console.log("comment deleted.") });
                             // Append buttons to div
                             editDiv.appendChild(editButton);
                             editDiv.appendChild(deleteButton);
@@ -88,7 +90,7 @@ export function initContent() {
                 notification(501, 'comments');
             });
     });
-    shareButton.addEventListener('click', ()=>{
+    shareButton.addEventListener('click', () => {
         copyPathToClipboard();
         notification(207);
     })
@@ -107,7 +109,17 @@ export function loadContent(chapterId) {
                     contentHtml.querySelector('#likes').innerHTML = chapterData.likes + " Likes";
                     contentHtml.querySelector('#author').innerHTML = chapterData.author.name;
                     showComments.innerHTML = "Comments (" + chapterData.comments + ")";
-                    
+                    if (chapterData.previousChapter) {
+                        prevBtn.classList.remove('locked');
+                        prevBtn.href = chapterData.previousChapter;
+                    } else
+                        prevBtn.classList.add('locked');
+                    if (chapterData.nextChapter) {
+                        nextBtn.classList.remove('locked');
+                        nextBtn.href = chapterData.nextChapter;
+                    } else
+                        nextBtn.classList.add('locked');
+
                     if (chapterData.type == "text") {
                         watchVideo.classList.add('disabled');
                         chapterContent.classList.remove('disabled');
@@ -117,7 +129,7 @@ export function loadContent(chapterId) {
                         watchVideo.classList.remove('disabled');
                         chapterContent.classList.add('disabled');
                         // contentHtml.querySelector('.video').poster = chapterData.thumbnail;
-                        contentHtml.querySelector('.video').src= chapterData.videoId;
+                        contentHtml.querySelector('.video').src = chapterData.videoId;
                         contentHtml.querySelector('.description').innerHTML = chapterData.description;
                     }
                     loadContentSidebar(chapterData.courseId, chapterData.courseName, chapterId, chapterData.type);
@@ -139,7 +151,7 @@ export function loadContent(chapterId) {
         publish('notFoundRoute');
 }
 
-export function hideComments(){
+export function hideComments() {
     commentHtml.classList.add('disabled');
     showComments.classList.remove('disabled');
     if (isUserLoggedIn()) {

@@ -12,7 +12,7 @@ export function publish(eventName, data) {
 }
 const statusCodes = {
     200: "Registration Successful!",
-    201:"Login Successful!",
+    201: "Login Successful!",
     202: "Successfully Updated: ",
     203: "Processing Request...",
     204: "Logout Successful",
@@ -28,8 +28,8 @@ const statusCodes = {
     305: "Password is required!",
     306: "Password must be at least 8 characters long.",
     307: "Password cannot be more than 25 charaters.",
-308:"",
-309:"Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
+    308: "",
+    309: "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
 
     500: "Something went wrong, please try again later",
     501: "Something went wrong, unable to load: ",
@@ -78,6 +78,7 @@ export async function initAddOn(page) {
                 import('./profile.js').then(module => {
                     module.initProfile();
                     subscribe('loadProfile', module.loadProfile);
+                    subscribe('loadMyCourses', module.loadMyCourses);
                     resolve();
                 });
 
@@ -96,6 +97,17 @@ export async function initAddOn(page) {
                     subscribe('hideComments', module.hideComments);
                     resolve();
                 });
+            else if (page == "streams")
+                import('./streams.js').then(module => {
+                    console.log("loading streams");
+                    module.initStreams().then(
+                        ()=>{
+                            subscribe('loadStreams',module.loadStreams);
+                            resolve();
+                        }
+                    )
+                   
+                });
             else
                 resolve();
         } catch (error) {
@@ -109,7 +121,7 @@ async function importMockApi() {
         const {
             mockgetCourseContentDetailsAPICall, mockUpdateUserDataAPICall } = await import('/public/test/mock-api.js');
         return {
-            mockgetCourseContentDetailsAPICall,mockUpdateUserDataAPICall
+            mockgetCourseContentDetailsAPICall, mockUpdateUserDataAPICall
         };
     } catch (error) {
         console.error('Error importing mock API:', error);

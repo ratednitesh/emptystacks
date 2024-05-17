@@ -3,6 +3,7 @@ import { notification, publish, getCourseContentDetailsAPICalls, updateUserData 
 import { getUserPrivateData } from "./setup";
 
 const textCourse = document.querySelector('.text-course');
+const courseStreams = textCourse.querySelector('.streams');
 const expandButton = document.getElementById("expand-button");
 const saveCourse = document.getElementById("save-course");
 const courseDetails = document.querySelector(".course-details .container .accordion");
@@ -10,6 +11,8 @@ const videoDetails = document.querySelector(".video-container .box-container");
 const boxContainer = document.querySelector('.reviews .box-container');
 const allBars = document.querySelectorAll('.signal-bars .bar');
 const startButton = document.getElementById('content-link');
+const progressContainer = document.getElementById('course-progress-container');
+const progressBar = progressContainer.querySelector('.progress-bar');
 const levelNames = ['Easy', 'Intermediate', 'Expert'];
 let lastCourseId;
 let courseToken;
@@ -50,6 +53,7 @@ export function initCoursePage() {
 // Load course page
 export function loadCoursePage(courseId) {
     saveCourse.classList.add('disabled');
+    progressContainer.classList.add('disabled');
     startButton.innerText = "Start Course";
     if (lastCourseId != courseId) {
         lastCourseId = courseId;
@@ -71,10 +75,18 @@ function getCourseData(courseId) {
                         let matchingCourse = userData.enrolledCourses.find(course => course.href === coursehref);
                         if (matchingCourse) {
                             saveCourse.classList.add('disabled');
-                            if(matchingCourse.chaptersCompleted > 0)
+                            progressContainer.classList.remove('disabled');
+                            let percent = (matchingCourse.chaptersCompleted / matchingCourse.totalChapters) * 100;
+                            console.log(percent);
+                            progressBar.style.width = percent + '%';
+                            if (matchingCourse.chaptersCompleted > 0)
                                 startButton.innerText = "Resume Course";
-                        } else
+                            // TODO: Handle on  auth change as well.
+                            // TODO: update href of this button as well.
+                        } else {
+                            progressContainer.classList.add('disabled');
                             saveCourse.classList.remove('disabled');
+                        }
                     })
                 }
 
@@ -84,6 +96,27 @@ function getCourseData(courseId) {
                 textCourse.querySelector('#thumbnail').src = courseData.thumbnail;
                 textCourse.querySelector('#publishDate').innerHTML = courseData.publishDate;
                 textCourse.querySelector('#courseName').innerHTML = courseData.courseName;
+                courseData.streams.forEach(stream => {
+                    // Create the anchor tag
+                    const anchorTag = document.createElement('a');
+                    anchorTag.href = '/streams/'+stream.text;
+                    anchorTag.setAttribute("onclick", "route()");
+    
+                    // Create the icon element
+                    const iconElement = document.createElement('i');
+                    iconElement.classList.add(stream.icon);
+    
+                    // Create the span element for the text
+                    const spanElement = document.createElement('span');
+                    spanElement.textContent = stream.text;
+    
+                    // Append the icon and span elements to the anchor tag
+                    anchorTag.appendChild(iconElement);
+                    anchorTag.appendChild(spanElement);
+                    // Append the anchor tag to the flex container
+                    courseStreams.appendChild(anchorTag);
+                });
+                
                 textCourse.querySelector('#description').innerHTML = courseData.description;
                 textCourse.querySelector('#content-link').href = courseData.href;
                 const level = courseData.level;
@@ -287,6 +320,7 @@ function createCourseToken(courseData) {
         href: "/course/" + lastCourseId,
         nextChapter: courseData.href,
         chaptersCompleted: 0,
+        totalChapters: courseData.chapterCount
     };
 }
 // TODO: Potentially need to remove following function */

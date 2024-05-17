@@ -59,10 +59,20 @@ export function initProfile() {
             });
         })();
     }
+    document.querySelector(".profile-acc-sett").addEventListener('click', () =>
+        document.querySelector(".acc-sett-modal").classList.add('is-visible'));
 }
 
 // Load profile
-export function loadProfile(uid) {
+export function loadProfile(uid, type) {
+    if (type == 'only-course')
+        document.querySelectorAll('.not-my-courses').forEach(function (event) {
+            event.classList.add("disabled");
+        });
+    else
+        document.querySelectorAll('.not-my-courses').forEach(function (event) {
+            event.classList.remove("disabled");
+        });
     console.log('here');
     let myUid = getUid();
     if (uid == myUid) {
@@ -96,7 +106,7 @@ function loadPublicProfile(uid, isMyProfile) {
             for (const property in data.tutorDetails.stats) {
                 initUserActivities(property, data.tutorDetails.stats[property]);
             }
-            createCoursesSection(data.tutorDetails.publishedCourses, '.box-container.published-courses');
+            createCoursesSection(data.tutorDetails.publishedCourses, '.box-container.published-courses', 'published');
             document.querySelectorAll('.profile .tutor').forEach(function (event) {
                 event.classList.remove("disabled");
             });
@@ -121,12 +131,20 @@ function loadPrivateProfile(uid) {
         for (const property in data.activities) {
             initUserActivities(property, data.activities[property]);
         }
-        createCoursesSection(data.enrolledCourses, '.box-container.enrolled-courses');
+        createCoursesSection(data.enrolledCourses, '.box-container.enrolled-courses', 'enrolled');
     }
     ).catch(() => {
         notification(501, 'user private profile');
     });
 }
+// load my profile
+// load my courses
+export function loadMyCourses() {
+
+    loadProfile(getUid(), 'only-course');
+
+}
+
 /* Public Section */
 function setUserProfilePhoto(userProfileSrc) {
     var userPhoto = document.getElementById('user-photo');
@@ -143,7 +161,7 @@ function initUserActivities(fieldId, fieldValue) {
     var dataField = field.querySelector('h2');
     dataField.innerHTML = fieldValue;
 }
-function createCoursesSection(courses, rootElement) {
+function createCoursesSection(courses, rootElement, type) {
     // Select the box-container element
     const container = document.querySelector(rootElement);
     container.innerHTML = "";
@@ -170,9 +188,18 @@ function createCoursesSection(courses, rootElement) {
         link.classList.add('inline-btn');
         // Add the onclick event for routing
         link.onclick = route;
-
-        // Append img, title, and link to the box div
         box.appendChild(img);
+        if (type == 'enrolled') {
+            const progressDiv = document.createElement('div');
+            progressDiv.classList.add('progress-bar-container');
+            const progressBar = document.createElement('div');
+            progressBar.classList.add('progress-bar');
+            let percent = (course.chaptersCompleted / course.totalChapters) * 100;
+            console.log(percent);
+            progressBar.style.width = percent + '%';
+            progressDiv.appendChild(progressBar);
+            box.appendChild(progressDiv);
+        }
         box.appendChild(title);
         box.appendChild(link);
 
@@ -187,7 +214,7 @@ async function importMockApi() {
         const { mockgetUserDataAPICall } = await import('/public/test/mock-api.js');
         return {
             mockgetUserDataAPICall,
-            
+
         };
     } catch (error) {
         console.error('Error importing mock API:', error);

@@ -62,10 +62,9 @@
                         <div class="menu private">
                             <a id="profile-link" onclick="route()"><i class="es-user"></i><span>My
                                     Profile</span></a>
-                            <a href="/courses" onclick="route()"><i class="es-book"></i><span>My
+                            <a href="/my-courses" onclick="route()"><i class="es-book"></i><span>My
                                     Courses</span></i></a>
-                            <a href="/profile-update" onclick="route()"><i class="es-cogs"></i><span>Account
-                                    Settings</span></i></a>
+                            <a id="account-settings"><i class="es-cogs"></i><span>Account Settings</span></i></a>
                         </div>
                         <div class="menu public">
                             <a id="toggle-btn"><i id="mode-icon" class="es-moon"></i><span id="mode-text">
@@ -98,10 +97,10 @@
                     <a href="/" onclick="route()"><i class="es-home"></i><span>Home</span></i></a>
                     <a href="/courses" onclick="route()"><i class="es-graduation-cap"></i><span>All
                             Courses</span></i></a>
-                    <a href="/courses" onclick="route()"><i class="es-tags"></i><span>All Streams</span></i></a>
+                    <a href="/streams" onclick="route()"><i class="es-tags"></i><span>All Streams</span></i></a>
                     <a href="/about" onclick="route()"><i class="es-address-card"></i><span>About Us</span></i></a>
                     <a href="/contact" onclick="route()"><i class="es-headphones"></i><span>Contact Us</span></i></a>
-                    <a href="/register" onclick="route()"><i class="es-magic"></i><span>Become a
+                    <a id="register-tutor"><i class="es-magic"></i><span>Become a
                             Tutor</span></i></a>
                 </nav>
             </div>
@@ -120,13 +119,12 @@
         </div>
     </nav>
     <!-- user modal section starts  -->
-    <div class="cd-user-modal">
-        <div class="cd-user-modal-container"> <!-- this is the container wrapper -->
+    <div class="cd-forms-modal cd-user-modal">
+        <div class="cd-forms-modal-container"> <!-- this is the container wrapper -->
             <ul class="cd-switcher">
                 <li><a href="#0">Sign in</a></li>
                 <li><a href="#0">New account</a></li>
             </ul>
-
             <div id="cd-login"> <!-- log in form -->
                 <form class="cd-form">
                     <p class="fieldset">
@@ -221,6 +219,51 @@
             <a href="#0" class="cd-close-form">Close</a>
         </div>
     </div>
+    <div class="cd-forms-modal acc-sett-modal">
+        <div class="cd-forms-modal-container">
+            <section class="form-container">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <h2>Account Settings</h2>
+                    <p>Your Name</p>
+                    <input type="text" name="name" placeholder="Nitesh Saxena" class="box" maxlength="100">
+                    <p>Your email</p>
+                    <input type="email" name="email" placeholder="NiteshSaxena@gmail.com" class="box" maxlength="100">
+                    <p>Old password</p>
+                    <input type="password" name="old_pass" placeholder="enter your old password" class="box"
+                        maxlength="50">
+                    <p>New Password</p>
+                    <input type="password" name="new_pass" placeholder="enter your new password" class="box"
+                        maxlength="50">
+                    <p>Confirm password</p>
+                    <input type="password" name="confirm_pass" placeholder="confirm your new password" class="box"
+                        maxlength="50">
+                    <p>Update Profile Photo</p>
+                    <input type="file" name="image" accept="image/*" class="box">
+                    <input type="submit" name="submit" value="update profile" class="btn">
+                </form>
+            </section>
+            <a href="#0" class="cd-close-form">Close</a>
+        </div>
+
+    </div>
+    <div class="cd-forms-modal reg-tutor-modal">
+        <div class="cd-forms-modal-container">
+            <section class="form-container">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <h2>Become a Tutor!</h2>
+                    <p>Your Name <span>*</span></p>
+                    <input type="text" name="name" placeholder="enter your name" class="box" maxlength="100" required>
+                    <p>Your email <span>*</span></p>
+                    <input type="email" name="email" placeholder="enter your email" class="box" maxlength="100" required>
+                    <p>Your Message <span>*</span></p>
+                    <textarea name="msg" class="box" placeholder="enter your message" cols="30" rows="10"></textarea>
+                    <input type="submit" name="submit" value="Submit" class="btn">
+                </form>
+            </section>
+            <a href="#0" class="cd-close-form">Close</a>
+        </div>
+
+    </div>
 
     <!-- main content section starts  -->
     <main id="main-page">
@@ -231,12 +274,12 @@
         <div id="home"></div>
         <div id="notFound"></div>
         <div id="profile"></div>
-        <div id="profileUpdate"></div>
-        <div id="register"></div>
+        <div id="streams"></div>
     </main>
     <!-- footer section starts  -->
     <footer class="footer">
-        &copy; copyright @ 2024 by <span><a onclick="route()" href="/">www.emptyStacks.com</a></span> | all rights reserved!
+        &copy; copyright @ 2024 by <span><a onclick="route()" href="/">www.emptyStacks.com</a></span> | all rights
+        reserved!
     </footer>
 </body>
 

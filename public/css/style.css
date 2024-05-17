@@ -113,11 +113,11 @@
 
 
 @media only screen and (min-width: 600px) {
-    .cd-user-modal-container {
+    .cd-forms-modal-container {
         margin: 4em auto;
     }
 
-    .cd-user-modal-container .cd-switcher a {
+    .cd-forms-modal-container .cd-switcher a {
         height: 70px;
         line-height: 70px;
     }

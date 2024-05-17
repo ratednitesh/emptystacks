@@ -1,4 +1,4 @@
-import {initAddOn, subscribe, publish, copyToClipboard } from "./helper";
+import { initAddOn, subscribe, publish, copyToClipboard } from "./helper";
 import { removeMenuOptions } from "./setup";
 
 // const variables
@@ -12,10 +12,6 @@ const routes = {
     "/courses/*": "home",
     "/contact": "contact",
     "/contact/*": "contact",
-    "/profile-update": "profileUpdate",
-    "/profile-update/*": "profileUpdate",
-    "/register": "register",
-    "/register/*": "register",
     "/course": "notFound",
     "/course/": "notFound",
     "/course/*": "course",
@@ -25,6 +21,11 @@ const routes = {
     "/profile": "notFound",
     "/profile/": "notFound",
     "/profile/*": "profile",
+    "/my-courses": "profile",
+    "/my-courses/*": "profile",
+    "/streams":"streams",
+    "/streams/":"streams",
+    "/streams/*":"streams",
     404: "notFound"
 };
 const sideBar = document.querySelector('#sideBar');
@@ -92,13 +93,14 @@ const handleLocation = async () => {
                 document.body.classList.add('active');
             };
         }
-    }else
-    console.log(previousMainBodyPath);
+    } else
+        console.log(previousMainBodyPath);
 };
 function loadMainScripts(path) {
     const matchCoursePath = path.match(/^\/course\/([\w/-]+)$/);
     const matchProfilepath = path.match(/^\/profile\/([\w/-]+)$/);
     const matchContentpath = path.match(/^\/content\/([\w/-]+)$/);
+    const matchStreamspath = path.match(/^\/streams\/([\w/-]+)$/);
 
     if (matchCoursePath) {
         publish('unloadHome');
@@ -109,10 +111,18 @@ function loadMainScripts(path) {
     } else if (matchContentpath) {
         publish('unloadHome');
         publish('loadContent', matchContentpath[1]);
+    } else if (matchStreamspath) {
+        publish('unloadHome');
+        publish('loadStreams', matchStreamspath[1]);
     } else {
         switch (path) {
             case "/courses":
                 publish('loadHome', 'only-course');
+                break;
+            case "/my-courses":
+                console.log("I am here");
+                publish('unloadHome');
+                publish('loadMyCourses');
                 break;
             case "/":
                 publish('loadHome');
@@ -134,13 +144,13 @@ function findMatchingRoute(path) {
     });
     return routes[matchingRoute] || routes[404];
 }
-export function reloadProfilePage(){
+export function reloadProfilePage() {
     // TODO: This can be generic solution to all auth state changes
     const matchProfilepath = previousMainBodyPath.match(/^\/profile\/([\w/-]+)$/);
     if (matchProfilepath) {
         publish('loadProfile', matchProfilepath[1]);
     }
 }
-export function copyPathToClipboard(){
-    copyToClipboard("www.emptystacks.com"+previousMainBodyPath);
+export function copyPathToClipboard() {
+    copyToClipboard("www.emptystacks.com" + previousMainBodyPath);
 }

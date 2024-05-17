@@ -72,3 +72,9 @@
     background-color: var(--black);
     color: var(--white);
 }
+
+.locked {
+    opacity: 0.5 !important; /* Reduce opacity to indicate disabled state */
+    cursor: not-allowed !important; /* Change cursor to indicate not clickable */
+    /* Optionally, you can also change colors, add borders, etc. to visually indicate the disabled state */
+  }

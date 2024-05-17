@@ -15,24 +15,25 @@ export var userPrivateProfile = {
                 "title": "Solving LeetCode Questions",
                 "href": "/course/problemSolvingLeetCode",
                 "nextChapter": "/content/problemSolvingLeetCode/getStarted", //TODO: Put first chapter by default.
-                "chaptersCompleted":2,
-                
-
+                "chaptersCompleted": 2,
+                "totalChapters": 16
             },
             {
                 "thumbnail": "/images/thumbnails/2.jpg",
                 "title": "HTML: Complete Beginner Guide",
                 "href": "/course/htmlBeginner",
-                "nextChapter": "/content/htmlBeginner/Introduction", 
-                "chaptersCompleted":0,
+                "nextChapter": "/content/htmlBeginner/Introduction",
+                "chaptersCompleted": 0,
+                "totalChapters": 16
 
             },
             {
                 "thumbnail": "/images/thumbnails/3.jpg",
                 "title": "A complete Javascript Guide",
                 "href": "/course/jsComplete",
-                "nextChapter": "/content/jsComplete/Introduction", 
-                "chaptersCompleted":1,
+                "nextChapter": "/content/jsComplete/Introduction",
+                "chaptersCompleted": 1,
+                "totalChapters": 16
             }
         ]
     },
@@ -42,7 +43,7 @@ export var userPrivateProfile = {
         "mailId": "niteshmode@gmail.com",
         "role": "Stack Explorer",
         "activities": {
-            "saved-courses": 4,
+            "saved-courses": 0,
             "liked-tutorials": 23,
             "total-comments": 12
         },
@@ -87,31 +88,34 @@ export var userPrivateProfile = {
                 "thumbnail": "/images/thumbnails/4.jpg",
                 "title": "System Design: Deep Dive",
                 "href": "/course/systemDesign",
-                "nextChapter": "/content/systemDesign/Introduction", 
-                "chaptersCompleted":0,
+                "nextChapter": "/content/systemDesign/Introduction",
+                "chaptersCompleted": 1,
+                "totalChapters": 16
 
             },
             {
                 "thumbnail": "/images/thumbnails/5.jpg",
                 "title": "JAVA: A complete Beginner Guide",
                 "href": "/course/javaBeginner",
-                "nextChapter": "/content/javaBeginner/Introduction", 
-                "chaptersCompleted":0,
+                "nextChapter": "/content/javaBeginner/Introduction",
+                "chaptersCompleted": 9, "totalChapters": 16
 
             },
             {
                 "thumbnail": "/images/thumbnails/3.jpg",
                 "title": "A complete Javascript Guide",
                 "href": "/course/jsComplete",
-                "nextChapter": "/content/jsComplete/Introduction", 
-                "chaptersCompleted":0,
+                "nextChapter": "/content/jsComplete/Introduction",
+                "chaptersCompleted": 0,
+                "totalChapters": 16
             },
             {
                 "thumbnail": "/images/thumbnails/2.jpg",
                 "title": "HTML: Complete Beginner Guide",
                 "href": "/course/htmlBeginner",
-                "nextChapter": "/content/htmlBeginner/Introduction", 
-                "chaptersCompleted":0,
+                "nextChapter": "/content/htmlBeginner/Introduction",
+                "chaptersCompleted": 5,
+                "totalChapters": 16
             },
         ]
     }
@@ -275,16 +279,224 @@ export var userPublicProfile = {
 };
 export var topStreams = [
     { icon: 'es-code', text: 'JAVA' },
-    { icon: 'es-chart-bar', text: 'System Design' },
-    { icon: 'es-pencil', text: 'Full Stack' },
+    { icon: 'es-chart-bar', text: 'SystemDesign' },
+    { icon: 'es-pencil', text: 'FullStack' },
     { icon: 'es-chart-line', text: 'Front-End' },
     { icon: 'es-music', text: 'Back-End' },
     { icon: 'es-camera', text: 'Javascript' },
     { icon: 'es-cog', text: 'DSA' },
     { icon: 'es-cloud', text: 'Leetcode' },
-    { icon: 'es-cogs', text: 'Problem Solving' },
+    { icon: 'es-cogs', text: 'Problem-Solving' },
     { icon: 'es-rupee', text: 'Projects' }
 ];
+
+export var allStreams = [
+    { icon: 'es-code', text: 'JAVA' },
+    { icon: 'es-chart-bar', text: 'SystemDesign' },
+    { icon: 'es-pencil', text: 'FullStack' },
+    { icon: 'es-chart-line', text: 'Front-End' },
+    { icon: 'es-music', text: 'Back-End' },
+    { icon: 'es-camera', text: 'Javascript' },
+    { icon: 'es-cog', text: 'DSA' },
+    { icon: 'es-cloud', text: 'Leetcode' },
+    { icon: 'es-cogs', text: 'Problem-Solving' },
+    { icon: 'es-rupee', text: 'Projects' },
+    { icon: 'es-code', text: 'Python' },
+    { icon: 'es-chart-bar', text: 'Backend' },
+    { icon: 'es-pencil', text: 'Dev-Ops' },
+    { icon: 'es-chart-line', text: 'End-to-End' },
+    { icon: 'es-music', text: 'R&D' },
+    { icon: 'es-camera', text: 'Artificial-Intelligence' },
+    { icon: 'es-cog', text: 'LLM' },
+    { icon: 'es-cloud', text: 'Codechef' },
+    { icon: 'es-cogs', text: 'Graphs' },
+    { icon: 'es-rupee', text: 'Google-Cloud' }
+];
+
+export var coursesByStreams = {
+    'JAVA': [{
+        thumbnail: "/images/thumbnails/1.jpg",
+        title: "Problem Solving: LeetCode Series",
+        href: "/course/problemSolvingLeetCode"
+    },
+    {
+        thumbnail: "/images/thumbnails/2.jpg",
+        title: "HTML Complete Tutorial: Beginner",
+        href: "/course/htmlBeginner"
+    },
+    {
+        thumbnail: "/images/thumbnails/3.jpg",
+        title: "Javascript: Complete Tutorial",
+        href: "/course/jsComplete"
+    }],
+    'SystemDesign': [,
+        {
+            thumbnail: "/images/thumbnails/4.jpg",
+            title: "System Design: Deep Dive",
+            href: "/course/systemDesign"
+        },
+        {
+            thumbnail: "/images/thumbnails/5.jpg",
+            title: "JAVA Complete Tutorial: Beginner",
+            href: "/course/javaBeginner"
+        },
+        {
+            thumbnail: "/images/thumbnails/6.jpg",
+            title: "Data Structure & Algorithm: Beginner",
+            href: "/course/dsa-beginner"
+        }],
+    'FullStack': [,
+        {
+            thumbnail: "/images/thumbnails/7.jpg",
+            title: "Javascript: Advanced Projects",
+            href: "/course/js-projects"
+        },
+        {
+            thumbnail: "/images/thumbnails/8.jpg",
+            title: "Data Structure & Algorithm: Medium",
+            href: "/course/dsa-medium"
+        },
+        {
+            thumbnail: "/images/thumbnails/9.jpg",
+            title: "JAVA Complete Tutorial: Medium",
+            href: "/course/javaMedium"
+        },
+    ],
+    'Front-End': [{
+        thumbnail: "/images/thumbnails/10.jpg",
+        title: "Data Structure & Algorithm: Expert",
+        href: "/course/dsa-expert"
+    },
+    {
+        thumbnail: "/images/thumbnails/3.jpg",
+        title: "JAVA Complete Tutorial: Expert",
+        href: "/course/javaExpert"
+    },
+    {
+        thumbnail: "/images/thumbnails/5.jpg",
+        title: "JAVA: Advanced Projects",
+        href: "/course/javaProjects"
+    }],
+    'Back-End': [{
+        thumbnail: "/images/thumbnails/10.jpg",
+        title: "Data Structure & Algorithm: Expert",
+        href: "/course/dsa-expert"
+    },
+    {
+        thumbnail: "/images/thumbnails/3.jpg",
+        title: "JAVA Complete Tutorial: Expert",
+        href: "/course/javaExpert"
+    },],
+    'Javascript': [{
+        thumbnail: "/images/thumbnails/8.jpg",
+        title: "Data Structure & Algorithm: Medium",
+        href: "/course/dsa-medium"
+    },],
+    'DSA': [{
+        thumbnail: "/images/thumbnails/7.jpg",
+        title: "Javascript: Advanced Projects",
+        href: "/course/js-projects"
+    },
+    {
+        thumbnail: "/images/thumbnails/8.jpg",
+        title: "Data Structure & Algorithm: Medium",
+        href: "/course/dsa-medium"
+    },],
+    'Leetcode': [{
+        thumbnail: "/images/thumbnails/7.jpg",
+        title: "Javascript: Advanced Projects",
+        href: "/course/js-projects"
+    },
+    {
+        thumbnail: "/images/thumbnails/8.jpg",
+        title: "Data Structure & Algorithm: Medium",
+        href: "/course/dsa-medium"
+    },],
+    'Problem-Solving': [{
+        thumbnail: "/images/thumbnails/7.jpg",
+        title: "Javascript: Advanced Projects",
+        href: "/course/js-projects"
+    },
+    {
+        thumbnail: "/images/thumbnails/8.jpg",
+        title: "Data Structure & Algorithm: Medium",
+        href: "/course/dsa-medium"
+    },],
+    'Projects': [{
+        thumbnail: "/images/thumbnails/7.jpg",
+        title: "Javascript: Advanced Projects",
+        href: "/course/js-projects"
+    },
+    {
+        thumbnail: "/images/thumbnails/8.jpg",
+        title: "Data Structure & Algorithm: Medium",
+        href: "/course/dsa-medium"
+    },],
+    'Python': [{
+        thumbnail: "/images/thumbnails/7.jpg",
+        title: "Javascript: Advanced Projects",
+        href: "/course/js-projects"
+    },
+    {
+        thumbnail: "/images/thumbnails/8.jpg",
+        title: "Data Structure & Algorithm: Medium",
+        href: "/course/dsa-medium"
+    },],
+    'Backend': [],
+    'Dev-Ops': [],
+    'End-to-End': [{
+        thumbnail: "/images/thumbnails/7.jpg",
+        title: "Javascript: Advanced Projects",
+        href: "/course/js-projects"
+    },
+    {
+        thumbnail: "/images/thumbnails/8.jpg",
+        title: "Data Structure & Algorithm: Medium",
+        href: "/course/dsa-medium"
+    },],
+    'R&D': [],
+    'Artificial-Intelligence': [],
+    'LLM': [{
+        thumbnail: "/images/thumbnails/7.jpg",
+        title: "Javascript: Advanced Projects",
+        href: "/course/js-projects"
+    },
+    {
+        thumbnail: "/images/thumbnails/8.jpg",
+        title: "Data Structure & Algorithm: Medium",
+        href: "/course/dsa-medium"
+    },],
+    'Codechef': [{
+        thumbnail: "/images/thumbnails/7.jpg",
+        title: "Javascript: Advanced Projects",
+        href: "/course/js-projects"
+    },
+    {
+        thumbnail: "/images/thumbnails/8.jpg",
+        title: "Data Structure & Algorithm: Medium",
+        href: "/course/dsa-medium"
+    },],
+    'Graphs': [{
+        thumbnail: "/images/thumbnails/7.jpg",
+        title: "Javascript: Advanced Projects",
+        href: "/course/js-projects"
+    },
+    {
+        thumbnail: "/images/thumbnails/8.jpg",
+        title: "Data Structure & Algorithm: Medium",
+        href: "/course/dsa-medium"
+    },],
+    'Google-Cloud': [{
+        thumbnail: "/images/thumbnails/7.jpg",
+        title: "Javascript: Advanced Projects",
+        href: "/course/js-projects"
+    },
+    {
+        thumbnail: "/images/thumbnails/8.jpg",
+        title: "Data Structure & Algorithm: Medium",
+        href: "/course/dsa-medium"
+    },],
+}
 export var topCourses = [
     {
         thumbnail: "/images/thumbnails/1.jpg",
@@ -355,6 +567,12 @@ export var courseDetails = {
         "level": 2,
         "href": "/content/problemSolvingLeetCode/Introduction",
         "chapterCount": 9,
+        "streams": [
+            { icon: 'es-code', text: 'JAVA' },
+            { icon: 'es-cog', text: 'DSA' },
+            { icon: 'es-cloud', text: 'Leetcode' },
+            { icon: 'es-cogs', text: 'Problem-Solving' },
+        ],
         "thumbnail": "/images/thumbnails/1.jpg",
         "author": {
             "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
@@ -371,6 +589,7 @@ export var courseDetails = {
         "level": 1,
         "href": "/content/htmlBeginner/Introduction",
         "chapterCount": 6,
+        "streams": [],
         "thumbnail": "/images/thumbnails/2.jpg",
         "author": {
             "id": "eDLhJLXv7ChEf6vBCSSbHUphTlV2",
@@ -387,6 +606,7 @@ export var courseDetails = {
         "level": 1,
         "href": "/content/jsComplete/Introduction",
         "chapterCount": 14,
+        "streams": [],
         "thumbnail": "/images/thumbnails/3.jpg",
         "author": {
             "id": "12345",
@@ -403,6 +623,12 @@ export var courseDetails = {
         "level": 1,
         "href": "/content/systemDesign/Introduction",
         "chapterCount": 14,
+        "streams": [
+            { icon: 'es-code', text: 'JAVA' },
+            { icon: 'es-cog', text: 'DSA' },
+            { icon: 'es-cloud', text: 'Leetcode' },
+            { icon: 'es-cogs', text: 'Problem-Solving' },
+        ],
         "thumbnail": "/images/thumbnails/4.jpg",
         "author": {
             "id": "12345",
@@ -419,6 +645,7 @@ export var courseDetails = {
         "level": 1,
         "href": "/content/javaBeginner/default",
         "chapterCount": 14,
+        "streams": [],
         "thumbnail": "/images/thumbnails/5.jpg",
         "author": {
             "id": "12345",
@@ -435,6 +662,7 @@ export var courseDetails = {
         "level": 1,
         "href": "/content/dsa-beginner/default",
         "chapterCount": 14,
+        "streams": [],
         "thumbnail": "/images/thumbnails/6.jpg",
         "author": {
             "id": "12345",
@@ -450,7 +678,13 @@ export var courseDetails = {
         "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq",
         "level": 3,
         "href": "/content/js-projects/1",
-        "chapterCount": "6 Videos",
+        "chapterCount": 6,
+        "streams": [
+            { icon: 'es-code', text: 'JAVA' },
+            { icon: 'es-cog', text: 'DSA' },
+            { icon: 'es-cloud', text: 'Leetcode' },
+            { icon: 'es-cogs', text: 'Problem-Solving' },
+        ],
         "thumbnail": "/images/thumbnails/7.jpg",
         "author": {
             "id": "12345",
@@ -467,6 +701,7 @@ export var courseDetails = {
         "level": 1,
         "href": "/content/dsa-medium/default",
         "chapterCount": 14,
+        "streams": [],
         "thumbnail": "/images/thumbnails/8.jpg",
         "author": {
             "id": "12345",
@@ -483,6 +718,7 @@ export var courseDetails = {
         "level": 1,
         "href": "/content/javaMedium/Introduction",
         "chapterCount": 14,
+        "streams": [],
         "thumbnail": "/images/thumbnails/9.jpg",
         "author": {
             "id": "12345",
@@ -499,6 +735,7 @@ export var courseDetails = {
         "level": 1,
         "href": "/content/dsa-expert/default",
         "chapterCount": 14,
+        "streams": [],
         "thumbnail": "/images/thumbnails/10.jpg",
         "author": {
             "id": "12345",
@@ -515,6 +752,7 @@ export var courseDetails = {
         "level": 1,
         "href": "/content/javaExpert/Introduction",
         "chapterCount": 14,
+        "streams": [],
         "thumbnail": "/images/thumbnails/3.jpg",
         "author": {
             "id": "12345",
@@ -531,6 +769,7 @@ export var courseDetails = {
         "level": 1,
         "href": "/content/javaProjects/1",
         "chapterCount": 14,
+        "streams": [],
         "thumbnail": "/images/thumbnails/5.jpg",
         "author": {
             "id": "12345",
@@ -1308,7 +1547,7 @@ export var courseContent = {
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
         "previousChapter": "",
-        "nextChapter": "js-projects/2",
+        "nextChapter": "/content/js-projects/2",
         "likes": 10,
         "comments": 2
     },
@@ -1327,8 +1566,8 @@ export var courseContent = {
             "userProfileSrc": "/images/profile/teacher2.png"
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
-        "previousChapter": "js-projects/1",
-        "nextChapter": "js-projects/3",
+        "previousChapter": "/content/js-projects/1",
+        "nextChapter": "/content/js-projects/3",
         "likes": 8,
         "comments": 1
     },
@@ -1347,8 +1586,8 @@ export var courseContent = {
             "userProfileSrc": "/images/profile/teacher2.png"
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
-        "previousChapter": "js-projects/2",
-        "nextChapter": "js-projects/4",
+        "previousChapter": "/content/js-projects/2",
+        "nextChapter": "/content/js-projects/4",
         "likes": 12,
         "comments": 3
     },
@@ -1367,8 +1606,8 @@ export var courseContent = {
             "userProfileSrc": "/images/profile/teacher2.png"
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
-        "previousChapter": "js-projects/3",
-        "nextChapter": "js-projects/5",
+        "previousChapter": "/content/js-projects/3",
+        "nextChapter": "/content/js-projects/5",
         "likes": 15,
         "comments": 4
     },
@@ -1387,8 +1626,8 @@ export var courseContent = {
             "userProfileSrc": "/images/profile/teacher2.png"
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
-        "previousChapter": "js-projects/4",
-        "nextChapter": "js-projects/6",
+        "previousChapter": "/content/js-projects/4",
+        "nextChapter": "/content/js-projects/6",
         "likes": 18,
         "comments": 5
     },
@@ -1407,7 +1646,7 @@ export var courseContent = {
             "userProfileSrc": "/images/profile/teacher2.png"
         },
         "description": "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae perspiciatis fugit et eaq</p>",
-        "previousChapter": "js-projects/5",
+        "previousChapter": "/content/js-projects/5",
         "nextChapter": "",
         "likes": 20,
         "comments": 6
