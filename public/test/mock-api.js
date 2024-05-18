@@ -1,4 +1,4 @@
-import { allStreams, courseContent, courseContentComments, courseContentDetails, courseDetails, courseReviews, topCourses, topStreams, userPrivateProfile, userPublicProfile } from "../test/test-data";
+import { allStreams, courseContent, courseContentComments, courseContentDetails, courseDetails, courseReviews, coursesByStreams, topCourses, topStreams, userPrivateProfile, userPublicProfile } from "../test/test-data";
 
 export function mockgetUserPrivateDataAPICall(uid) {
     return new Promise((resolve, reject) => {
@@ -136,4 +136,13 @@ export function mockCreateUserDataAPICall(uid, newData) {
 
 export function mockIsValidUid(uid) {
 
+}
+
+export function mockGetCoursesByStreams(streamid){
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("Course Content Details read from the server.");
+            resolve(coursesByStreams[streamid]);
+        }, 1000);
+    });
 }

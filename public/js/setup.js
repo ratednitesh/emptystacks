@@ -263,6 +263,7 @@ function modalListeners() {
             forgotPassword(email);
         }
     });
+
     // IE9 placeholder fallback
     if (!("placeholder" in document.createElement("input"))) {
         var placeholders = document.querySelectorAll("[placeholder]");
@@ -314,6 +315,44 @@ function modalListeners() {
     document.querySelectorAll('.facebook-btn').forEach((event) => event.addEventListener("click", () => { notification(506) }));
     document.querySelectorAll('.apple-btn').forEach((event) => event.addEventListener("click", () => { notification(506) }));
     document.querySelectorAll('.github-btn').forEach((event) => event.addEventListener("click", () => { notification(506) }));
+
+    regTutorModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
+        // Prevent the default form submission
+        event.preventDefault();
+
+        // Validate form fields
+        var name = document.getElementById("reg-tutor-name").value.trim();
+        var email = document.getElementById("reg-tutor-email").value.trim();
+        var msg = document.getElementById("reg-tutor-msg").value.trim();
+        var pdfFile = document.getElementById("reg-tutor-pdfFile").value.trim();
+        // TODO: Complete this.
+        if (name === '' || email === '' || msg === '') {
+            notification(310);
+            return;
+        }
+        notification(209);
+        forms_modal.forEach(f => f.classList.remove('is-visible'));
+    });
+
+    accSettModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
+        event.preventDefault();
+
+        var old = document.getElementById("acc-old-pass").value;
+        var newp = document.getElementById("acc-new-pass").value;
+        var conf = document.getElementById("acc-conf-pass").value;
+        if (old === '' || newp === '' || conf === '') {
+            notification(310);
+            return;
+        }
+        else if (newp != conf)
+            notification(311);
+        else if (validatePassword(newp)) {
+            // TODO: actually call firebase password change function
+            notification(210);
+            accSettModal.classList.remove('is-visible');
+            setTimeout(() => { signOut() }, 5000);
+        }
+    });
 }
 function login_selected() {
     auth_modal.classList.add("is-visible");
@@ -428,7 +467,9 @@ export function loadUserPrivateData() {
                 sideBar.querySelector('#user-photo-sb').src = userData.userProfileSrc;
                 sideBar.querySelector('#user-name-sb').innerHTML = userData.username;
                 sideBar.querySelector('#user-role-sb').innerHTML = userData.role;
-            }).catch(() => { notification(501, 'user profile') })
+                document.getElementById('acc-sett-name').placeholder = userData.username;
+                document.getElementById('acc-sett-mail').placeholder = userData.mailId;
+            }).catch((e) => { console.log(e); notification(501, 'user profile') })
     } else {
         profileMenuPrivate.forEach((node) => { node.classList.add('disabled') });
         profileMenuOnlyPublic.forEach((node) => { node.classList.remove('disabled') });

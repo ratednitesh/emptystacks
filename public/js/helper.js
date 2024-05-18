@@ -20,6 +20,8 @@ const statusCodes = {
     206: "A password reset email has been sent!",
     207: "Link Copied! ",
     208: "Course Saved! ",
+    209: "Request Submitted.",
+    210: "Password Changed! Sign In again with New Password.",
 
     301: "Please agree to Terms & Conditions!",
     302: "Username is required!",
@@ -30,6 +32,8 @@ const statusCodes = {
     307: "Password cannot be more than 25 charaters.",
     308: "",
     309: "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
+    310: "Please provide all mandatory fields",
+    311: "Password and Confirm Password Strings do not match",
 
     500: "Something went wrong, please try again later",
     501: "Something went wrong, unable to load: ",
@@ -55,7 +59,7 @@ export function notification(statusCode, message) {
     el.style.backgroundColor = color;
     document.body.appendChild(el);
     setTimeout(() => {
-        el.remove();
+        el?.remove();
     }, 5000);
 }
 

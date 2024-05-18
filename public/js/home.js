@@ -10,9 +10,13 @@ const slideshow = document.querySelector(".slideshow");
 const noEnroll = document.querySelector(".no-enroll");
 const nextBtn = document.querySelector(".next");
 const prevBtn = document.querySelector(".prev");
+const studentDiv = document.querySelector('.box.student-mode');
+const tutorDiv = document.querySelector('.box.tutor-mode');
+const regTutorSideBar = document.getElementById('register-tutor');
 
 let bannerInterval, isBannerLoaded = false;
 let enrolledCourses = [], enrolledCourseIndex = -1;
+
 // Initializers and Listeners: Home 
 export function initHome() {
     initBanner();
@@ -66,14 +70,14 @@ function initPopularCourses() {
                 boxContainer.appendChild(box);
 
             });
-            const viewMoreCourses = document.querySelector("#view-more-courses");
-            viewMoreCourses.addEventListener(
-                'click', () => {
-                    // TODO: Enhance this
-                    viewMoreCourses.classList.add('disabled');
-                    document.querySelector("#that-all").classList.remove('disabled');
-                }
-            );
+            // const viewMoreCourses = document.querySelector("#view-more-courses");
+            // viewMoreCourses.addEventListener(
+            //     'click', () => {
+            //         // TODO: Enhance this
+            //         viewMoreCourses.classList.add('disabled');
+            //         document.querySelector("#that-all").classList.remove('disabled');
+            //     }
+            // );
 
         }
     ).catch((e) => {
@@ -106,7 +110,7 @@ function initStreams() {
             streams.forEach(stream => {
                 // Create the anchor tag
                 const anchorTag = document.createElement('a');
-                anchorTag.href = '/streams/'+stream.text;
+                anchorTag.href = '/streams/' + stream.text;
                 anchorTag.setAttribute("onclick", "route()");
 
                 // Create the icon element
@@ -242,6 +246,13 @@ function updateEnrolledCourses() {
                         slideshow.classList.add('disabled');
                         noEnroll.classList.remove('disabled');
                     }
+                    if (data.role == "Stack Builder") {
+                        studentDiv.classList.add('disabled');
+                        tutorDiv.classList.remove('disabled');
+                        regTutorSideBar.classList.add('disabled');
+                    } else {
+                        disabledTutorMode();
+                    }
                 }
             ).catch((e) => {
                 console.log(e);
@@ -251,7 +262,14 @@ function updateEnrolledCourses() {
         bookContainer.innerHTML = "";
         enrolledCourses = [];
         enrolledCourseIndex = -1;
+        disabledTutorMode();
     }
+}
+
+function disabledTutorMode() {
+    studentDiv.classList.remove('disabled');
+    tutorDiv.classList.add('disabled');
+    regTutorSideBar.classList.remove('disabled');
 }
 // Show hide selected enrolled course
 function showSelectedEnrolledCourse(oldIndex, newIndex) {

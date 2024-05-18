@@ -126,7 +126,11 @@ export var likedTutorials = {
 
     // TODO: Complete these.
 }
-
+/*
+Likes: 
+ user : on like add to  liked tutorial
+Reviews
+*/
 export var userPublicProfile = {
     "zhcyWRZpJKZohfqSt6Xihyo4Awq2": {
         "username": "Nitesh Saxena",
@@ -305,7 +309,7 @@ export var allStreams = [
     { icon: 'es-chart-bar', text: 'Backend' },
     { icon: 'es-pencil', text: 'Dev-Ops' },
     { icon: 'es-chart-line', text: 'End-to-End' },
-    { icon: 'es-music', text: 'R&D' },
+    { icon: 'es-music', text: 'Research' },
     { icon: 'es-camera', text: 'Artificial-Intelligence' },
     { icon: 'es-cog', text: 'LLM' },
     { icon: 'es-cloud', text: 'Codechef' },
@@ -328,6 +332,11 @@ export var coursesByStreams = {
         thumbnail: "/images/thumbnails/3.jpg",
         title: "Javascript: Complete Tutorial",
         href: "/course/jsComplete"
+    },
+    {
+        thumbnail: "/images/thumbnails/5.jpg",
+        title: "JAVA Complete Tutorial: Beginner",
+        href: "/course/javaBeginner"
     }],
     'SystemDesign': [,
         {
@@ -454,7 +463,7 @@ export var coursesByStreams = {
         title: "Data Structure & Algorithm: Medium",
         href: "/course/dsa-medium"
     },],
-    'R&D': [],
+    'Research': [],
     'Artificial-Intelligence': [],
     'LLM': [{
         thumbnail: "/images/thumbnails/7.jpg",
