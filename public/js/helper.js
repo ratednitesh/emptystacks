@@ -22,6 +22,7 @@ const statusCodes = {
     208: "Course Saved! ",
     209: "Request Submitted.",
     210: "Password Changed! Sign In again with New Password.",
+    211: "Comment Added",
 
     301: "Please agree to Terms & Conditions!",
     302: "Username is required!",
@@ -34,6 +35,7 @@ const statusCodes = {
     309: "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
     310: "Please provide all mandatory fields",
     311: "Password and Confirm Password Strings do not match",
+    312: "Comment cannot be blank",
 
     500: "Something went wrong, please try again later",
     501: "Something went wrong, unable to load: ",
@@ -105,12 +107,12 @@ export async function initAddOn(page) {
                 import('./streams.js').then(module => {
                     console.log("loading streams");
                     module.initStreams().then(
-                        ()=>{
-                            subscribe('loadStreams',module.loadStreams);
+                        () => {
+                            subscribe('loadStreams', module.loadStreams);
                             resolve();
                         }
                     )
-                   
+
                 });
             else
                 resolve();
@@ -173,4 +175,14 @@ export async function updateUserData(uid, newData) {
                 reject(error); // Reject with the error from the API call
             });
     });
+}
+
+export function getFormattedDate(date) {
+    // Extract the day, month, and year from the Date object
+    const day = String(date.getDate()).padStart(2, '0'); // Ensure day is two digits
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Ensure month is two digits and add 1 since months are zero-based
+    const year = date.getFullYear();
+
+    // Format the date as a string in DD-MM-YYYY format
+    return `${day}-${month}-${year}`;
 }

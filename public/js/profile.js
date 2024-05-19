@@ -194,7 +194,7 @@ function createCoursesSection(courses, rootElement, type) {
             progressDiv.classList.add('progress-bar-container');
             const progressBar = document.createElement('div');
             progressBar.classList.add('progress-bar');
-            let percent = (course.chaptersCompleted / course.totalChapters) * 100;
+            let percent = (course.chaptersCompleted.length / course.totalChapters) * 100;
             console.log(percent);
             progressBar.style.width = percent + '%';
             progressDiv.appendChild(progressBar);

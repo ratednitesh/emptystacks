@@ -15,7 +15,7 @@ export var userPrivateProfile = {
                 "title": "Solving LeetCode Questions",
                 "href": "/course/problemSolvingLeetCode",
                 "nextChapter": "/content/problemSolvingLeetCode/getStarted", //TODO: Put first chapter by default.
-                "chaptersCompleted": 2,
+                "chaptersCompleted": [0,1,6,7,8],
                 "totalChapters": 16
             },
             {
@@ -23,7 +23,7 @@ export var userPrivateProfile = {
                 "title": "HTML: Complete Beginner Guide",
                 "href": "/course/htmlBeginner",
                 "nextChapter": "/content/htmlBeginner/Introduction",
-                "chaptersCompleted": 0,
+                "chaptersCompleted": [0,1,2],
                 "totalChapters": 16
 
             },
@@ -32,9 +32,17 @@ export var userPrivateProfile = {
                 "title": "A complete Javascript Guide",
                 "href": "/course/jsComplete",
                 "nextChapter": "/content/jsComplete/Introduction",
-                "chaptersCompleted": 1,
+                "chaptersCompleted": [0,1],
                 "totalChapters": 16
-            }
+            },
+            {
+                thumbnail: "/images/thumbnails/7.jpg",
+                title: "Javascript: Advanced Projects",
+                href: "/course/js-projects",
+                "nextChapter": "/content/js-projects/3",
+                "chaptersCompleted": [0,1],
+                "totalChapters": 6
+            },
         ]
     },
     "hhjGEzFfz4gcFBUt9qROUwxxI852": {
@@ -89,7 +97,7 @@ export var userPrivateProfile = {
                 "title": "System Design: Deep Dive",
                 "href": "/course/systemDesign",
                 "nextChapter": "/content/systemDesign/Introduction",
-                "chaptersCompleted": 1,
+                "chaptersCompleted": [0],
                 "totalChapters": 16
 
             },
@@ -98,7 +106,7 @@ export var userPrivateProfile = {
                 "title": "JAVA: A complete Beginner Guide",
                 "href": "/course/javaBeginner",
                 "nextChapter": "/content/javaBeginner/Introduction",
-                "chaptersCompleted": 9, "totalChapters": 16
+                "chaptersCompleted": [0,1], "totalChapters": 16
 
             },
             {
@@ -106,7 +114,7 @@ export var userPrivateProfile = {
                 "title": "A complete Javascript Guide",
                 "href": "/course/jsComplete",
                 "nextChapter": "/content/jsComplete/Introduction",
-                "chaptersCompleted": 0,
+                "chaptersCompleted": [0,1,2],
                 "totalChapters": 16
             },
             {
@@ -114,7 +122,7 @@ export var userPrivateProfile = {
                 "title": "HTML: Complete Beginner Guide",
                 "href": "/course/htmlBeginner",
                 "nextChapter": "/content/htmlBeginner/Introduction",
-                "chaptersCompleted": 5,
+                "chaptersCompleted": [1,3,4],
                 "totalChapters": 16
             },
         ]
@@ -793,51 +801,76 @@ export var courseContentDetails = {
     "problemSolvingLeetCode": {
         "Introduction to LeetCode":
         {
-            "Introduction to LeetCod": "/content/problemSolvingLeetCode/Introduction",
-            "Problem Solving Basics": "/content/problemSolvingLeetCode/Basics",
-            "Where to get Started": "/content/problemSolvingLeetCode/getStarted"
+            "Introduction to LeetCod": {
+                id: 0,
+                href: "/content/problemSolvingLeetCode/Introduction", 
+            } ,
+            "Problem Solving Basics": {
+                id: 1,
+                href: "/content/problemSolvingLeetCode/Basics",},
+            "Where to get Started": {
+                id: 2,
+                href: "/content/problemSolvingLeetCode/getStarted"},
         },
         "Arrays and Sets":
         {
-            "Two Sum": "/content/problemSolvingLeetCode/twoSum",
-            "Group Anagram": "/content/problemSolvingLeetCode/group-anagram",
-            "Valid Anagram": "/content/problemSolvingLeetCode/valid-anagram"
+            "Two Sum":  {
+                id: 3,
+                href:"/content/problemSolvingLeetCode/twoSum" },
+            "Group Anagram":  {
+                id: 4,
+                href:"/content/problemSolvingLeetCode/group-anagram",},
+            "Valid Anagram":  {
+                id: 5,
+                href:"/content/problemSolvingLeetCode/valid-anagram"},
         },
         "HashMaps": {
-            "Phone Directory": "/content/problemSolvingLeetCode/phoneDirectory",
-            "Grade System": "/content/problemSolvingLeetCode/gradeSystem"
+            "Phone Directory": {
+                id: 6,
+                href: "/content/problemSolvingLeetCode/phoneDirectory", },
+            "Grade System":  {
+                id: 7,
+                href:"/content/problemSolvingLeetCode/gradeSystem" },
         },
-        "Moving Forward": "/content/problemSolvingLeetCode/nextSteps",
+        "Moving Forward": {
+            id: 8,
+            href: "/content/problemSolvingLeetCode/nextSteps",}
 
     },
     "js-projects": {
         "Javascript: Advanced Projects (part 01)": {
+            id: 0,
             "videoId": "course2v1", //TODO: do we even need these?
             "thumbnail": "/images/thumbnails/7.jpg",
             "href": "/content/js-projects/1"
         },
         "Javascript: Advanced Projects (part 02)": {
+            id: 1,
             "videoId": "course2v2",
             "thumbnail": "/images/thumbnails/7.jpg",
             "href": "/content/js-projects/2"
         },
         "Javascript: Advanced Projects (part 03)": {
+            id: 2,
             "videoId": "course2v3",
             "thumbnail": "/images/thumbnails/7.jpg",
             "href": "/content/js-projects/3"
         },
         "Javascript: Advanced Projects (part 04)": {
+            id: 3,
             "videoId": "course2v4",
             "thumbnail": "/images/thumbnails/7.jpg",
             "href": "/content/js-projects/4"
 
         },
         "Javascript: Advanced Projects (part 05)": {
+            id: 4,
             "videoId": "course2v5",
             "thumbnail": "/images/thumbnails/7.jpg",
             "href": "/content/js-projects/5"
         },
         "Javascript: Advanced Projects (part 06)": {
+            id: 5,
             "videoId": "course2v6",
             "thumbnail": "/images/thumbnails/7.jpg",
             "href": "/content/js-projects/6"
@@ -846,21 +879,25 @@ export var courseContentDetails = {
     },
     "javaProjects": {
         "JAVA: Advanced Projects (part 01)": {
+            id: 0,
             "videoId": "course2v1",
             "thumbnail": "/images/thumbnails/5.jpg",
             "href": "/content/javaProjects/1"
         },
         "JAVA: Advanced Projects (part 02)": {
+            id: 1,
             "videoId": "course2v2",
             "thumbnail": "/images/thumbnails/5.jpg",
             "href": "/content/javaProjects/1"
         },
         "JAVA: Advanced Projects (part 03)": {
+            id: 2,
             "videoId": "course2v3",
             "thumbnail": "/images/thumbnails/5.jpg",
             "href": "/content/javaProjects/1"
         },
         "JAVA: Advanced Projects (part 04)": {
+            id: 3,
             "videoId": "course2v4",
             "thumbnail": "/images/thumbnails/5.jpg",
             "href": "/content/javaProjects/1"
@@ -869,110 +906,157 @@ export var courseContentDetails = {
     "htmlBeginner": {
         "Introduction to LeetCode":
         {
-            "Introduction to LeetCod": "/content/htmlBeginner/Introduction",
-            "Problem Solving Basics": "/content/htmlBeginner/Basics",
-            "Where to get Started": "/content/htmlBeginner/Advanced"
+            "Introduction to LeetCod":  {
+                id: 0,
+                href:"/content/htmlBeginner/Introduction",},
+            "Problem Solving Basics":  {
+                id: 1,
+                href:"/content/htmlBeginner/Basics",},
+            "Where to get Started":  {
+                id: 2,
+                href:"/content/htmlBeginner/Advanced"},
         },
 
         "HashMaps": {
-            "Phone Directory": "/content/htmlBeginner/firstProject",
-            "Grade System": "/content/htmlBeginner/multimedia"
+            "Phone Directory":  {
+                id: 3,
+                href:"/content/htmlBeginner/firstProject",},
+            "Grade System":  {
+                id: 4,
+                href:"/content/htmlBeginner/multimedia"},
         },
-        "Moving Forward": "/content/htmlBeginner/nextSteps",
+        "Moving Forward":  {
+            id: 5,
+            href:"/content/htmlBeginner/nextSteps",}
 
     },
     "jsComplete": {
         "Introduction to JavaScript":
         {
-            "Introduction to LeetCod": "/content/jsComplete/Introduction",
-            "Problem Solving Basics": "/content/jsComplete/Basics",
-            "Javascript: Advanced": "/content/jsComplete/Advanced"
+            "Introduction to LeetCod":  {
+                id: 0,
+                href:"/content/jsComplete/Introduction", },
+            "Problem Solving Basics":  {
+                id: 1,
+                href:"/content/jsComplete/Basics",},
+            "Javascript: Advanced":  {
+                id: 2,
+                href:"/content/jsComplete/Advanced"},
         },
 
-        "Moving Forward": "/content/jsComplete/nextSteps",
+        "Moving Forward":  {
+            id: 3,
+            href:"/content/jsComplete/nextSteps",},
 
     },
     "systemDesign": {
-        "Introduction to LeetCode":
-        {
-            "Introduction to LeetCod": "/content/systemDesign/Introduction",
-            "Problem Solving Basics": "/content/systemDesign/Basics",
-            "Where to get Started": "/content/systemDesign/Advanced"
-        },
+        "Introduction to LeetCode": {
+            "Introduction to LeetCod":  {
+                id: 0,
+                href:"/content/systemDesign/Introduction", },
+            "Problem Solving Basics":  {
+                id: 1,
+                href:"/content/systemDesign/Basics",},
+            "Javascript: Advanced":  {
+                id: 2,
+                href:"/content/systemDesign/Advanced"},
+        }
     },
     "javaBeginner": {
-        "Introduction to LeetCode":
-        {
-            "Introduction to LeetCod": "/content/javaBeginner/default",
-            "Problem Solving Basics": "/content/javaBeginner/default",
-            "Where to get Started": "/content/javaBeginner/default"
+        "Introduction to LeetCode":{
+            "Introduction to LeetCod":  {
+                id: 0,
+                href:"/content/javaBeginner/default", },
+            "Problem Solving Basics":  {
+                id: 1,
+                href:"/content/javaBeginner/default",},
+            "Javascript: Advanced":  {
+                id: 2,
+                href:"/content/javaBeginner/default"},
         },
 
-        "Moving Forward": "/content/javaBeginner/default",
+        "Moving Forward":   {
+            id: 3,
+            href:"/content/javaBeginner/default"},
 
     },
     "javaMedium": {
-        "Introduction to LeetCode":
-        {
-            "Introduction to LeetCod": "/content/javaMedium/default",
-            "Problem Solving Basics": "/content/javaMedium/default",
-            "Where to get Started": "/content/javaMedium/default"
+        "Introduction to LeetCode":{
+            "Introduction to LeetCod":  {
+                id: 0,
+                href:"/content/javaMedium/default", },
+            "Problem Solving Basics":  {
+                id: 1,
+                href:"/content/javaMedium/default",},
+            "Javascript: Advanced":  {
+                id: 2,
+                href:"/content/javaMedium/default"},
         },
-        "Moving Forward": "/content/javaMedium/default",
-
     },
     "javaExpert": {
         "Introduction to LeetCode":
         {
-            "Introduction to LeetCod": "/content/javaExpert/default",
-            "Problem Solving Basics": "/content/javaExpert/default",
+            "Introduction to LeetCod": {
+                id: 0,
+                href:"/content/javaExpert/default",},
+            "Problem Solving Basics": {
+                id: 1,
+                href:"/content/javaExpert/default",},
         },
         "Arrays and Sets":
         {
-            "Two Sum": "/content/javaExpert/default",
+            "Two Sum": {
+                id: 2,
+                href:"/content/javaExpert/default",},
         },
 
-        "Moving Forward": "/content/javaExpert/default",
+        "Moving Forward": {
+            id: 3,
+            href:"/content/javaExpert/default",}
     },
     "dsa-beginner": {
-        "Introduction to LeetCode":
-        {
-            "Introduction to LeetCod": "/content/dsa-beginner/default",
-            "Problem Solving Basics": "/content/dsa-beginner/default",
-            "Where to get Started": "/content/dsa-beginner/default"
+        "Introduction to LeetCode":{
+            "Introduction to LeetCod":  {
+                id: 0,
+                href:"/content/dsa-beginner/default", },
+            "Problem Solving Basics":  {
+                id: 1,
+                href:"/content/dsa-beginner/default",},
+            "Javascript: Advanced":  {
+                id: 2,
+                href:"/content/dsa-beginner/default"},
         },
+    
 
 
     },
     "dsa-medium": {
-        "Introduction to LeetCode":
-        {
-            "Introduction to LeetCod": "/content/dsa-medium/default",
-            "Problem Solving Basics": "/content/dsa-medium/default",
-            "Where to get Started": "/content/dsa-medium/default"
+        "Introduction to LeetCode":{
+            "Introduction to LeetCod":  {
+                id: 0,
+                href:"/content/dsa-medium/default", },
+            "Problem Solving Basics":  {
+                id: 1,
+                href:"/content/dsa-medium/default",},
+            "Javascript: Advanced":  {
+                id: 2,
+                href:"/content/dsa-medium/default"},
         },
-
-        "Moving Forward": "/content/dsa-medium/default",
 
     },
     "dsa-expert": {
-        "Introduction to LeetCode":
-        {
-            "Introduction to LeetCod": "/content/dsa-expert/default",
-            "Problem Solving Basics": "/content/dsa-expert/default",
-            "Where to get Started": "/content/dsa-expert/default"
+        "Introduction to LeetCode":{
+            "Introduction to LeetCod":  {
+                id: 0,
+                href:"/content/dsa-expert/default", },
+            "Problem Solving Basics":  {
+                id: 1,
+                href:"/content/dsa-expert/default",},
+            "Javascript: Advanced":  {
+                id: 2,
+                href:"/content/dsa-expert/default"},
         },
-        "Arrays and Sets":
-        {
-            "Two Sum": "/content/dsa-expert/twoSum",
-            "Group Anagram": "/content/dsa-expert/default",
-            "Valid Anagram": "/content/dsa-expert/default"
-        },
-        "HashMaps": {
-            "Phone Directory": "/content/dsa-expert/default",
-            "Grade System": "/content/dsa-expert/default"
-        },
-        "Moving Forward": "/content/dsa-expert/default",
+
     },
 };
 export var courseReviews = {

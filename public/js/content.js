@@ -1,6 +1,6 @@
-import { publish, getCourseContentDetailsAPICalls, notification } from "./helper";
+import { publish, getCourseContentDetailsAPICalls, notification, getFormattedDate } from "./helper";
 import { getUid, isUserLoggedIn } from "./firebase-config";
-import { signup_selected } from "./setup";
+import { getUserPrivateData, signup_selected } from "./setup";
 import { copyPathToClipboard } from "./router";
 
 const contentSidebarHtml = document.querySelector('#contentSidebar');
@@ -13,7 +13,14 @@ const chapterContent = contentHtml.querySelector('.chapter-content');
 const shareButton = document.getElementById('share');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
+const addCommentForm = document.querySelector('.add-comment');
+const comments = commentHtml.querySelector('.show-comments');
+const courseTitle = contentSidebarHtml.querySelector('.course-title a');
+const completionMarker = contentHtml.querySelector('.completion');
 let lastChapterId;
+let lastCourseId;
+let showCompletionButton = true;
+let chaptersCompleted;
 export function initContent() {
     document.querySelector('#start-journey-content').addEventListener("click", () => {
         signup_selected();
@@ -23,65 +30,10 @@ export function initContent() {
         commentHtml.classList.remove('disabled');
         getCourseContentCommentsAPICalls(lastChapterId).then(
             ((commentData) => {
-                var comments = commentHtml.querySelector('.show-comments');
                 comments.innerHTML = "";
                 if (commentData) {
                     for (const comment of commentData) {
-                        const boxDiv = document.createElement("div");
-                        boxDiv.classList.add("box");
-                        const userParentDiv = document.createElement("div");
-                        userParentDiv.classList.add("user-parent");
-                        const userDiv = document.createElement("div");
-                        userDiv.classList.add("user");
-
-                        const userImg = document.createElement("img");
-                        userImg.src = comment.imageSrc;
-                        userImg.alt = "";
-                        const userInfoDiv = document.createElement("div");
-                        const userName = document.createElement("h2");
-                        userName.textContent = comment.name;
-
-                        const commentDate = document.createElement("span");
-                        commentDate.textContent = comment.commentDate;
-
-                        userInfoDiv.appendChild(userName);
-                        userInfoDiv.appendChild(commentDate);
-
-                        const profileLink = document.createElement("a");
-                        profileLink.setAttribute("onclick", "route()");
-                        profileLink.href = "/profile/" + comment.uid;
-
-                        profileLink.appendChild(userImg);
-                        userDiv.appendChild(profileLink);
-                        userDiv.appendChild(userInfoDiv);
-
-                        const commentText = document.createElement("p");
-                        commentText.classList.add("text");
-                        commentText.textContent = comment.comment;
-                        userParentDiv.appendChild(userDiv);
-                        let uid = getUid();
-                        if (comment.uid == uid) {
-                            // Create edit div element
-                            var editDiv = document.createElement("div");
-                            editDiv.classList.add("edit-my-comments")
-
-                            // Create edit button
-                            var editButton = document.createElement("i");
-                            editButton.classList.add("es-pencil");
-
-                            // Create delete button
-                            var deleteButton = document.createElement("i");
-                            deleteButton.classList.add("es-trash");
-                            editButton.addEventListener("click", () => { console.log("now you can edit comment") });
-                            deleteButton.addEventListener("click", () => { console.log("comment deleted.") });
-                            // Append buttons to div
-                            editDiv.appendChild(editButton);
-                            editDiv.appendChild(deleteButton);
-                            userParentDiv.appendChild(editDiv);
-                        }
-                        boxDiv.appendChild(userParentDiv);
-                        boxDiv.appendChild(commentText);
-                        comments.appendChild(boxDiv);
+                        displayComment(comment);
                     }
                 }
             }))
@@ -94,10 +46,100 @@ export function initContent() {
         copyPathToClipboard();
         notification(207);
     })
-}
+    addCommentForm.querySelector('input[type="submit"]').addEventListener('click', () => {
+        var commentMsg = document.getElementById('comment-msg')
+        var msg = commentMsg.value.trim();
+        commentMsg.value = '';
+        if (msg == '')
+            notification(312);
+        else {
+            var commentObject = {
+                "uid": getUid(),
+                "name": document.getElementById('user-menu-name').innerHTML,
+                "commentDate": getFormattedDate(new Date()),
+                "comment": msg,
+                "imageSrc": document.getElementById('user-menu-photo').src
+            };
+            addCommentToCourseAPICalls(lastChapterId, commentObject).then(
+                () => {
+                    displayComment(commentObject);
+                    notification(211);
+                }
+            ).catch(
+                (e) => { console.log(e); notification(500) }
+            );
+        }
 
+    })
+    completionMarker.querySelector('a').addEventListener('click', () => {
+        // TODO: update to db changes. Add to enrolled courses - completed courses.
+        const activeI = document.querySelector('.nano-content .active  >a > i');
+        activeI.classList.add('es-ok-circled', 'green');
+        activeI.classList.remove('es-circle-empty');
+        markParentMenuComplete();
+        // TODO: if all green mark the course as completed in Db. show ui for displaying course completion or get use review?
+    });
+}
+function displayComment(comment) {
+    const boxDiv = document.createElement("div");
+    boxDiv.classList.add("box");
+    const userParentDiv = document.createElement("div");
+    userParentDiv.classList.add("user-parent");
+    const userDiv = document.createElement("div");
+    userDiv.classList.add("user");
+
+    const userImg = document.createElement("img");
+    userImg.src = comment.imageSrc;
+    userImg.alt = "";
+    const userInfoDiv = document.createElement("div");
+    const userName = document.createElement("h2");
+    userName.textContent = comment.name;
+
+    const commentDate = document.createElement("span");
+    commentDate.textContent = comment.commentDate;
+
+    userInfoDiv.appendChild(userName);
+    userInfoDiv.appendChild(commentDate);
+
+    const profileLink = document.createElement("a");
+    profileLink.setAttribute("onclick", "route()");
+    profileLink.href = "/profile/" + comment.uid;
+
+    profileLink.appendChild(userImg);
+    userDiv.appendChild(profileLink);
+    userDiv.appendChild(userInfoDiv);
+
+    const commentText = document.createElement("p");
+    commentText.classList.add("text");
+    commentText.textContent = comment.comment;
+    userParentDiv.appendChild(userDiv);
+    let uid = getUid();
+    if (comment.uid == uid) {
+        // Create edit div element
+        var editDiv = document.createElement("div");
+        editDiv.classList.add("edit-my-comments")
+
+        // Create edit button
+        var editButton = document.createElement("i");
+        editButton.classList.add("es-pencil");
+
+        // Create delete button
+        var deleteButton = document.createElement("i");
+        deleteButton.classList.add("es-trash");
+        editButton.addEventListener("click", () => { console.log("now you can edit comment") });
+        deleteButton.addEventListener("click", () => { console.log("comment deleted.") });
+        // Append buttons to div
+        editDiv.appendChild(editButton);
+        editDiv.appendChild(deleteButton);
+        userParentDiv.appendChild(editDiv);
+    }
+    boxDiv.appendChild(userParentDiv);
+    boxDiv.appendChild(commentText);
+    comments.appendChild(boxDiv);
+}
 // load course content
 export function loadContent(chapterId) {
+    console.log("chapter: " + chapterId);
     if (lastChapterId != chapterId) {
         lastChapterId = chapterId;
         hideComments();
@@ -132,7 +174,17 @@ export function loadContent(chapterId) {
                         contentHtml.querySelector('.video').src = chapterData.videoId;
                         contentHtml.querySelector('.description').innerHTML = chapterData.description;
                     }
-                    loadContentSidebar(chapterData.courseId, chapterData.courseName, chapterId, chapterData.type);
+                    let courseID = chapterId.split('/')[0];
+                    if (lastCourseId != courseID) {
+                        lastCourseId = courseID;
+                        loadContentSidebar(chapterData.courseId, chapterData.courseName, chapterId, chapterData.type);
+                    } else {
+                        showCompletionButton = false;
+                        const activeI = document.querySelector('.nano-content .active  >a > i');
+                        if (!activeI.classList.contains('es-ok-circled'))
+                            showCompletionButton = true;
+                        showMarkCompletion();
+                    }
 
                 } else {
                     lastChapterId = 'notFoundRoute';
@@ -167,47 +219,52 @@ export function hideComments() {
 function loadContentSidebar(courseId, courseName, chapterId, type) {
     getCourseContentDetailsAPICalls(courseId).then(
         (chapterDetails) => {
-            contentSidebarHtml.querySelector('.course-title').innerHTML = courseName;
+            courseTitle.setAttribute("onclick", "route()");
+            courseTitle.href = "/course/" + courseId;
+            courseTitle.innerHTML = courseName;
             ul.innerHTML = "";
             for (const [chapter, topics] of Object.entries(chapterDetails)) {
                 const li = document.createElement("li");
                 li.classList.add("menu-options");
                 if (type == "text") {
-                    if (typeof topics === 'object') {
+                    if (!topics.id) {
                         li.classList.add("sub-menu");
                         const a = document.createElement("a");
                         a.href = "javascript:void(0);";
-                        a.innerHTML = `<span>${chapter}</span><i class="arrow es-angle-double-down pull-right"></i>`;
+                        a.innerHTML = `<i class="es-circle-empty"></i><span> ${chapter}</span><i class="arrow es-angle-double-down pull-right"></i>`;
                         const subUl = document.createElement("ul");
                         subUl.classList.add('disabled');
-                        for (const [topic, link] of Object.entries(topics)) {
+                        for (const [topic, value] of Object.entries(topics)) {
                             const subLi = document.createElement("li");
                             const subA = document.createElement("a");
-                            subLi.classList.add("sub-menu-options");
-                            subA.href = link;
+                            subLi.classList.add("sub-menu-options", 'chapter-menu');
+                            subA.href = value.href;
                             subA.setAttribute("onclick", "route()");
-                            subA.textContent = topic;
+                            subA.innerHTML = `<i  id="sb-${courseId}-${value.id}" class="es-circle-empty"></i>` + topic;
                             subLi.appendChild(subA);
                             subUl.appendChild(subLi);
-                            if ("/content/" + chapterId == link) {
+                            if ("/content/" + chapterId == value.href) {
                                 subLi.classList.add("active");
                                 subUl.classList.remove('disabled');
-                                a.innerHTML = `<span>${chapter}</span><i class="arrow es-angle-double-up pull-right"></i>`;
+                                a.innerHTML = `<i class="es-circle-empty"></i><span> ${chapter}</span><i class="arrow es-angle-double-up pull-right"></i>`;
                             }
                         }
+
                         li.appendChild(a);
                         li.appendChild(subUl);
                     } else {
-                        if ("/content/" + chapterId == topics)
+                        li.classList.add('chapter-menu');
+                        if ("/content/" + chapterId == topics.href)
                             li.classList.add("active");
                         const a = document.createElement("a");
-                        a.href = topics;
+                        a.href = topics.href;
                         a.setAttribute("onclick", "route()");
-                        a.innerHTML = `<span>${chapter}</span>`;
+                        a.innerHTML = `<i id="sb-${courseId}-${topics.id}" class="es-circle-empty"></i><span> ${chapter}</span>`;
                         li.appendChild(a);
                     }
                     ul.appendChild(li);
                 } else {
+                    li.classList.add('chapter-menu');
                     if ("/content/" + chapterId == topics.href)
                         li.classList.add("active");
                     li.classList.add("video-list");
@@ -220,14 +277,19 @@ function loadContentSidebar(courseId, courseName, chapterId, type) {
                     img.alt = '';
 
                     const span = document.createElement('span');
-                    span.textContent = chapter;
+                    span.innerHTML = chapter;
 
                     a.appendChild(img);
+                    const itag = document.createElement('i');
+                    itag.classList.add('es-circle-empty');
+                    itag.id = "sb-" + courseId + '-' + topics.id;
+                    a.appendChild(itag);
                     a.appendChild(span);
                     li.appendChild(a);
                     ul.appendChild(li);
                 }
             }
+            updateUserLevelsOnEnrolledCourses();
             initializeContentSideBarListeners();
         }
     ).catch(
@@ -237,7 +299,54 @@ function loadContentSidebar(courseId, courseName, chapterId, type) {
         }
     )
 }
+function updateUserLevelsOnEnrolledCourses() {
+    showCompletionButton = false;
+    let uid = getUid();
+    if (uid) {
+        getUserPrivateData(uid).then((userData) => {
+            var coursehref = "/course/" + lastCourseId;
+            console.log(coursehref);
+            let matchingCourse = userData.enrolledCourses.find(course => course.href === coursehref);
+            chaptersCompleted = matchingCourse.chaptersCompleted;
+            if (matchingCourse) {
+                chaptersCompleted.forEach(id => {
+                    let savedId = "sb-" + lastCourseId + "-" + id
+                    let i = document.getElementById(savedId);
+                    i.classList.remove('es-circle-empty');
+                    i.classList.add('es-ok-circled', 'green');
+                });
+                markParentMenuComplete();
+            }
+            const activeI = document.querySelector('.nano-content .active  >a > i');
+            if (!activeI.classList.contains('es-ok-circled'))
+                showCompletionButton = true;
+            showMarkCompletion();
+        })
+    }
 
+}
+function markParentMenuComplete() {
+    const items = document.querySelectorAll('.sub-menu');
+    items.forEach(item => {
+        let subI = item.querySelectorAll('.sub-menu-options > a > i');
+        if (subI.length) {
+            const noneContainOkCircle = Array.from(subI).every(k => !k.classList.contains('es-circle-empty'));
+            if (noneContainOkCircle) {
+                let i = item.querySelector('a > i:first-of-type');
+                i.classList.remove('es-circle-empty');
+                i.classList.add('es-ok-circled', 'green');
+            }
+        }
+    });
+}
+function showMarkCompletion() {
+    console.log(showCompletionButton);
+    if (showCompletionButton) {
+        completionMarker.classList.remove('disabled');
+    } else {
+        completionMarker.classList.add('disabled');
+    }
+}
 // Initialize listeners on sidebar ( post load content sidebar)
 function initializeContentSideBarListeners() {
     let subMenus = document.querySelectorAll(".sub-menu > a");
@@ -259,17 +368,22 @@ function initializeContentSideBarListeners() {
             e.stopPropagation(); // TODO: may be needed at all places as well.
         });
     });
+
+    let menuOptions = document.querySelectorAll('.chapter-menu');
+    menuOptions.forEach(mo => mo.addEventListener('click', (event) => { menuOptions.forEach(moi => { if (moi == mo) moi.classList.add('active'); else moi.classList.remove('active') }) }))
 }
+
 
 // TODO: Potentially need to remove following function */
 async function importMockApi() {
     try {
         const {
-            mockgetCourseContentAPICall, mockgetCourseContentCommentsAPICall } = await import('/public/test/mock-api.js');
+            mockgetCourseContentAPICall, mockgetCourseContentCommentsAPICall, mockCourseContentAddCommentAPICall } = await import('/public/test/mock-api.js');
 
         return {
             mockgetCourseContentAPICall,
-            mockgetCourseContentCommentsAPICall
+            mockgetCourseContentCommentsAPICall,
+            mockCourseContentAddCommentAPICall
         };
     } catch (error) {
         console.error('Error importing mock API:', error);
@@ -308,5 +422,22 @@ async function getCourseContentCommentsAPICalls(courseId) {
                 reject(error); // Reject with the error from the API call
             });
 
+    });
+}
+
+async function addCommentToCourseAPICalls(courseId, newCommentObject) {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        // If data is already cached, resolve with the cached data
+
+        // Simulate an API call
+        mockApi.mockCourseContentAddCommentAPICall(courseId, newCommentObject)
+            .then(() => {
+                resolve(); // Resolve with the API response
+            })
+            .catch(error => {
+                console.log(error);
+                reject(error); // Reject with the error from the API call
+            });
     });
 }

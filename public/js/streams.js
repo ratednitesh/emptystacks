@@ -64,6 +64,7 @@ function initAllStreamsListeners() {
 }
 
 export function loadStreams(streamId) {
+    // TODO: Reset Courses section as well.
     console.log('loading streams from load: ' + streamId);
     resetSelection();
     if (streamId != undefined) {

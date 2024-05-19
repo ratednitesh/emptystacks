@@ -93,6 +93,15 @@ export function mockgetCourseContentCommentsAPICall(courseId) {
         }, 1000);
     });
 }
+export function mockCourseContentAddCommentAPICall(courseId, newCommentObject){
+    return new Promise((resolve, reject)=>{
+        setTimeout(() => {
+            // TODO: Doesn't work for first comment.
+            courseContentComments[courseId].push(newCommentObject);
+            resolve();
+        }, 1000);
+    })
+}
 // Creating User Profile
 export function mockCreateUserDataAPICall(uid, newData) {
     return new Promise((resolve, reject) => {

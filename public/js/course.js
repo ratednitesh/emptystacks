@@ -61,35 +61,53 @@ export function loadCoursePage(courseId) {
     } else if (lastCourseId == 'notFoundRoute')
         publish('notFoundRoute');
 }
+function updateUserLevelsOnEnrolledCourses() {
+    let uid = getUid();
+    if (uid) {
+        getUserPrivateData(uid).then((userData) => {
+            var coursehref = "/course/" + lastCourseId;
+            console.log(coursehref);
+            let matchingCourse = userData.enrolledCourses.find(course => course.href === coursehref);
+            if (matchingCourse) {
+                saveCourse.classList.add('disabled');
+                progressContainer.classList.remove('disabled');
+                let chaptersCompleted = matchingCourse.chaptersCompleted;
+                let percent = (chaptersCompleted.length / matchingCourse.totalChapters) * 100;
+                console.log(percent);
+                progressBar.style.width = percent + '%';
+                startButton.innerText = "Resume Course";
+                startButton.href = matchingCourse.nextChapter;
+                // TODO: Handle on  auth change as well.
 
+                chaptersCompleted.forEach(id => {
+                    let i = document.getElementById(lastCourseId+"-"+id);
+                    i.classList.remove('es-circle-empty');
+                    i.classList.add('es-ok-circled', 'green');
+                });
+                const items = document.querySelectorAll('.accordion-item');
+                items.forEach(item => {
+                    let subI = item.querySelectorAll('.course-list > a > i');
+                    if (subI.length) {
+                        const noneContainOkCircle = Array.from(subI).every(k => !k.classList.contains('es-circle-empty'));
+                        if (noneContainOkCircle) {
+                            let i = item.querySelector('.accordion-header > h2 > i:first-of-type');
+                            i.classList.remove('es-circle-empty');
+                            i.classList.add('es-ok-circled', 'green');
+                        }
+                    }
+                });
+            } else {
+                progressContainer.classList.add('disabled');
+                saveCourse.classList.remove('disabled');
+            }
+        })
+    }
+}
 // Load course Data
 function getCourseData(courseId) {
     getCourseDetailsAPICalls(courseId).then(
         (courseData) => {
             if (courseData) {
-                let uid = getUid();
-                if (uid) {
-                    getUserPrivateData(uid).then((userData) => {
-                        var coursehref = "/course/" + courseId;
-                        console.log(coursehref);
-                        let matchingCourse = userData.enrolledCourses.find(course => course.href === coursehref);
-                        if (matchingCourse) {
-                            saveCourse.classList.add('disabled');
-                            progressContainer.classList.remove('disabled');
-                            let percent = (matchingCourse.chaptersCompleted / matchingCourse.totalChapters) * 100;
-                            console.log(percent);
-                            progressBar.style.width = percent + '%';
-                            if (matchingCourse.chaptersCompleted > 0)
-                                startButton.innerText = "Resume Course";
-                            // TODO: Handle on  auth change as well.
-                            // TODO: update href of this button as well.
-                        } else {
-                            progressContainer.classList.add('disabled');
-                            saveCourse.classList.remove('disabled');
-                        }
-                    })
-                }
-
                 textCourse.querySelectorAll('.chapters').forEach((event) => {
                     event.innerHTML = courseData.chapterCount + " Chapters";
                 });
@@ -99,26 +117,26 @@ function getCourseData(courseId) {
                 courseData.streams.forEach(stream => {
                     // Create the anchor tag
                     const anchorTag = document.createElement('a');
-                    anchorTag.href = '/streams/'+stream.text;
+                    anchorTag.href = '/streams/' + stream.text;
                     anchorTag.setAttribute("onclick", "route()");
-    
+
                     // Create the icon element
                     const iconElement = document.createElement('i');
                     iconElement.classList.add(stream.icon);
-    
+
                     // Create the span element for the text
                     const spanElement = document.createElement('span');
                     spanElement.textContent = stream.text;
-    
+
                     // Append the icon and span elements to the anchor tag
                     anchorTag.appendChild(iconElement);
                     anchorTag.appendChild(spanElement);
                     // Append the anchor tag to the flex container
                     courseStreams.appendChild(anchorTag);
                 });
-                
+
                 textCourse.querySelector('#description').innerHTML = courseData.description;
-                textCourse.querySelector('#content-link').href = courseData.href;
+                startButton.href = courseData.href; //TODO: on click here it should also save the course if not already.
                 const level = courseData.level;
                 const n = 4 - level; // Calculate the value of n based on the level
                 textCourse.querySelector('#course-level').innerHTML = levelNames[level - 1];
@@ -138,14 +156,96 @@ function getCourseData(courseId) {
                 if (courseData.type == "text") {
                     document.querySelector(".course-details").classList.remove('disabled');
                     document.querySelector(".video-container").classList.add('disabled');
-                    getCourseContentDetails(courseId);
                 }
                 else {
                     document.querySelector(".video-container").classList.remove('disabled');
                     document.querySelector(".course-details").classList.add('disabled');
-                    getCourseVideoDetails(courseId);
                 }
-                getCourseReviews(courseId);
+                getCourseContentDetailsAPICalls(courseId).then(
+                    (courseContentData) => {
+                        if (courseData.type == "text") {
+                            courseDetails.innerHTML = "";
+                            for (const [course, topics] of Object.entries(courseContentData)) {
+                                const accordionItem = document.createElement("div");
+                                accordionItem.classList.add("accordion-item");
+                                const accordionHeader = document.createElement("div");
+                                accordionHeader.classList.add("accordion-header");
+                                const headerTitle = document.createElement("h2");
+                                const headerIcon = document.createElement("i");
+                                headerIcon.classList.add("es-circle-empty", "bullet");
+
+                                if (topics.id) {
+                                    headerIcon.id = courseId+"-"+topics.id;
+                                    headerTitle.appendChild(headerIcon);
+                                    headerTitle.innerHTML += ` ${course}`;
+                                    const headingLink = document.createElement("a");
+                                    headingLink.href = topics.href;
+                                    headingLink.setAttribute("onclick", "route()");
+                                    headingLink.appendChild(headerTitle);
+                                    accordionHeader.appendChild(headingLink);
+                                    accordionItem.appendChild(accordionHeader);
+
+                                }
+                                else if (typeof topics === "object") {
+                                    headerTitle.appendChild(headerIcon);
+                                    headerTitle.innerHTML += ` ${course}`;
+                                    const expandIcon = document.createElement("i");
+                                    expandIcon.classList.add("expand", "es-angle-up");
+                                    headerTitle.appendChild(expandIcon);
+                                    accordionHeader.classList.add("expandable");
+                                    accordionHeader.appendChild(headerTitle);
+                                    accordionItem.appendChild(accordionHeader);
+                                    const accordionContent = document.createElement("div");
+                                    accordionContent.classList.add("accordion-content");
+
+                                    for (const [topic, value] of Object.entries(topics)) {
+                                        const courseList = document.createElement("li");
+                                        courseList.classList.add("course-list");
+                                        const topicLink = document.createElement("a");
+                                        topicLink.href = value.href;
+                                        topicLink.setAttribute("onclick", "route()");
+                                        topicLink.innerHTML = `<i id="${courseId}-${value.id}"class="es-circle-empty"></i>${topic}`;
+
+                                        courseList.appendChild(topicLink);
+                                        accordionContent.appendChild(courseList);
+                                    }
+                                    accordionItem.appendChild(accordionContent);
+                                    accordionItem.classList.add("active");
+                                }
+                                courseDetails.appendChild(accordionItem);
+                            }
+                            // courseDetails.innerHTML = courseData;
+                            document.querySelectorAll('.expandable').forEach(function (header) {
+                                header.addEventListener('click', function () {
+                                    var item = this.parentNode;
+                                    item.classList.toggle('active');
+                                    this.children[0].children[1].classList.toggle('es-angle-up');
+                                    this.children[0].children[1].classList.toggle('es-angle-down');
+                                });
+                            });
+                        }
+                        else {
+                            videoDetails.innerHTML = "";
+                            for (const [title, cvd] of Object.entries(courseContentData)) {
+                                const videoHtml = document.createElement("a");
+                                videoHtml.href = cvd.href;
+                                videoHtml.setAttribute("onclick", "route()");
+                                videoHtml.classList.add("box");
+                                videoHtml.innerHTML = `<i class="es-play-lg"></i><img src="${cvd.thumbnail}"alt=""><h2><i id="${courseId}-${cvd.id}" class="es-circle-empty"></i> ${title}</h2>`;
+                                videoDetails.appendChild(videoHtml);
+                            };
+                        }
+                        updateUserLevelsOnEnrolledCourses();
+                        getCourseReviews(courseId);
+                    }
+                )
+                    .catch(
+                        (e) => {
+                            console.log(e);
+                            notification(501, 'content details');
+                        }
+                    )
+
             } else {
                 lastCourseId = 'notFoundRoute';
                 publish('notFoundRoute');
@@ -160,94 +260,6 @@ function getCourseData(courseId) {
         )
 }
 
-// Load text course Details 
-function getCourseContentDetails(courseId) {
-    getCourseContentDetailsAPICalls(courseId).then(
-        (courseData) => {
-            courseDetails.innerHTML = "";
-            for (const [course, topics] of Object.entries(courseData)) {
-                const accordionItem = document.createElement("div");
-                accordionItem.classList.add("accordion-item");
-                const accordionHeader = document.createElement("div");
-                accordionHeader.classList.add("accordion-header");
-                const headerTitle = document.createElement("h2");
-                const headerIcon = document.createElement("i");
-                headerIcon.classList.add("es-circle-empty", "bullet");
-                headerTitle.appendChild(headerIcon);
-                headerTitle.innerHTML += ` ${course}`;
-                if (typeof topics === "string") {
-                    const headingLink = document.createElement("a");
-                    headingLink.href = topics;
-                    headingLink.setAttribute("onclick", "route()");
-                    headingLink.appendChild(headerTitle);
-                    accordionHeader.appendChild(headingLink);
-                    accordionItem.appendChild(accordionHeader);
-                }
-                else if (typeof topics === "object") {
-                    const expandIcon = document.createElement("i");
-                    expandIcon.classList.add("expand", "es-angle-up");
-                    headerTitle.appendChild(expandIcon);
-                    accordionHeader.classList.add("expandable");
-                    accordionHeader.appendChild(headerTitle);
-                    accordionItem.appendChild(accordionHeader);
-                    const accordionContent = document.createElement("div");
-                    accordionContent.classList.add("accordion-content");
-
-                    for (const [topic, href] of Object.entries(topics)) {
-                        const courseList = document.createElement("li");
-                        courseList.classList.add("course-list");
-                        const topicLink = document.createElement("a");
-                        topicLink.href = href;
-                        topicLink.setAttribute("onclick", "route()");
-                        topicLink.innerHTML = `<i class="es-circle-empty"></i>${topic}`;
-                        courseList.appendChild(topicLink);
-                        accordionContent.appendChild(courseList);
-                    }
-                    accordionItem.appendChild(accordionContent);
-                    accordionItem.classList.add("active");
-                }
-                courseDetails.appendChild(accordionItem);
-            }
-            // courseDetails.innerHTML = courseData;
-            document.querySelectorAll('.expandable').forEach(function (header) {
-                header.addEventListener('click', function () {
-                    var item = this.parentNode;
-                    item.classList.toggle('active');
-                    this.children[0].children[1].classList.toggle('es-angle-up');
-                    this.children[0].children[1].classList.toggle('es-angle-down');
-                });
-            });
-        }
-    )
-        .catch(
-            (e) => {
-                console.log(e);
-                notification(501, 'content details');
-            }
-        )
-}
-
-// Load video course details
-function getCourseVideoDetails(courseId) {
-    getCourseContentDetailsAPICalls(courseId).then(
-        (courseVideoDetails) => {
-            videoDetails.innerHTML = "";
-            for (const [title, cvd] of Object.entries(courseVideoDetails)) {
-                const videoHtml = document.createElement("a");
-                videoHtml.href = cvd.href;
-                videoHtml.setAttribute("onclick", "route()");
-                videoHtml.classList.add("box");
-                videoHtml.innerHTML = `<i class="es-play-lg"></i><img src="${cvd.thumbnail}"alt=""><h2>${title}</h2>`;
-                videoDetails.appendChild(videoHtml);
-            };
-        }
-    ).catch(
-        (e) => {
-            console.log(e);
-            notification(501, 'course content details');
-        }
-    );
-}
 export function disableSignOutUserOptionsForCourse() {
     if (isUserLoggedIn())
         saveCourse.classList.remove('disabled');
@@ -319,7 +331,7 @@ function createCourseToken(courseData) {
         title: courseData.courseName,
         href: "/course/" + lastCourseId,
         nextChapter: courseData.href,
-        chaptersCompleted: 0,
+        chaptersCompleted: [],
         totalChapters: courseData.chapterCount
     };
 }

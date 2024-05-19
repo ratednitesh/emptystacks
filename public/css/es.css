@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'es';
-  src: url('../font/es.eot?16872053');
-  src: url('../font/es.eot?16872053#iefix') format('embedded-opentype'),
-       url('../font/es.woff2?16872053') format('woff2'),
-       url('../font/es.woff?16872053') format('woff'),
-       url('../font/es.ttf?16872053') format('truetype'),
-       url('../font/es.svg?16872053#es') format('svg');
+  src: url('../font/es.eot?14836753');
+  src: url('../font/es.eot?14836753#iefix') format('embedded-opentype'),
+       url('../font/es.woff2?14836753') format('woff2'),
+       url('../font/es.woff?14836753') format('woff'),
+       url('../font/es.ttf?14836753') format('truetype'),
+       url('../font/es.svg?14836753#es') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'es';
-    src: url('../font/es.svg?16872053#es') format('svg');
+    src: url('../font/es.svg?14836753#es') format('svg');
   }
 }
 */
@@ -109,6 +109,7 @@
 .es-download:before { content: '\e834'; } /* '' */
 .es-cloud:before { content: '\e835'; } /* '' */
 .es-equalizer:before { content: '\e836'; } /* '' */
+.es-ok-circled:before { content: '\e837'; } /* '' */
 .es-chat:before { content: '\f03d'; } /* '' */
 .es-bell-2:before { content: '\f03f'; } /* '' */
 .es-bookmark:before { content: '\f097'; } /* '' */

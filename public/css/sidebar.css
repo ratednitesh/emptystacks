@@ -50,11 +50,11 @@
     font-size: 1.8rem;
 }
 
-.side-bar .navbar a i {
+.side-bar .navbar a i.arrow {
     color: var(--main-color);
     margin-right: 1.5rem;
     transition: .2s linear;
-
+    float: right;
 }
 
 .side-bar .navbar a span {
@@ -63,10 +63,6 @@
 
 .side-bar .navbar a:hover {
     background-color: var(--light-bg);
-}
-
-.side-bar .navbar a:hover i {
-    margin-right: 2.5rem;
 }
 
 
@@ -78,17 +74,6 @@
     color: var(--light-color);
 }
 
-.side-bar .navbar a i {
-    color: var(--main-color);
-    margin-right: 1.5rem;
-    transition: .2s linear;
-}
-
-.side-bar .navbar a i.arrow {
-    float: right;
-    padding-top: .5rem;
-}
-
 .side-bar .navbar a span {
     color: var(--light-color);
 }
@@ -97,7 +82,7 @@
     background-color: var(--light-bg);
 }
 
-.side-bar .navbar a:hover i {
+.side-bar .navbar a:hover i.arrow {
     margin-right: 2.5rem;
 }
 
@@ -141,4 +126,5 @@
 .sidebar .menu-options.video-list img{
     padding-top: 2rem;
     height:15rem;
+    display: block;
 }
