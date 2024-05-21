@@ -306,3 +306,7 @@
 .video-container .box-container .box:hover h2 {
     color: var(--main-color);
 }
+* {
+    box-sizing: border-box;
+  }
+  

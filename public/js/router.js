@@ -30,7 +30,7 @@ const routes = {
 };
 const sideBar = document.querySelector('#sideBar');
 
-let cachedPages = {};
+let cachedPages = {"search":true};
 let previousSideBarPath = "";
 let previousMainBodyPath = "";
 
@@ -93,6 +93,7 @@ const handleLocation = async () => {
                 document.body.classList.add('active');
             };
         }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     } else
         console.log(previousMainBodyPath);
 };

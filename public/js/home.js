@@ -1,7 +1,7 @@
 
 import { getUid, isUserLoggedIn } from "./firebase-config";
 import { signup_selected, getUserPrivateData } from "./setup";
-import { notification } from './helper';
+import { getTopCourses, notification } from './helper';
 
 const bookContainer = document.querySelector('.box.private .book .enrolled-courses-home');
 const homeOptionPrivate = document.querySelectorAll('.quick-select .box-container .private');
@@ -300,10 +300,10 @@ function showSlide(index) {
 // TODO: Potentially need to remove following function */
 async function importMockApi() {
     try {
-        const { mockgetTopStreamsAPICall, mockgetTopCoursesAPICall } = await import('/public/test/mock-api.js');
+        const { mockgetTopStreamsAPICall } = await import('/public/test/mock-api.js');
         return {
             mockgetTopStreamsAPICall,
-            mockgetTopCoursesAPICall,
+            
 
         };
     } catch (error) {
@@ -328,20 +328,4 @@ async function getTopStreams() {
 
     });
 }
-async function getTopCourses() {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // If data is already cached, resolve with the cached data
 
-        // Simulate an API call
-        mockApi.mockgetTopCoursesAPICall()
-            .then(response => {
-                // TODO: Store the API response in the cachedData object
-                resolve(response); // Resolve with the API response
-            })
-            .catch(error => {
-                reject(error); // Reject with the error from the API call
-            });
-
-    });
-}

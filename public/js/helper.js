@@ -23,6 +23,8 @@ const statusCodes = {
     209: "Request Submitted.",
     210: "Password Changed! Sign In again with New Password.",
     211: "Comment Added",
+    212: "Review submitted.",
+    213: "Added to liked tutorials",
 
     301: "Please agree to Terms & Conditions!",
     302: "Username is required!",
@@ -36,6 +38,7 @@ const statusCodes = {
     310: "Please provide all mandatory fields",
     311: "Password and Confirm Password Strings do not match",
     312: "Comment cannot be blank",
+    313: "Max Characters: ",
 
     500: "Something went wrong, please try again later",
     501: "Something went wrong, unable to load: ",
@@ -125,9 +128,9 @@ export async function initAddOn(page) {
 async function importMockApi() {
     try {
         const {
-            mockgetCourseContentDetailsAPICall, mockUpdateUserDataAPICall } = await import('/public/test/mock-api.js');
+            mockgetCourseContentDetailsAPICall, mockUpdateUserDataAPICall, mockgetTopCoursesAPICall } = await import('/public/test/mock-api.js');
         return {
-            mockgetCourseContentDetailsAPICall, mockUpdateUserDataAPICall
+            mockgetCourseContentDetailsAPICall, mockUpdateUserDataAPICall, mockgetTopCoursesAPICall
         };
     } catch (error) {
         console.error('Error importing mock API:', error);
@@ -185,4 +188,21 @@ export function getFormattedDate(date) {
 
     // Format the date as a string in DD-MM-YYYY format
     return `${day}-${month}-${year}`;
+}
+export async function getTopCourses() {
+    const mockApi = await importMockApi();
+    return new Promise((resolve, reject) => {
+        // If data is already cached, resolve with the cached data
+
+        // Simulate an API call
+        mockApi.mockgetTopCoursesAPICall()
+            .then(response => {
+                // TODO: Store the API response in the cachedData object
+                resolve(response); // Resolve with the API response
+            })
+            .catch(error => {
+                reject(error); // Reject with the error from the API call
+            });
+
+    });
 }

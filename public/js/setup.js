@@ -1,5 +1,5 @@
 import { getUid, getUserToken } from "./firebase-config";
-import { notification, publish } from "./helper";
+import { getTopCourses, notification, publish } from "./helper";
 import { createNewUser, emailPasswordSignIn, firebaseSignOut, googleSignIn, isUserLoggedIn, tryPasswordResetEmail } from "./firebase-config";
 import { reloadProfilePage } from "./router";
 
@@ -40,12 +40,14 @@ const accSettModal = document.querySelector(".acc-sett-modal");
 const regTutorModal = document.querySelector(".reg-tutor-modal");
 const startJourney = document.querySelector('#start-journey');
 
+let searchData = {};
 /* One time init Logic */
 export function initStaticContent() {
     // Initialize
     initHeaders();
     initGlobalEventsListeners();
     initUserModal();
+    initSearchBar();
     // Load logged in user data
     loadUserPrivateData();
 }
@@ -56,6 +58,79 @@ function initHeaders() {
     if (darkMode === 'enabled') {
         enableDarkMode();
     }
+}
+function initSearchBar() {
+    initSearchCourses();
+    document.getElementById('search_box').addEventListener('input', function (event) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const query = event.target.value;
+        handleInputChange(query);
+    });
+
+}
+function initSearchCourses() {
+    getTopCourses().then(
+        (coursesData) => {
+            // Select the box-container element
+            const boxContainer = document.querySelector('.search .box-container');
+            let i = 0;
+            // Iterate over coursesData and create HTML elements
+            coursesData.forEach(course => {
+                // Create box element
+                const box = document.createElement('div');
+                box.classList.add('box');
+
+                // Create thumbnail image
+                const thumbnailImg = document.createElement('img');
+                thumbnailImg.src = course.thumbnail;
+                thumbnailImg.alt = 'Course Thumbnail';
+                thumbnailImg.classList.add('thumb');
+
+                // Create title
+                const title = document.createElement('p');
+                title.classList.add('title');
+                title.textContent = course.title;
+
+                // Create link
+                const link = document.createElement('a');
+                link.href = course.href;
+                link.textContent = 'View Course';
+                link.classList.add('inline-btn');
+                link.setAttribute('onclick', 'route()');
+
+                // Append elements to the box
+                box.appendChild(thumbnailImg);
+                box.appendChild(title);
+                box.appendChild(link);
+                box.classList.add('disabled');
+                searchData[i] = course.title;
+
+                box.id = "search-" + i++;
+
+                // Append box to the box-container
+                boxContainer.appendChild(box);
+            });
+        }
+    ).catch((e) => {
+        notification(501, 'popular courses');
+    });
+
+}
+function handleInputChange(query) {
+    console.log('User is typing:', query);
+    if (query) {
+        document.querySelector("#search").classList.remove('disabled');
+        for (let [key, value] of Object.entries(searchData)) {
+            if (value.toLowerCase().includes(query.toLowerCase())) {
+                document.getElementById("search-" + key).classList.remove('disabled');
+            } else {
+                document.getElementById("search-" + key).classList.add('disabled');
+            }
+        }
+    }
+    else
+        document.querySelector("#search").classList.add('disabled');
+    // You can add more logic here to handle the input, such as filtering courses
 }
 function headerListeners() {
     // static actions 
@@ -383,7 +458,8 @@ function loginSuccess() {
 function signOut() {
     firebaseSignOut().then(() => {
         if (!isUserLoggedIn()) {
-            updateAuthDependentSections();
+            location.reload();
+            // updateAuthDependentSections(); TODO: get rid of these calls.
             notification(204);
         } else {
             notification(504);
@@ -397,8 +473,9 @@ function signIn(provider, userToken) {
                 registerUserAPI(getUid(), getUserToken()).then(() => {
                     console.log("User Logged In");
                     loginSuccess();
-                    updateAuthDependentSections();
+                    // updateAuthDependentSections();
                     notification(201);
+                    location.reload();
                 }).catch(() => { notification(505); });
             }
         }).catch(() => {
@@ -409,8 +486,9 @@ function signIn(provider, userToken) {
             if (isUserLoggedIn()) {
                 console.log("User Logged In");
                 loginSuccess();
-                updateAuthDependentSections();
+                // updateAuthDependentSections();
                 notification(201);
+                location.reload();
             }
         }).catch(() => {
             notification(503);

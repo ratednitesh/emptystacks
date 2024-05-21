@@ -7,7 +7,7 @@ export var userPrivateProfile = {
         "activities": {
             "saved-courses": 4,
             "liked-tutorials": 10,
-            "total-comments": 1,
+            "completed-courses": 1,
         },
         "enrolledCourses": [
             {
@@ -53,7 +53,7 @@ export var userPrivateProfile = {
         "activities": {
             "saved-courses": 0,
             "liked-tutorials": 23,
-            "total-comments": 12
+            "completed-courses": 12
         },
         "enrolledCourses": [
             // {
@@ -89,7 +89,7 @@ export var userPrivateProfile = {
         "activities": {
             "saved-courses": 4,
             "liked-tutorials": 23,
-            "total-comments": 12
+            "completed-courses": 12
         },
         "enrolledCourses": [
             {

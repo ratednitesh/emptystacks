@@ -17,6 +17,9 @@ const addCommentForm = document.querySelector('.add-comment');
 const comments = commentHtml.querySelector('.show-comments');
 const courseTitle = contentSidebarHtml.querySelector('.course-title a');
 const completionMarker = contentHtml.querySelector('.completion');
+const courseCompletionModal = document.querySelector('.course-completed-modal');
+const thumbsUp = document.querySelector('.chapter-footer .es-thumbs-up');
+const thumbsDown = document.querySelector('.chapter-footer .es-thumbs-down');
 let lastChapterId;
 let lastCourseId;
 let showCompletionButton = true;
@@ -77,8 +80,37 @@ export function initContent() {
         activeI.classList.add('es-ok-circled', 'green');
         activeI.classList.remove('es-circle-empty');
         markParentMenuComplete();
+        completionMarker.classList.add('disabled');
+        checkCourseCompletion();
         // TODO: if all green mark the course as completed in Db. show ui for displaying course completion or get use review?
     });
+    courseCompletionModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
+        // Prevent the default form submission
+        event.preventDefault();
+        // TODO: Complete this.
+        notification(212);
+        // TODO: Refresh on page change 
+        // save to db
+        // increase counter
+        courseCompletionModal.classList.remove('is-visible')
+    
+    });
+    thumbsUp.addEventListener('click', function() {
+        thumbsUp.classList.toggle('red');
+        thumbsDown.classList.remove('red');
+        notification(213); // Optional: Remove red from thumbs down if it was selected
+      });
+      
+      thumbsDown.addEventListener('click', function() {
+        thumbsDown.classList.toggle('red');
+        thumbsUp.classList.remove('red'); // Optional: Remove red from thumbs up if it was selected
+      });
+}
+function checkCourseCompletion(){
+    var notcompleted = contentSidebarHtml.querySelector('.es-circle-empty')
+    if(!notcompleted)
+        courseCompletionModal.classList.add('is-visible');
+
 }
 function displayComment(comment) {
     const boxDiv = document.createElement("div");

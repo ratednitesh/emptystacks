@@ -130,7 +130,7 @@ export function mockCreateUserDataAPICall(uid, newData) {
                     "activities": {
                         "saved-courses": 0,
                         "liked-tutorials": 0,
-                        "total-comments": 0,
+                        "completed-courses": 0,
                     },
                     "enrolledCourses": []
                 };

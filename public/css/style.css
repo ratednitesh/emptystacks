@@ -1,7 +1,7 @@
 
 .popup {
     position: fixed;
-    bottom: -60px;
+    top: -60px;
     right: 10px;
     padding: var(--small-padding-box);
     font-size: var(--small-font);
@@ -13,11 +13,11 @@
 
 @keyframes popup {
     10%, 90% {
-        bottom: 10px;
+        top: 60px;
     }
 
     100% {
-        bottom: -60px;
+        top: -60px;
     }
 }
 

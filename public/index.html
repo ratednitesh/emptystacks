@@ -225,18 +225,20 @@
                 <form action="" method="post" enctype="multipart/form-data">
                     <h2>Account Settings</h2>
                     <p>Your Name</p>
-                    <input type="text" id="acc-sett-name" name="name" placeholder="" class="box" maxlength="100" readonly>
+                    <input type="text" id="acc-sett-name" name="name" placeholder="" class="box" maxlength="100"
+                        readonly>
                     <p>Your email</p>
-                    <input type="email" id="acc-sett-mail" name="email" placeholder="" class="box" maxlength="100" readonly>
+                    <input type="email" id="acc-sett-mail" name="email" placeholder="" class="box" maxlength="100"
+                        readonly>
                     <p>Old password <span>*</span></p>
-                    <input type="password" id="acc-old-pass" name="old_pass" placeholder="enter your old password" class="box"
-                        maxlength="50" required>
+                    <input type="password" id="acc-old-pass" name="old_pass" placeholder="enter your old password"
+                        class="box" maxlength="50" required>
                     <p>New Password <span>*</span></p>
-                    <input type="password" id="acc-new-pass" name="new_pass" placeholder="enter your new password" class="box"
-                        maxlength="50" required>
+                    <input type="password" id="acc-new-pass" name="new_pass" placeholder="enter your new password"
+                        class="box" maxlength="50" required>
                     <p>Confirm password <span>*</span></p>
-                    <input type="password" id="acc-conf-pass"  name="confirm_pass" placeholder="confirm your new password" class="box"
-                        maxlength="50" required>
+                    <input type="password" id="acc-conf-pass" name="confirm_pass"
+                        placeholder="confirm your new password" class="box" maxlength="50" required>
                     <input type="submit" name="submit" value="Submit" class="btn">
                 </form>
             </section>
@@ -250,25 +252,63 @@
                 <form action="" method="post" enctype="multipart/form-data">
                     <h2>Become a Tutor!</h2>
                     <p>Your Name <span>*</span></p>
-                    <input id='reg-tutor-name' type="text" name="name" placeholder="enter your name" class="box" maxlength="100" required>
-                     <!-- // TODO: put  Required in other places. -->
+                    <input id='reg-tutor-name' type="text" name="name" placeholder="enter your name" class="box"
+                        maxlength="100" required>
+                    <!-- // TODO: put  Required in other places. -->
                     <p>Your email <span>*</span></p>
-                    <input id='reg-tutor-email' type="email" name="email" placeholder="enter your email" class="box" maxlength="100"
-                        required>
-                    <p>Describe your industry, experience level and hours you can spend on preparing courses weekly. <span>*</span></p>
-                    <textarea id='reg-tutor-msg' name="msg" class="box" placeholder="enter your message" cols="30" rows="5"></textarea>
+                    <input id='reg-tutor-email' type="email" name="email" placeholder="enter your email" class="box"
+                        maxlength="100" required>
+                    <p>Describe your industry, experience level and hours you can spend on preparing courses weekly.
+                        <span>*</span>
+                    </p>
+                    <textarea id='reg-tutor-msg' name="msg" class="box" placeholder="enter your message" cols="30"
+                        rows="5"></textarea>
                     <p>Attach Resume [pdf]</p>
                     <input id='reg-tutor-pdfFile' type="file" name="pdfFile" accept="application/pdf" class="box">
-                    <input  type="submit" name="submit" value="Submit" class="btn">
+                    <input type="submit" name="submit" value="Submit" class="btn">
                 </form>
             </section>
             <a href="#0" class="cd-close-form">Close</a>
         </div>
 
     </div>
+    <div class="cd-forms-modal course-completed-modal">
+        <div class="cd-forms-modal-container">
+            <section class="form-container">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <h2><i class="es-ok-circled green"></i>Congratulations! You have completed this course.</h2>
+                    <p>Rate this course</p>
+                    <div class="ratings">
+                        <input type="radio" name="rate" id="rate-5">
+                        <label for="rate-5"><i class="es-star"></i></label>
+                        <input type="radio" name="rate" id="rate-4">
+                        <label for="rate-4"><i class="es-star"></i></label>
+                        <input type="radio" name="rate" id="rate-3">
+                        <label for="rate-3"><i class="es-star"></i></label>
+                        <input type="radio" name="rate" id="rate-2">
+                        <label for="rate-2"><i class="es-star"></i></label>
+                        <input type="radio" name="rate" id="rate-1">
+                        <label for="rate-1"><i class="es-star"></i></label>
 
+                    </div>
+                    <p>Write your Review </p>
+                    <textarea name="msg" class="box" placeholder="enter your message" cols="30" rows="5"></textarea>
+                    <input type="submit" name="submit" value="Submit" class="btn">
+                </form>
+            </section>
+            <a href="#0" class="cd-close-form">Close</a>
+        </div>
+
+    </div>
     <!-- main content section starts  -->
     <main id="main-page">
+        <div id="search" class="disabled">
+            <section class="search">
+                <h1 class="heading">Search Results</h1>
+                <div class="box-container">
+                </div>
+            </section>
+        </div>
         <div id="about"></div>
         <div id="contact"></div>
         <div id="content"></div>

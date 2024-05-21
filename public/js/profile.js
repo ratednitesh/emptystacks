@@ -37,17 +37,24 @@ export function initProfile() {
                 crossIcon.classList.toggle('inactive');
             })
             checkIcon.addEventListener("click", () => {
-                //TODO: add validations for fields change
-                myProfile[dataField] = dataFieldElement.innerHTML;
-                updateUserData("uid", myProfile).then(() => {
-                    notification(202, dataField);
-                })
-                    .catch(() => { notification(502); });
-                dataFieldElement.contentEditable = false;
-                dataFieldElement.classList.remove("editable");
-                editIcon.classList.toggle('inactive');
-                checkIcon.classList.toggle('inactive');
-                crossIcon.classList.toggle('inactive');
+                //TODO: add validations for fields change old value = new value
+                var newValue = dataFieldElement.innerHTML;
+                //Validations
+                if(newValue.length> 30){
+                    notification(313, 30);
+                }else{
+                    myProfile[dataField] = newValue;
+                    updateUserData("uid", myProfile).then(() => {
+                        notification(202, dataField);
+                    })
+                        .catch(() => { notification(502); });
+                    dataFieldElement.contentEditable = false;
+                    dataFieldElement.classList.remove("editable");
+                    editIcon.classList.toggle('inactive');
+                    checkIcon.classList.toggle('inactive');
+                    crossIcon.classList.toggle('inactive');
+                }
+                
             });
             crossIcon.addEventListener("click", () => {
                 dataFieldElement.innerHTML = myProfile[dataField];

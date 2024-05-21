@@ -89,6 +89,9 @@
 .text-section .chapter-details .chapter-footer i:hover {
     color: var(--main-color);
 }
+.red{
+    color: var(--main-color)
+}
 .text-section .chapter-details .completion{
     margin-top: 2rem;
     text-align: right;
