@@ -91,6 +91,7 @@ a {
     gap: 1.5rem;
     align-items: flex-start;
     justify-content: center;
+    min-height: 50rem;
 }
 
 .search .box-container .box {
