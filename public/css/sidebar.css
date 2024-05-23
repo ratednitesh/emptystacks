@@ -103,7 +103,15 @@
     animation-name: slide-in;
     animation-duration: .5s;
 }
+@keyframes slide-in {
+    from {
+        opacity: 0.4;
+    }
 
+    to {
+        opacity: 1;
+    }
+}
 .sidebar .menu-options.active span {
     color: var(--main-color);
 }

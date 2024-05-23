@@ -15,13 +15,6 @@
     transition: opacity 0.3s 0, visibility 0 0.3s;
 }
 
-.cd-forms-modal.is-visible {
-    visibility: visible;
-    opacity: 1;
-    -webkit-transition: opacity 0.3s 0, visibility 0 0;
-    -moz-transition: opacity 0.3s 0, visibility 0 0;
-    transition: opacity 0.3s 0, visibility 0 0;
-}
 
 .cd-forms-modal.is-visible .cd-forms-modal-container {
     -webkit-transform: translateY(0);

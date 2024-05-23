@@ -3,7 +3,7 @@ import { notification } from './helper';
 const selectedSection = document.querySelector('.streams-selected .streams');
 const otherSection = document.querySelector('.streams-others .streams');
 const noStreamMessage = document.querySelector('.noSelectedStreams');
-const boxContainer = document.querySelector('.stream-courses .box-container');
+const boxContainer = document.querySelector('.stream-courses .flex-container');
 const selectedStreams = new Set();  // Track selected streams
 
 var coursesByStreams = {};
@@ -17,6 +17,7 @@ export async function initStreams() {
                     const anchorTag = document.createElement('a');
                     anchorTag.classList.add('toggle-section');
                     anchorTag.id = stream.text;
+                    anchorTag.classList.add('transparent-btn')
                     const iconElement = document.createElement('i');
                     iconElement.classList.add(stream.icon);
                     const spanElement = document.createElement('span');
@@ -98,7 +99,7 @@ function getCoursesByStreams(streamId) {
                     const thumbnailImg = document.createElement('img');
                     thumbnailImg.src = course.thumbnail;
                     thumbnailImg.alt = 'Course Thumbnail';
-                    thumbnailImg.classList.add('thumb');
+                    thumbnailImg.classList.add('thumb-md');
 
                     // Create title
                     const title = document.createElement('p');

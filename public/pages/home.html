@@ -1,21 +1,21 @@
 <!-- highlight section starts  -->
 <section class="highlight-section disabled">
     <h1 class="heading">Highlights</h1>
-    <div class="box-container">
-        <!-- <div class="image-loader animated-background"></div> -->
-        <div class="slide-section">
-            <a href="/course/problemSolvingLeetCode" aria-label="Read this course 1"><img id="slide-img-1"
-                    src="/images/banners/1.jpg" onclick="route()" class="banner-slide disabled" alt=""></a>
-            <a href="/course/dsa-beginner" aria-label="Read this course 2"><img id="slide-img-2"
-                    src="/images/banners/2.jpg" onclick="route()" class="banner-slide disabled" alt=""></a>
-            <a href="/course/systemDesign" aria-label="Read this course 3"><img id="slide-img-3"
-                    src="/images/banners/3.jpg" onclick="route()" class="banner-slide disabled" alt=""></a>
-            <div class="slider">
-                <i id="slide-1" class="es-circle-empty circle"></i>
-                <i id="slide-2" class="es-circle-empty circle"></i>
-                <i id="slide-3" class="es-circle-empty circle"></i>
-            </div>
-
+    <!-- <div class="image-loader animated-background"></div> -->
+    <div class="banner-slide">
+        <a href="/course/problemSolvingLeetCode" aria-label="Read this course 1">
+            <img id="slide-img-1" src="/images/banners/1.jpg" onclick="route()" class="disabled" alt="">
+        </a>
+        <a href="/course/dsa-beginner" aria-label="Read this course 2">
+            <img id="slide-img-2" src="/images/banners/2.jpg" onclick="route()" class="disabled" alt="">
+        </a>
+        <a href="/course/systemDesign" aria-label="Read this course 3">
+            <img id="slide-img-3" src="/images/banners/3.jpg" onclick="route()" class="disabled" alt="">
+        </a>
+        <div class="slider txt-center">
+            <i id="slide-1" class="es-circle-empty circle"></i>
+            <i id="slide-2" class="es-circle-empty circle"></i>
+            <i id="slide-3" class="es-circle-empty circle"></i>
         </div>
     </div>
 </section>
@@ -25,9 +25,9 @@
     <h1 class="heading">
         Quick Options
     </h1>
-    <div class="box-container">
-        <div class="box signup only-public">
-            <img src="/images/profile/guest-user.svg" alt="">
+    <div class="flex-container">
+        <div class="box signup only-public txt-center">
+            <img class="user-logo user-logo-lg" src="/images/profile/guest-user.svg" alt="">
             <h2 class="title">Hello Guest!</h2>
             <p>Explore exclusive Courses and lot more</p>
             <button class="inline-btn" id="start-journey-home">Start Your Journey</button>
@@ -35,17 +35,15 @@
         <div class="box private">
             <h2 class="title">Enrolled Courses</h2>
             <div class="book">
-                <div class="enrolled-courses-home">
-
+                <div id="enrolled-courses-home">
                 </div>
-                <div class="slideshow">
-                    <button class="prev">&#10094;</button>
-                    <button class="next">&#10095;</button>
+                <div class="slideshow txt-center disabled">
+                    <button class="no-border-btn"  id="prev">&#10094;</button>
+                    <button class="no-border-btn" id="next">&#10095;</button>
                 </div>
-                <div class="no-enroll disabled">
-                    <!-- TODO: UX Improve -->
-                    <p>No Courses Enrolled</p>
-                </div>
+            </div>
+            <div class="no-enroll disabled">
+                <p>No Courses Enrolled</p>
             </div>
         </div>
         <div class="box">
@@ -54,16 +52,17 @@
             </div>
             <a href="/streams" onclick="route()" class="inline-btn">View More</a>
         </div>
-        <div class="box tutor student-mode">
-            <img src="/images/illustrations/tutor.svg" alt="">
+        <div class="box txt-center student-mode">
+            <img class="illustration-sm" src="/images/illustrations/tutor.svg" alt="">
             <h2 class="title">Become a Tutor</h2>
             <p>Empower minds, share knowledge, and inspire future generations through tailored guidance and support!</p>
-            <a class="home-reg-tutor inline-btn">get started</a>
+            <a class="home-reg-tutor inline-btn">Get Started</a>
         </div>
-        <div class="box tutor tutor-mode disabled">
-            <img src="/images/illustrations/tutor.svg" alt="">
+        <div class="box txt-center tutor-mode disabled">
+            <img class="illustration-sm" src="/images/illustrations/tutor.svg" alt="">
             <h2 class="title">Welcome Back!</h2>
-            <p>Your passion for teaching lights up young minds. Dive back in and continue shaping the future with your unique touch.</p>
+            <p>Your passion for teaching lights up young minds. Dive back in and continue shaping the future with your
+                unique touch.</p>
             <a class="home-continue-tutor inline-btn">Empower Minds</a>
         </div>
     </div>
@@ -73,7 +72,7 @@
 <!-- courses section starts  -->
 <section class="courses">
     <h1 class="heading">Our Courses</h1>
-    <div class="box-container">
+    <div class="flex-container">
     </div>
     <!-- <div class="more-btn">
         <button id="view-more-courses" class="inline-btn">View More</button>

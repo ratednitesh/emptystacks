@@ -6,9 +6,9 @@ const textCourse = document.querySelector('.text-course');
 const courseStreams = textCourse.querySelector('.streams');
 const expandButton = document.getElementById("expand-button");
 const saveCourse = document.getElementById("save-course");
-const courseDetails = document.querySelector(".course-details .container .accordion");
-const videoDetails = document.querySelector(".video-container .box-container");
-const boxContainer = document.querySelector('.reviews .box-container');
+const courseDetails = document.querySelector(".course-details .flex-container .accordion");
+const videoDetails = document.querySelector(".video-container .flex-container");
+const boxContainer = document.querySelector('.reviews .flex-container');
 const allBars = document.querySelectorAll('.signal-bars .bar');
 const startButton = document.getElementById('content-link');
 const progressContainer = document.getElementById('course-progress-container');
@@ -119,6 +119,7 @@ function getCourseData(courseId) {
                     const anchorTag = document.createElement('a');
                     anchorTag.href = '/streams/' + stream.text;
                     anchorTag.setAttribute("onclick", "route()");
+                    anchorTag.classList.add('transparent-btn');
 
                     // Create the icon element
                     const iconElement = document.createElement('i');
@@ -204,7 +205,7 @@ function getCourseData(courseId) {
                                         const topicLink = document.createElement("a");
                                         topicLink.href = value.href;
                                         topicLink.setAttribute("onclick", "route()");
-                                        topicLink.innerHTML = `<i id="${courseId}-${value.id}"class="es-circle-empty"></i>${topic}`;
+                                        topicLink.innerHTML = `<i id="${courseId}-${value.id}"class="bullet es-circle-empty"></i>${topic}`;
 
                                         courseList.appendChild(topicLink);
                                         accordionContent.appendChild(courseList);
@@ -231,7 +232,7 @@ function getCourseData(courseId) {
                                 videoHtml.href = cvd.href;
                                 videoHtml.setAttribute("onclick", "route()");
                                 videoHtml.classList.add("box");
-                                videoHtml.innerHTML = `<i class="es-play-lg"></i><img src="${cvd.thumbnail}"alt=""><h2><i id="${courseId}-${cvd.id}" class="es-circle-empty"></i> ${title}</h2>`;
+                                videoHtml.innerHTML = `<i class="es-play-lg"></i><img class="thumb-md" src="${cvd.thumbnail}"alt=""><h2 class="title"><i id="${courseId}-${cvd.id}" class="es-circle-empty"></i> ${title}</h2>`;
                                 videoDetails.appendChild(videoHtml);
                             };
                         }
@@ -279,17 +280,20 @@ function getCourseReviews(courseId) {
                     reviewBox.classList.add('box');
                     const reviewParagraph = document.createElement('p');
                     reviewParagraph.textContent = r.review;
+                    reviewParagraph.classList.add('para');
                     const userDiv = document.createElement('div');
-                    userDiv.classList.add('user');
+                    userDiv.classList.add('flex-item');
                     const profileLink = document.createElement('a');
                     profileLink.href = `/profile/${userInfo.uid}`;
                     profileLink.setAttribute("onclick", "route()");
                     const userImage = document.createElement('img');
                     userImage.src = userInfo.userProfileSrc;
                     userImage.alt = userInfo.name;
+                    userImage.classList.add('user-logo-sm');
                     const userContentDiv = document.createElement('div');
                     const userName = document.createElement('h2');
                     userName.textContent = userInfo.name;
+                    userName.classList.add("title");
                     const starsContent = document.createElement('div');
                     starsContent.innerHTML = generateStarRating(r.rating);
 

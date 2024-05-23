@@ -1,0 +1,99 @@
+.banner-slide .slider i {
+    cursor: pointer;
+    padding: .5rem;
+    font-size: 1.5rem;
+    color: var(--light-color);
+}
+
+.banner-slide img {
+    animation-name: fade-in;
+    animation-duration: 3s;
+    width: 100%;
+    margin-bottom: 2rem;
+    border-radius: .5rem;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0.4;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.streams {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 2rem;
+}
+
+.streams-selected .box p {
+    line-height: 1.5;
+    color: var(--light-color);
+    font-size: 2rem;
+}
+
+
+
+
+.text-course .row {
+    gap: 2rem;
+    padding: 2rem;
+}
+
+
+.course-attributes {
+    font-size: 1.7rem;
+    padding-top: .5rem;
+
+}
+
+.course-attributes i {
+    color: var(--main-color);
+    margin-right: 1.5rem;
+}
+
+#course-level {
+    margin-left: 2rem;
+}
+
+.course-attributes span {
+    color: var(--light-color);
+}
+
+
+
+.text-course .row .col .details .signal-bars {
+    display: inline;
+    margin-left: 0.5rem;
+
+}
+
+.text-course .row .col .details .signal-bars .bar {
+    width: 0;
+    display: inline-flex;
+    margin-right: 0;
+    background-color: #fff;
+}
+
+.signal-bars>.bar {
+    border: var(--border);
+}
+
+.bar:nth-of-type(1) {
+    margin-right: -0.2em;
+    height: .7rem;
+}
+
+.bar:nth-of-type(2) {
+    margin-right: -0.2em;
+    height: 1.2rem;
+}
+
+.bar:nth-of-type(3) {
+    height: 1.7rem;
+    margin-right: .7rem;
+}

@@ -72,7 +72,7 @@ function initSearchCourses() {
     getTopCourses().then(
         (coursesData) => {
             // Select the box-container element
-            const boxContainer = document.querySelector('.search .box-container');
+            const boxContainer = document.querySelector('.search .flex-container');
             let i = 0;
             // Iterate over coursesData and create HTML elements
             coursesData.forEach(course => {
@@ -84,7 +84,7 @@ function initSearchCourses() {
                 const thumbnailImg = document.createElement('img');
                 thumbnailImg.src = course.thumbnail;
                 thumbnailImg.alt = 'Course Thumbnail';
-                thumbnailImg.classList.add('thumb');
+                thumbnailImg.classList.add('thumb-md');
 
                 // Create title
                 const title = document.createElement('p');

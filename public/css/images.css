@@ -1,0 +1,60 @@
+.user-logo {
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: .5rem;
+}
+
+.user-logo-lg {
+    height: 10rem;
+    width: 10rem;
+
+}
+.user-logo-md {
+    height: 7rem;
+    width: 7rem;
+}
+
+.user-logo-sm {
+    height: 4.5rem;
+    width: 4.5rem;
+    margin-left: .5rem;
+    cursor: pointer;
+}
+
+.illustration-sm {
+    width: 20rem;
+    height: 20rem;
+}
+
+.illustration-lg{
+    height: 50rem;
+    width: 100%;
+}
+
+.thumb-md{
+        width: 100%;
+        border-radius: .5rem;
+        height: 20rem;
+        object-fit: cover;
+}
+
+.thumb-lg{
+    width: 100%;
+    border-radius: .5rem;
+    height: 36rem;
+    object-fit: cover;
+}
+.text-course .row .col .thumb {
+    position: relative;
+    height: 30rem;
+}
+.thumb span {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border-radius: .5rem;
+    padding: .5rem 1.5rem;
+    font-size: 2rem;
+    color: #fff;
+    background-color: rgba(0, 0, 0, .3);
+}

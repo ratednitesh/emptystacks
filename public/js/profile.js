@@ -181,7 +181,7 @@ function createCoursesSection(courses, rootElement, type) {
         // Create an img element for the thumbnail
         const img = document.createElement('img');
         img.src = course.thumbnail;
-        img.classList.add('thumb');
+        img.classList.add('thumb-md');
         img.alt = '';
 
         // Create an h2 element for the title

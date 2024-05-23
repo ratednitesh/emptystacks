@@ -40,21 +40,21 @@
                 <div class="icons">
                     <div id="menu-btn" class="header-icon  es-nav"></div>
                     <div id="user-btn">
-                        <div id="guest-photo-header" class="header-icon es-user "></div>
-                        <img id="user-photo-header" class="disabled" alt="">
+                        <div id="guest-photo-header" class="header-icon es-user disabled"></div>
+                        <img class="user-logo user-logo-sm disabled" id="user-photo-header" alt="">
                     </div>
                 </div>
                 <div class="menus-modal">
                     <div class="menus">
                         <div class="profile only-public">
-                            <img id="guest-menu-photo" alt="">
+                            <img class="user-logo-lg" id="guest-menu-photo" alt="">
                             <h2>Hello Guest!</h2>
                             <span>Explore exclusive Courses and lot more</span>
                             <button class="btn" id="start-journey">Start Your Journey</button>
                         </div>
                         <div class="profile private">
                             <a id="header-profile-link" onclick="route()">
-                                <img id="user-menu-photo" alt="">
+                                <img  class="user-logo user-logo-lg" id="user-menu-photo" alt="">
                                 <h2 id="user-menu-name"></h2>
                                 <span id="user-menu-mail"></span>
                             </a>
@@ -88,7 +88,7 @@
             <div class="side-bar">
                 <div class="profile">
                     <a id="sb-profile-link" onclick="route()">
-                        <img id="user-photo-sb" alt="">
+                        <img class="ser-logo user-logo-lg" id="user-photo-sb" alt="">
                         <h2 id="user-name-sb"></h2>
                         <span id="user-role-sb"></span>
                     </a>
@@ -305,7 +305,7 @@
         <div id="search" class="disabled">
             <section class="search">
                 <h1 class="heading">Search Results</h1>
-                <div class="box-container">
+                <div class="flex-container">
                 </div>
             </section>
         </div>

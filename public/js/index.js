@@ -1,27 +1,34 @@
 import { initFirebase } from "./firebase-config";
 import { initStaticContent } from "./setup";
 import { initRouter } from "./router";
-import "../css/main.css";
-import "../css/style.css";
-import "../css/loader.css";
-import "../css/buttons.css";
-import "../css/profile.css";
+
+// Importing CSS Files 
+import "../css/index.css"; // Root CSS File
+import "../css/es.css"; // Importing icons
+import "../css/loader.css"; // Imprting Loader Screen
+import "../css/buttons.css"; // Importing Buttons 
+
+import "../css/images.css"
+import "../css/divs.css";
+import "../css/helper.css";
+import "../css/others.css";
+
 import "../css/header.css";
 import "../css/sidebar.css";
 import "../css/modals.css";
-import "../css/about.css";
-import "../css/comment.css";
-import "../css/contact.css";
-import "../css/courses.css";
-import "../css/form.css";
-import "../css/home.css";
-import "../css/reviews.css";
 import "../css/textcourse.css";
-import "../css/textsection.css";
-import "../css/watchvideo.css";
-import "../css/footer.css";
-import "../css/es.css";
-import "../css/streams.css";
+
+
+// import "../css/style.css";
+// import "../css/profile.css";
+// import "../css/comment.css";
+// import "../css/form.css";
+// import "../css/reviews.css";
+// import "../css/textsection.css";
+// import "../css/watchvideo.css";
+
+
+
 
 window.addEventListener('DOMContentLoaded', function () {
   initFirebase().then(() => {

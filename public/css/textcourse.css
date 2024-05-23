@@ -1,181 +1,15 @@
-/* text-course starts  */
-.text-course .row {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-    padding: 2rem;
-    background-color: var(--white);
+.course-details .accordion-header .expand {
+    float: right;
 }
 
-.text-course .row .col {
-    flex: 1 1 40rem;
-}
-
-.text-course .row .col .save-list button {
-    font-size: 2rem;
-    border-radius: .5rem;
-    background-color: var(--light-bg);
-    padding: 1.2rem 2.5rem;
-    cursor: pointer;
-    margin-bottom: 2rem;
-}
-
-.text-course .row .col .save-list button i {
-    color: var(--black);
-    margin-right: 1rem;
-}
-
-.text-course .row .col .save-list button span {
-    color: var(--light-color);
-}
-
-.text-course .row .col .save-list button:hover {
-    background-color: var(--black);
-}
-
-.text-course .row .col .save-list button:hover i {
-    color: var(--white);
-}
-
-.text-course .row .col .save-list button:hover span {
-    color: var(--white);
-}
-
-.text-course .row .col .thumb {
-    position: relative;
-    height: 30rem;
-}
-
-.text-course .row .col .thumb img {
-    width: 100%;
-    height: 100%;
-    border-radius: .5rem;
-    object-fit: cover;
-}
-
-.text-course .row .col .thumb span {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    border-radius: .5rem;
-    padding: .5rem 1.5rem;
-    font-size: 2rem;
-    color: #fff;
-    background-color: rgba(0, 0, 0, .3);
-}
-
-.text-course .row .col .tutor {
-    display: flex;
-    align-items: center;
-    gap: 1.7rem;
-}
-
-.text-course .row .col .tutor img {
-    height: 7rem;
-    width: 7rem;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-
-.text-course .row .col .tutor h2 {
-    font-size: 2rem;
-    color: var(--black);
-    margin-bottom: .2rem;
-}
-
-.text-course .row .col .tutor span {
-    color: var(--light-color);
-    font-size: 1.5rem;
-}
-
-.text-course .row .col .details {
-    padding-top: 1.5rem;
-
-}
-
-.text-course .row .col .details h2 {
-    font-size: 2rem;
-    color: var(--black);
-}
-
-.text-course .row .col .details p {
-    padding: 1rem 0;
-    line-height: 2;
-    color: var(--light-color);
-    font-size: 1.7rem;
-}
-
-.text-course .row .col .details .course-attributes {
-    font-size: 1.7rem;
-    padding-top: .5rem;
-
-}
-
-.text-course .row .col .details .course-attributes i {
-    color: var(--main-color);
-    margin-right: 1.5rem;
-}
-
-.text-course .row .col .details .signal-bars {
-    display: inline;
-    margin-left: 0.5rem;
-
-}
-
-.text-course .row .col .details .signal-bars .bar {
-    width: 0;
-    display: inline-flex;
-    margin-right: 0;
-    background-color: #fff;
-}
-
-.signal-bars>.bar {
-    border: var(--border);
-}
-
-.bar:nth-of-type(1) {
-    margin-right: -0.2em;
-    height: .7rem;
-}
-
-.bar:nth-of-type(2) {
-    margin-right: -0.2em;
-    height: 1.2rem;
-}
-
-.bar:nth-of-type(3) {
-    height: 1.7rem;
-    margin-right: .7rem;
-}
-
-#course-level {
-    margin-left: 2rem;
-}
-
-.text-course .row .col .details .course-attributes span {
-    color: var(--light-color);
-}
-
-.course-details .container {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-    padding: 2rem;
-    background-color: var(--white);
-}
-
-.course-details .container .accordion {
+.course-details .flex-container .accordion {
     flex-direction: column;
     width: 100%;
+    color: var(--black);
 }
 
-.course-details .container .accordion-item {
-    border: .5rem solid --border;
-    border-radius: 1rem;
-    color: var(--black);
+.course-details .accordion-item:hover,a:hover  {
+    color: var(--light-color);
 }
 
 .course-details .accordion-header {
@@ -185,128 +19,18 @@
     border-bottom: var(--border);
 }
 
-.course-details .accordion-header a {
-    text-decoration: none;
-    color: var(--black);
-}
-
-.course-details .accordion-header a:hover {
-    color: var(--light-color);
-}
-
-.course-details .accordion-header .bullet {
-    margin-right: 2rem;
-}
-
-.course-details .accordion-header .expand {
-    float: right;
-
-}
-
 .course-details .accordion-content {
     display: none;
     padding: 1rem;
-
 }
-
-.course-details .accordion-item:hover {
-    color: var(--light-color);
-}
-
-
 
 .course-details .accordion-item.active .accordion-content {
     display: block;
 }
 
-.course-details .container .button-container {
-    width: 100%;
-}
-
-.course-details .button-container-button {
-    font-size: 1.5rem;
-    border-radius: .5rem;
-    background-color: var(--light-bg);
-    padding: 1rem 2rem;
-    cursor: pointer;
-    /* margin-left: 1.5rem; */
-    margin-bottom: .5rem;
-    float: right;
-    color: var(--black);
-
-}
-
-.course-details .container .course-list {
+.course-details .flex-container .course-list {
     list-style: none;
     margin-left: 5rem;
     margin-bottom: 2rem;
-}
-
-.course-details .container .course-list a {
     font-size: 1.7rem;
-    text-decoration: none;
-    color: var(--black);
 }
-
-.course-details .container .course-list a:hover {
-    color: var(--main-color);
-}
-
-.course-details .container .course-list a i {
-    margin-right: 2rem;
-}
-
-.video-container .box-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
-    gap: 1.5rem;
-    align-items: flex-start;
-    justify-content: center;
-}
-
-.video-container .box-container .box {
-    position: relative;
-    border-radius: .5rem;
-    padding: 2rem;
-    background-color: var(--white);
-}
-
-.video-container .box-container .box img {
-    height: 20rem;
-    width: 100%;
-    border-radius: .5rem;
-    object-fit: cover;
-}
-
-.video-container .box-container .box i.es-play-lg {
-    position: absolute;
-    top: 2rem;
-    left: 2rem;
-    right: 2rem;
-    height: 20rem;
-    background-color: rgba(0, 0, 0, 0.3);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    color: #fff;
-    border-radius: .5rem;
-}
-
-.video-container .box-container .box:hover i.es-play-lg {
-    display: flex;
-}
-
-.video-container .box-container .box h2 {
-    font-size: 2rem;
-    color: var(--black);
-    margin-top: 1rem;
-}
-
-.video-container .box-container .box:hover h2 {
-    color: var(--main-color);
-}
-* {
-    box-sizing: border-box;
-  }
-  

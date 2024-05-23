@@ -2,14 +2,15 @@
 import { getUid, isUserLoggedIn } from "./firebase-config";
 import { signup_selected, getUserPrivateData } from "./setup";
 import { getTopCourses, notification } from './helper';
-
-const bookContainer = document.querySelector('.box.private .book .enrolled-courses-home');
-const homeOptionPrivate = document.querySelectorAll('.quick-select .box-container .private');
-const homeOptionOnlyPublic = document.querySelectorAll('.quick-select .box-container .only-public');
+const highlightSection = document.querySelector('.highlight-section');
+const quickSelect = document.querySelector('.quick-select');
+const bookContainer = document.querySelector('#enrolled-courses-home');
+const homeOptionPrivate = quickSelect.querySelectorAll('.flex-container .private');
+const homeOptionOnlyPublic = quickSelect.querySelectorAll('.flex-container .only-public');
 const slideshow = document.querySelector(".slideshow");
 const noEnroll = document.querySelector(".no-enroll");
-const nextBtn = document.querySelector(".next");
-const prevBtn = document.querySelector(".prev");
+const nextBtn = document.querySelector("#next");
+const prevBtn = document.querySelector("#prev");
 const studentDiv = document.querySelector('.box.student-mode');
 const tutorDiv = document.querySelector('.box.tutor-mode');
 const regTutorSideBar = document.getElementById('register-tutor');
@@ -35,7 +36,7 @@ function initPopularCourses() {
     getTopCourses().then(
         (coursesData) => {
             // Select the box-container element
-            const boxContainer = document.querySelector('.courses .box-container');
+            const boxContainer = document.querySelector('.courses .flex-container');
 
             // Iterate over coursesData and create HTML elements
             coursesData.forEach(course => {
@@ -47,7 +48,7 @@ function initPopularCourses() {
                 const thumbnailImg = document.createElement('img');
                 thumbnailImg.src = course.thumbnail;
                 thumbnailImg.alt = 'Course Thumbnail';
-                thumbnailImg.classList.add('thumb');
+                thumbnailImg.classList.add('thumb-md');
 
                 // Create title
                 const title = document.createElement('p');
@@ -112,6 +113,7 @@ function initStreams() {
                 const anchorTag = document.createElement('a');
                 anchorTag.href = '/streams/' + stream.text;
                 anchorTag.setAttribute("onclick", "route()");
+                anchorTag.classList.add('transparent-btn')
 
                 // Create the icon element
                 const iconElement = document.createElement('i');
@@ -153,11 +155,11 @@ function initQuickCourses() {
 //  Load Home / Courses
 export function loadHome(args) {
     if (args == 'only-course') {
-        document.querySelector('.quick-select').classList.add('disabled');
-        document.querySelector('.highlight-section').classList.add('disabled');
+        quickSelect.classList.add('disabled');
+        highlightSection.classList.add('disabled');
     } else {
-        document.querySelector('.quick-select').classList.remove('disabled');
-        document.querySelector('.highlight-section').classList.remove('disabled');
+        quickSelect.classList.remove('disabled');
+        highlightSection.classList.remove('disabled');
         if (!isBannerLoaded) {
             loadBanner();
             isBannerLoaded = true;
@@ -206,7 +208,7 @@ function updateEnrolledCourses() {
                         // Create image tag
                         const imageTag = document.createElement('img');
                         imageTag.src = course.thumbnail;
-                        imageTag.classList.add('thumb');
+                        imageTag.classList.add('thumb-md');
                         imageTag.alt = "Course Name";
 
                         // Create paragraph tag for course title
@@ -246,13 +248,7 @@ function updateEnrolledCourses() {
                         slideshow.classList.add('disabled');
                         noEnroll.classList.remove('disabled');
                     }
-                    if (data.role == "Stack Builder") {
-                        studentDiv.classList.add('disabled');
-                        tutorDiv.classList.remove('disabled');
-                        regTutorSideBar.classList.add('disabled');
-                    } else {
-                        disabledTutorMode();
-                    }
+                    disabledTutorMode(data.role == "Stack Builder");
                 }
             ).catch((e) => {
                 console.log(e);
@@ -262,14 +258,21 @@ function updateEnrolledCourses() {
         bookContainer.innerHTML = "";
         enrolledCourses = [];
         enrolledCourseIndex = -1;
-        disabledTutorMode();
+        disabledTutorMode(false);
     }
 }
 
-function disabledTutorMode() {
-    studentDiv.classList.remove('disabled');
-    tutorDiv.classList.add('disabled');
-    regTutorSideBar.classList.remove('disabled');
+function disabledTutorMode( isTutor ) {
+    if(isTutor){
+        studentDiv.classList.add('disabled');
+        tutorDiv.classList.remove('disabled');
+        regTutorSideBar.classList.add('disabled');
+    }else{
+        studentDiv.classList.remove('disabled');
+        tutorDiv.classList.add('disabled');
+        regTutorSideBar.classList.remove('disabled');
+    }
+   
 }
 // Show hide selected enrolled course
 function showSelectedEnrolledCourse(oldIndex, newIndex) {
@@ -287,7 +290,7 @@ function showSelectedEnrolledCourse(oldIndex, newIndex) {
 }
 // Show hide banner slide based on selected index.
 function showSlide(index) {
-    let slides = document.querySelectorAll('.banner-slide');
+    let slides = document.querySelectorAll('.banner-slide img');
     let dots = document.querySelectorAll(".slider .circle");
     if (index > slides.length)
         index = 1;

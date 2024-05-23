@@ -1,7 +1,7 @@
 <!-- text-course section starts  -->
 <section class="text-course">
     <h1 class="heading">Course Overview</h1>
-    <div class="row">
+    <div class="row white-bg">
         <div class="col">
             <div id="save-course" method="post" class="save-list disabled">
                 <button type="submit" name="save_list">
@@ -9,28 +9,27 @@
             </div>
             <div class="thumb">
                 <span class="chapters"></span>
-                <img id="thumbnail" alt="">
+                <img class="thumb-lg" id="thumbnail" alt="">
                 <div id="course-progress-container" class="progress-bar-container disabled">
                     <div class="progress-bar"></div>
                 </div>
             </div>
         </div>
         <div class="col">
-            <div class="tutor">
-                <a id="tutor-link" onclick="route()" href="">
-                    <img id="tutor-img" alt="">
-                </a>
-                <div>
-                    <h2 id="tutor-name"></h2>
-                    <span id="tutor-role"></span>
-                </div>
-
-            </div>
             <div class="details">
-                <h2 id="courseName"></h2>
+                <h2 class="heading" id="courseName"></h2>
+                <div class="tutor flex-item">
+                    <a id="tutor-link" onclick="route()" href="">
+                        <img class="user-logo-md" id="tutor-img" alt="">
+                    </a>
+                    <div>
+                        <h2 class="title" id="tutor-name"></h2>
+                        <span id="tutor-role"></span>
+                    </div>
+                </div>
                 <div class="streams">
                 </div>
-                <p id="description"></p>
+                <p class="para" id="description"></p>
                 <div class="course-attributes"><i class="es-calendar"></i><span id="publishDate"></span></div>
                 <div class="course-attributes"><i class="es-doc-text"></i><span class="chapters"></span></div>
                 <div class="course-attributes">
@@ -48,7 +47,7 @@
 </section>
 <section class="course-details disabled">
     <h1 class="heading">Course Details</h1>
-    <div class="container">
+    <div class="flex-container white-bg">
         <div class="button-container">
             <button id="expand-button" class="button-container-button">Minimize All</button>
         </div>
@@ -58,14 +57,14 @@
 </section>
 <section class="video-container disabled">
     <h1 class="heading">Playlist Videos</h1>
-    <div class="box-container">
+    <div class="flex-container">
     </div>
 </section>
 <!-- text-course section ends  -->
 <!-- reviews section starts  -->
 <section class="reviews">
     <h1 class="heading">Course Reviews</h1>
-    <div class="box-container">
+    <div class="flex-container">
     </div>
 </section>
 <!-- review section ends  -->

@@ -119,12 +119,6 @@
 }
 
 
-.profile .details .box-container .box .thumb {
-    width: 100%;
-    border-radius: .5rem;
-    height: 20rem;
-    object-fit: cover;
-}
 
 .profile .details .box-container .box .title {
     font-size: 2rem;
@@ -143,7 +137,6 @@
     margin-top: 5rem;
     border-top: var(--border);
     text-align: end;
-
 }
 
 .profile-pic {
