@@ -35,7 +35,6 @@ function initBanner() {
 function initPopularCourses() {
     getTopCourses().then(
         (coursesData) => {
-            // Select the box-container element
             const boxContainer = document.querySelector('.courses .flex-container');
 
             // Iterate over coursesData and create HTML elements
@@ -67,19 +66,9 @@ function initPopularCourses() {
                 box.appendChild(title);
                 box.appendChild(link);
 
-                // Append box to the box-container
                 boxContainer.appendChild(box);
 
             });
-            // const viewMoreCourses = document.querySelector("#view-more-courses");
-            // viewMoreCourses.addEventListener(
-            //     'click', () => {
-            //         // TODO: Enhance this
-            //         viewMoreCourses.classList.add('disabled');
-            //         document.querySelector("#that-all").classList.remove('disabled');
-            //     }
-            // );
-
         }
     ).catch((e) => {
         notification(501, 'popular courses');
@@ -182,7 +171,7 @@ function unloadBanner() {
 }
 
 // On auth state change, call this function to update show/ hide section
-export function updateQuickSelectOptions() {
+function updateQuickSelectOptions() {
     homeOptionPrivate.forEach((node) => { if (!isUserLoggedIn()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
     homeOptionOnlyPublic.forEach((node) => { if (isUserLoggedIn()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
     updateEnrolledCourses();
@@ -244,7 +233,6 @@ function updateEnrolledCourses() {
                         noEnroll.classList.add('disabled');
                     }
                     else {
-                        console.log("TODO: Add a logic to display a message that no courses are enrolled. Hide prev/ next button");
                         slideshow.classList.add('disabled');
                         noEnroll.classList.remove('disabled');
                     }
@@ -262,17 +250,17 @@ function updateEnrolledCourses() {
     }
 }
 
-function disabledTutorMode( isTutor ) {
-    if(isTutor){
+function disabledTutorMode(isTutor) {
+    if (isTutor) {
         studentDiv.classList.add('disabled');
         tutorDiv.classList.remove('disabled');
         regTutorSideBar.classList.add('disabled');
-    }else{
+    } else {
         studentDiv.classList.remove('disabled');
         tutorDiv.classList.add('disabled');
         regTutorSideBar.classList.remove('disabled');
     }
-   
+
 }
 // Show hide selected enrolled course
 function showSelectedEnrolledCourse(oldIndex, newIndex) {
@@ -300,13 +288,12 @@ function showSlide(index) {
     slides.forEach((node, i) => { if (index - 1 == i) node.classList.remove('disabled'); else node.classList.add('disabled'); })
 }
 
-// TODO: Potentially need to remove following function */
 async function importMockApi() {
     try {
         const { mockgetTopStreamsAPICall } = await import('/public/test/mock-api.js');
         return {
             mockgetTopStreamsAPICall,
-            
+
 
         };
     } catch (error) {

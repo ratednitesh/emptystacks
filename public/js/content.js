@@ -82,7 +82,7 @@ export function initContent() {
         markParentMenuComplete();
         completionMarker.classList.add('disabled');
         checkCourseCompletion();
-        // TODO: if all green mark the course as completed in Db. show ui for displaying course completion or get use review?
+        // TODO: if all green mark the course as completed in Db. 
     });
     courseCompletionModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
         // Prevent the default form submission
@@ -235,7 +235,7 @@ export function loadContent(chapterId) {
         publish('notFoundRoute');
 }
 
-export function hideComments() {
+function hideComments() {
     commentHtml.classList.add('disabled');
     showComments.classList.remove('disabled');
     if (isUserLoggedIn()) {

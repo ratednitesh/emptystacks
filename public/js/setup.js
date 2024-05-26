@@ -1,7 +1,6 @@
 import { getUid, getUserToken } from "./firebase-config";
-import { getTopCourses, notification, publish } from "./helper";
+import { getTopCourses, notification } from "./helper";
 import { createNewUser, emailPasswordSignIn, firebaseSignOut, googleSignIn, isUserLoggedIn, tryPasswordResetEmail } from "./firebase-config";
-import { reloadProfilePage } from "./router";
 
 // Header Button
 const toggleBtn = document.querySelector('#toggle-btn');
@@ -71,7 +70,6 @@ function initSearchBar() {
 function initSearchCourses() {
     getTopCourses().then(
         (coursesData) => {
-            // Select the box-container element
             const boxContainer = document.querySelector('.search .flex-container');
             let i = 0;
             // Iterate over coursesData and create HTML elements
@@ -107,7 +105,6 @@ function initSearchCourses() {
 
                 box.id = "search-" + i++;
 
-                // Append box to the box-container
                 boxContainer.appendChild(box);
             });
         }
@@ -459,7 +456,6 @@ function signOut() {
     firebaseSignOut().then(() => {
         if (!isUserLoggedIn()) {
             location.reload();
-            // updateAuthDependentSections(); TODO: get rid of these calls.
             notification(204);
         } else {
             notification(504);
@@ -473,7 +469,6 @@ function signIn(provider, userToken) {
                 registerUserAPI(getUid(), getUserToken()).then(() => {
                     console.log("User Logged In");
                     loginSuccess();
-                    // updateAuthDependentSections();
                     notification(201);
                     location.reload();
                 }).catch(() => { notification(505); });
@@ -486,7 +481,6 @@ function signIn(provider, userToken) {
             if (isUserLoggedIn()) {
                 console.log("User Logged In");
                 loginSuccess();
-                // updateAuthDependentSections();
                 notification(201);
                 location.reload();
             }
@@ -500,10 +494,9 @@ function signUp(userToken) {
         if (isUserLoggedIn()) {
             registerUserAPI(getUid(), userToken).then(() => {
                 loginSuccess();
-                updateAuthDependentSections();
+                location.reload();
                 notification(200);
                 setTimeout(() => { notification(205, userToken.email) }, 5000);
-                console.log("User Logged In");
             }).catch(() => { notification(505); });
         }
     }).catch(() => {
@@ -518,15 +511,9 @@ function forgotPassword(email) {
     });
 }
 
-function updateAuthDependentSections() {
-    loadUserPrivateData();
-    publish('updateQuickSelectOptions');
-    publish('hideComments');
-    publish('disableSignOutUserOptionsForCourse')
-    reloadProfilePage();
-}
+
 // Update user info on auth status change on header and main sidebar.
-export function loadUserPrivateData() {
+function loadUserPrivateData() {
     if (isUserLoggedIn()) {
         let uid = getUid();
         getUserPrivateData(uid)

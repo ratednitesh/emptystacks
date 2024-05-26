@@ -17,11 +17,11 @@
     text-align: center;
     color: var(--black);
     font-size: 2rem;
-    margin-top:2rem;
+    margin-top: 2rem;
     z-index: 1000;
 }
 
-.footer span a{
+.footer span a {
     text-decoration: underline;
     color: var(--main-color);
     letter-spacing: .1rem;
@@ -54,7 +54,7 @@
     background-color: var(--white);
     padding: 2rem;
     gap: 2rem;
-   
+
 }
 
 .flex-container .box .book {
@@ -105,4 +105,110 @@
 .flex-item span {
     font-size: 1.6rem;
     color: var(--light-color);
+}
+
+.accordion {
+    width: 100%;
+    color: var(--black);
+}
+
+.accordion-item:hover,
+a:hover {
+    color: var(--light-color);
+}
+
+.accordion-header {
+    padding: 2rem;
+    cursor: pointer;
+    font-size: 1.7rem;
+    border-bottom: var(--border);
+}
+
+.accordion-content {
+    display: none;
+    padding: 1rem;
+}
+
+.accordion-item.active .accordion-content {
+    display: block;
+}
+
+.course-list {
+    list-style: none;
+    margin-left: 5rem;
+    margin-bottom: 2rem;
+    font-size: 1.7rem;
+}
+
+
+.error-container {
+    color: var(--black);
+    text-align: center;
+    font-size: 2.5rem;
+}
+
+.error {
+    color: var(--main-color);
+    padding: 1rem;
+    margin: 2rem 2rem;
+}
+
+.error h2 {
+    padding-top: 2rem;
+    font-size: 20rem;
+    line-height: 18rem;
+
+}
+
+.error p {
+    font-size: 2.5rem;
+    margin-bottom: 5rem;
+    letter-spacing: .8rem;
+}
+
+.error-text {
+    margin-bottom: 10rem;
+    color: var(--light-color);
+}
+
+
+.form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* min-height: calc(100vh - 15rem); */
+}
+
+.form-container form {
+    background-color: var(--white);
+    border-radius: .5rem;
+    padding: 2rem;
+    width: 50rem;
+}
+
+.form-container form h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--black);
+}
+
+.form-container form p {
+    padding-top: 1rem;
+    font-size: 1.7rem;
+    color: var(--light-color);
+}
+
+.form-container form p span {
+    color: var(--red);
+}
+
+.form-container form .box {
+    width: 100%;
+    border-radius: .5rem;
+    margin: 1rem 0;
+    font-size: 1.8rem;
+    color: var(--black);
+    padding: 1.4rem;
+    background-color: var(--light-bg);
 }

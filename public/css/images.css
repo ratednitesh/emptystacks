@@ -41,12 +41,12 @@
 .thumb-lg{
     width: 100%;
     border-radius: .5rem;
-    height: 36rem;
+    height: 100%;
     object-fit: cover;
 }
-.text-course .row .col .thumb {
+.thumb {
     position: relative;
-    height: 30rem;
+    height: 80%;
 }
 .thumb span {
     position: absolute;

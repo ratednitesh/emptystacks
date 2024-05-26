@@ -146,13 +146,7 @@ function findMatchingRoute(path) {
     });
     return routes[matchingRoute] || routes[404];
 }
-export function reloadProfilePage() {
-    // TODO: This can be generic solution to all auth state changes
-    const matchProfilepath = previousMainBodyPath.match(/^\/profile\/([\w/-]+)$/);
-    if (matchProfilepath) {
-        publish('loadProfile', matchProfilepath[1]);
-    }
-}
+
 export function copyPathToClipboard() {
     copyToClipboard("www.emptystacks.com" + previousMainBodyPath);
 }

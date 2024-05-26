@@ -118,7 +118,6 @@ function getCoursesByStreams(streamId) {
                     box.appendChild(title);
                     box.appendChild(link);
 
-                    // Append box to the box-container
                     boxContainer.appendChild(box);
                 }
             });

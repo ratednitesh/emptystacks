@@ -48,7 +48,7 @@
 .course-attributes {
     font-size: 1.7rem;
     padding-top: .5rem;
-
+    color: var(--light-color);
 }
 
 .course-attributes i {
@@ -60,40 +60,129 @@
     margin-left: 2rem;
 }
 
-.course-attributes span {
-    color: var(--light-color);
-}
-
-
-
-.text-course .row .col .details .signal-bars {
+.signal-bars {
     display: inline;
     margin-left: 0.5rem;
-
 }
 
-.text-course .row .col .details .signal-bars .bar {
+.signal-bars .bar {
     width: 0;
     display: inline-flex;
     margin-right: 0;
     background-color: #fff;
-}
-
-.signal-bars>.bar {
     border: var(--border);
 }
 
 .bar:nth-of-type(1) {
-    margin-right: -0.2em;
     height: .7rem;
 }
 
 .bar:nth-of-type(2) {
-    margin-right: -0.2em;
     height: 1.2rem;
 }
 
 .bar:nth-of-type(3) {
     height: 1.7rem;
-    margin-right: .7rem;
+}
+
+.user {
+    text-align: center;
+    padding: 1.3rem 0;
+}
+
+.user h2 {
+    display: inline-block;
+    padding: 0 1rem;
+    font-size: 2rem;
+    color: var(--black);
+}
+
+#username {
+    margin: .7rem 0;
+    padding: 0 1rem;
+}
+
+.user p {
+    font-size: 1.3rem;
+    color: var(--light-color);
+}
+
+.data-field.editable {
+    background-color: var(--light-bg);
+    color: var(--black);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+}
+
+.edit-field {
+    font-size: 1rem;
+    color: var(--light-color);
+    margin-left: .5rem;
+    cursor: pointer;
+    display: inline;
+}
+
+.edit-field.inactive {
+    display: none;
+}
+
+.account-settings {
+    padding-top: 2rem;
+    margin-top: 5rem;
+    border-top: var(--border);
+    text-align: end;
+}
+
+.profile-pic {
+    display: inline-block;
+}
+
+.upload-profile-photo {
+    position: relative;
+    left: 7rem;
+    z-index: 100;
+    top: 2rem;
+}
+
+.upload-profile-photo input {
+    display: none;
+}
+
+.upload-profile-photo span {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    border: var(--border);
+    background-color: var(--light-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s;
+    padding: 1.5rem;
+    color: var(--black);
+}
+
+.upload-profile-photo span i {
+    position: absolute;
+    font-size: 1.5rem;
+}
+
+.upload-profile-photo span:hover {
+    transform: scale(1.2);
+}
+
+.profile-fields {
+    padding: inherit;
+    color: var(--black);
+    font-size: 1.5rem;
+}
+
+.profile-fields .social-info {
+    padding: 1rem;
+}
+
+.profile-fields .social-info .field-icon {
+    padding-right: 2.5rem;
+    font-size: 2.2rem;
 }

@@ -77,7 +77,6 @@ export async function initAddOn(page) {
                 import('./home.js').then(module => {
                     console.log("import done for home");
                     module.initHome();
-                    subscribe('updateQuickSelectOptions', module.updateQuickSelectOptions);
                     subscribe('loadHome', module.loadHome);
                     subscribe('unloadHome', module.unloadHome);
                     resolve();
@@ -95,7 +94,6 @@ export async function initAddOn(page) {
                 import('./course.js').then(module => {
                     module.initCoursePage();
                     subscribe('loadCoursePage', module.loadCoursePage);
-                    subscribe('disableSignOutUserOptionsForCourse', module.disableSignOutUserOptionsForCourse);
                     resolve();
                 });
             else if (page == "content")
@@ -103,7 +101,6 @@ export async function initAddOn(page) {
                     console.log("loading content");
                     module.initContent();
                     subscribe('loadContent', module.loadContent);
-                    subscribe('hideComments', module.hideComments);
                     resolve();
                 });
             else if (page == "streams")
@@ -115,7 +112,6 @@ export async function initAddOn(page) {
                             resolve();
                         }
                     )
-
                 });
             else
                 resolve();
@@ -151,19 +147,11 @@ export async function getCourseContentDetailsAPICalls(courseId) {
             .catch(error => {
                 reject(error); // Reject with the error from the API call
             });
-
     });
 }
 
 export function copyToClipboard(text) {
-    navigator.clipboard.writeText(text)
-        .then(() => {
-            console.log('Text copied to clipboard successfully');
-            console.log(text);
-        })
-        .catch(err => {
-            console.error('Error copying text to clipboard:', err);
-        });
+    navigator.clipboard.writeText(text);
 }
 
 export async function updateUserData(uid, newData) {

@@ -1,151 +1,136 @@
-<!-- profile section starts  -->
-<section class="profile">
-    <div class="details">
-        <div class="not-my-courses">
-            <h1 class="heading">User Details<i class="es-globe"></i></h1>
-            <div class="box-container">
-                <div class="box">
-                    <div class="user">
-                        <div class="profile-pic">
-                            <label class="upload-profile-photo private" for="updateProfilePic">
-                                <input type='file' id="updateProfilePic" accept=".png, .jpg, .jpeg">
-                                <span class="upload-button">
-                                    <i class="es-camera"></i>
-                                </span>
-                            </label>
-                            <img id="user-photo" alt="">
-                        </div>
-                        <div id="username">
-                        </div>
-                        <p id="user-role"></p>
-                    </div>
+<section class="not-my-courses profile">
+    <h1 class="heading">User Details<i class="es-globe"></i></h1>
+    <div class="flex-container">
+        <div class="box">
+            <div class="user">
+                <div class="profile-pic">
+                    <label class="upload-profile-photo private" for="updateProfilePic">
+                        <input type='file' id="updateProfilePic" accept=".png, .jpg, .jpeg">
+                        <span class="upload-button">
+                            <i class="es-camera"></i>
+                        </span>
+                    </label>
+                    <img class="user-logo-lg" id="user-photo" alt="">
                 </div>
-                <div class="box">
-                    <div class="profile-fields">
-                        <div class="social-info">
-                            <div id="about-me">
-                                <i class="field-icon es-doc"></i>
-                            </div>
-                        </div>
-                        <div class="social-info">
-                            <div id="work">
-                                <i class="field-icon es-suitcase"></i>
-                            </div>
-                        </div>
-                        <div class="social-info">
-                            <div id="location">
-                                <i class="field-icon es-location"></i>
-                            </div>
-                        </div>
-                        <div class="social-info">
-                            <div id="tech-stack">
-                                <i class="field-icon es-code"></i>
-                            </div>
-                        </div>
-                    </div>
+                <div id="username">
                 </div>
-                <div class="box">
-                    <div class="profile-fields">
-                        <div class="social-info">
-                            <div id="facebook">
-                                <i class="field-icon es-facebook"></i>
-                            </div>
-                        </div>
-                        <div class="social-info">
-                            <div id="instagram">
-                                <i class="field-icon es-instagram"></i>
-                            </div>
-                        </div>
-                        <div class="social-info">
-                            <div id="linkedin">
-                                <i class="field-icon es-linkedin"></i>
-                            </div>
-                        </div>
-                        <div class="social-info">
-                            <div id="github">
-                                <i class="field-icon es-github"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <p id="user-role"></p>
             </div>
-            <h1 class="heading tutor disabled">Tutor Stats<i class="es-globe"></i></h1>
-            <div class="box-container tutor disabled">
-                <div class="box">
-                    <div class="flex">
-                        <i class="es-bookmark-solid"></i>
-                        <div id="published-courses">
-                            <h2></h2>
-                            <span>Published Courses</span>
-                        </div>
+        </div>
+        <div class="box">
+            <div class="profile-fields">
+                <div class="social-info">
+                    <div id="about-me">
+                        <i class="field-icon es-doc"></i>
                     </div>
                 </div>
-                <div class="box">
-                    <div class="flex">
-                        <i class="es-heart"></i>
-                        <div id="tutor-liked-tutorials">
-                            <h2></h2>
-                            <span>liked tutorials</span>
-                        </div>
+                <div class="social-info">
+                    <div id="work">
+                        <i class="field-icon es-suitcase"></i>
                     </div>
                 </div>
-                <div class="box">
-                    <div class="flex">
-                        <i class="es-star"></i>
-                        <div id="tutor-rating">
-                            <h2></h2>
-                            <span>Tutor Rating</span>
-                        </div>
+                <div class="social-info">
+                    <div id="location">
+                        <i class="field-icon es-location"></i>
                     </div>
                 </div>
-            </div>
-            <h1 class="heading tutor disabled">Published Courses<i class="es-globe"></i></h1>
-            <div class="box-container published-courses tutor disabled">
-            </div>
-            <!-- <div class="more-btn tutor">
-                <a href="/courses" onclick="route()" class="inline-btn">View More</a>
-            </div> -->
-            <h1 class="heading private">My Activities<i class="es-lock"></i></h1>
-            <div class="box-container private">
-                <div class="box">
-                    <div class="flex">
-                        <i class="es-bookmark-solid"></i>
-                        <div id="saved-courses">
-                            <h2></h2>
-                            <span>Saved Courses</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="box">
-                    <div class="flex">
-                        <i class="es-heart"></i>
-                        <div id="liked-tutorials">
-                            <h2></h2>
-                            <span>Liked Tutorials</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="box">
-                    <div class="flex">
-                        <i class="es-comment"></i>
-                        <div id="completed-courses">
-                            <h2></h2>
-                            <span>Completed Tutorials</span>
-                        </div>
+                <div class="social-info">
+                    <div id="tech-stack">
+                        <i class="field-icon es-code"></i>
                     </div>
                 </div>
             </div>
         </div>
-        <h1 class="heading private">Enrolled Courses<i class="es-lock"></i></h1>
-        <div class="box-container enrolled-courses private">
-        </div>
-        <!-- <div class="more-btn private">
-            <a href="/courses" onclick="route()" class="inline-btn">View More</a>
-        </div> -->
-        <div class="not-my-courses">
-            <div class="account-settings private">
-                <a class="profile-acc-sett transparent-btn">Account Settings</a>
+        <div class="box">
+            <div class="profile-fields">
+                <div class="social-info">
+                    <div id="facebook">
+                        <i class="field-icon es-facebook"></i>
+                    </div>
+                </div>
+                <div class="social-info">
+                    <div id="instagram">
+                        <i class="field-icon es-instagram"></i>
+                    </div>
+                </div>
+                <div class="social-info">
+                    <div id="linkedin">
+                        <i class="field-icon es-linkedin"></i>
+                    </div>
+                </div>
+                <div class="social-info">
+                    <div id="github">
+                        <i class="field-icon es-github"></i>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+</section>
+<section class="not-my-courses tutor profile">
+    <h1 class="heading ">Tutor Stats<i class="es-globe"></i></h1>
+    <div class="flex-container">
+        <div class="flex-item box">
+            <i class="es-bookmark-solid ngtv-i"></i>
+            <div id="published-courses">
+                <h2 class="bold-text-main"></h2>
+                <span>Published Courses</span>
+            </div>
+        </div>
+        <div class="flex-item box">
+            <i class="es-heart ngtv-i"></i>
+            <div id="tutor-liked-tutorials">
+                <h2 class="bold-text-main"></h2>
+                <span>liked tutorials</span>
+            </div>
+        </div>
+        <div class="flex-item box">
+            <i class="es-star ngtv-i"></i>
+            <div id="tutor-rating">
+                <h2 class="bold-text-main"></h2>
+                <span>Tutor Rating</span>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="not-my-courses tutor profile">
+    <h1 class="heading">Published Courses<i class="es-globe"></i></h1>
+    <div class="flex-container published-courses">
+    </div>
+</section>
+<section class="not-my-courses profile private">
+    <h1 class="heading">My Activities<i class="es-lock"></i></h1>
+    <div class="flex-container">
+        <div class="flex-item box">
+            <i class="es-bookmark-solid ngtv-i"></i>
+            <div id="saved-courses">
+                <h2 class="bold-text-main"></h2>
+                <span>Saved Courses</span>
+            </div>
+        </div>
+        <div class="flex-item box">
+            <i class="es-heart ngtv-i"></i>
+            <div id="liked-tutorials">
+                <h2 class="bold-text-main"></h2>
+                <span>Liked Tutorials</span>
+            </div>
+        </div>
+        <div class="flex-item box">
+            <i class="es-comment ngtv-i"></i>
+            <div id="completed-courses">
+                <h2 class="bold-text-main"></h2>
+                <span>Completed Tutorials</span>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="profile my-courses private">
+    <h1 class="heading ">Enrolled Courses<i class="es-lock"></i></h1>
+    <div class="flex-container enrolled-courses">
+    </div>
+</section>
+<section class="not-my-courses profile private">
+    <div class="account-settings">
+        <a class="profile-acc-sett transparent-btn">Account Settings</a>
     </div>
 </section>

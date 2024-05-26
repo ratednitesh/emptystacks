@@ -4,6 +4,7 @@ import { notification, updateUserData } from "./helper";
 
 var myProfile = {};
 const dataFields = ["username", "about-me", "work", "location", "tech-stack", "facebook", "instagram", "linkedin", "github"];
+const profileDiv = document.querySelector('#profile');
 
 // Initializers and Listeners: Profile 
 export function initProfile() {
@@ -40,9 +41,9 @@ export function initProfile() {
                 //TODO: add validations for fields change old value = new value
                 var newValue = dataFieldElement.innerHTML;
                 //Validations
-                if(newValue.length> 30){
+                if (newValue.length > 30) {
                     notification(313, 30);
-                }else{
+                } else {
                     myProfile[dataField] = newValue;
                     updateUserData("uid", myProfile).then(() => {
                         notification(202, dataField);
@@ -54,7 +55,7 @@ export function initProfile() {
                     checkIcon.classList.toggle('inactive');
                     crossIcon.classList.toggle('inactive');
                 }
-                
+
             });
             crossIcon.addEventListener("click", () => {
                 dataFieldElement.innerHTML = myProfile[dataField];
@@ -72,29 +73,37 @@ export function initProfile() {
 
 // Load profile
 export function loadProfile(uid, type) {
-    if (type == 'only-course')
-        document.querySelectorAll('.not-my-courses').forEach(function (event) {
-            event.classList.add("disabled");
-        });
-    else
-        document.querySelectorAll('.not-my-courses').forEach(function (event) {
-            event.classList.remove("disabled");
-        });
-    console.log('here');
+    console.log(uid + " " + type);
     let myUid = getUid();
     if (uid == myUid) {
-        document.querySelectorAll('.profile .private').forEach(function (event) {
-            event.classList.remove("disabled");
-        });
+        if (type == 'only-course') {
+            document.querySelector('.my-courses').classList.remove('disabled');
+            document.querySelectorAll('.not-my-courses').forEach(function (event) {
+                event.classList.add("disabled");
+            });
+        }
+        else {
+            document.querySelectorAll('.not-my-courses').forEach(function (event) {
+                event.classList.remove("disabled");
+            });
+            profileDiv.querySelectorAll('.private').forEach(function (event) {
+                event.classList.remove("disabled");
+            });
+        }
         loadPublicProfile(uid, 1);
         loadPrivateProfile(uid);
     }
     else {
-        document.querySelectorAll('.profile .private').forEach(function (event) {
+        document.querySelectorAll('.not-my-courses').forEach(function (event) {
+            event.classList.remove("disabled");
+        });
+        profileDiv.querySelectorAll('.private').forEach(function (event) {
             event.classList.add("disabled");
         });
         loadPublicProfile(uid, 0);
     }
+
+
 }
 // load public profile
 function loadPublicProfile(uid, isMyProfile) {
@@ -113,12 +122,12 @@ function loadPublicProfile(uid, isMyProfile) {
             for (const property in data.tutorDetails.stats) {
                 initUserActivities(property, data.tutorDetails.stats[property]);
             }
-            createCoursesSection(data.tutorDetails.publishedCourses, '.box-container.published-courses', 'published');
-            document.querySelectorAll('.profile .tutor').forEach(function (event) {
+            createCoursesSection(data.tutorDetails.publishedCourses, '.flex-container.published-courses', 'published');
+            profileDiv.querySelectorAll('.tutor').forEach(function (event) {
                 event.classList.remove("disabled");
             });
         } else {
-            document.querySelectorAll('.profile .tutor').forEach(function (event) {
+            profileDiv.querySelectorAll('.tutor').forEach(function (event) {
                 event.classList.add("disabled");
             });
         }
@@ -138,7 +147,7 @@ function loadPrivateProfile(uid) {
         for (const property in data.activities) {
             initUserActivities(property, data.activities[property]);
         }
-        createCoursesSection(data.enrolledCourses, '.box-container.enrolled-courses', 'enrolled');
+        createCoursesSection(data.enrolledCourses, '.flex-container.enrolled-courses', 'enrolled');
     }
     ).catch(() => {
         notification(501, 'user private profile');
@@ -147,8 +156,8 @@ function loadPrivateProfile(uid) {
 // load my profile
 // load my courses
 export function loadMyCourses() {
-
-    loadProfile(getUid(), 'only-course');
+    let uid = getUid();
+    loadProfile(uid, 'only-course');
 
 }
 
@@ -169,7 +178,7 @@ function initUserActivities(fieldId, fieldValue) {
     dataField.innerHTML = fieldValue;
 }
 function createCoursesSection(courses, rootElement, type) {
-    // Select the box-container element
+    // Select the flex-container element
     const container = document.querySelector(rootElement);
     container.innerHTML = "";
     // Iterate over the courses array

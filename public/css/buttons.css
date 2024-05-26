@@ -120,7 +120,7 @@
 } */
 
 
-.text-course .row .col .save-list button {
+.save-list-btn {
     font-size: 1.5rem;
     border-radius: .5rem;
     background-color: var(--light-bg);
@@ -129,24 +129,24 @@
     margin-bottom: 1rem;
 }
 
-.text-course .row .col .save-list button i {
+.save-list-btn i {
     color: var(--black);
     margin-right: 1rem;
 }
 
-.text-course .row .col .save-list button span {
+.save-list-btn span {
     color: var(--light-color);
 }
 
-.text-course .row .col .save-list button:hover {
+.save-list-btn:hover {
     background-color: var(--black);
 }
 
-.text-course .row .col .save-list button:hover i {
+.save-list-btn:hover i {
     color: var(--white);
 }
 
-.text-course .row .col .save-list button:hover span {
+.save-list-btn:hover span {
     color: var(--white);
 }
 

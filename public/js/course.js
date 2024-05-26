@@ -34,7 +34,7 @@ export function initCoursePage() {
     saveCourse.addEventListener('click', () => {
         // call save course api if is user logged in
         if (isUserLoggedIn()) {
-            saveCourse.classList.add('disabled');
+            saveCourse.classList.add('locked');
             getUserPrivateData(getUid()).then((userData) => {
                 if (!userData.enrolledCourses.some(course => course.href === courseToken.href)) {
                     userData.activities["saved-courses"]++;
@@ -52,7 +52,7 @@ export function initCoursePage() {
 
 // Load course page
 export function loadCoursePage(courseId) {
-    saveCourse.classList.add('disabled');
+    saveCourse.classList.add('locked');
     progressContainer.classList.add('disabled');
     startButton.innerText = "Start Course";
     if (lastCourseId != courseId) {
@@ -69,7 +69,7 @@ function updateUserLevelsOnEnrolledCourses() {
             console.log(coursehref);
             let matchingCourse = userData.enrolledCourses.find(course => course.href === coursehref);
             if (matchingCourse) {
-                saveCourse.classList.add('disabled');
+                saveCourse.classList.add('locked');
                 progressContainer.classList.remove('disabled');
                 let chaptersCompleted = matchingCourse.chaptersCompleted;
                 let percent = (chaptersCompleted.length / matchingCourse.totalChapters) * 100;
@@ -77,8 +77,6 @@ function updateUserLevelsOnEnrolledCourses() {
                 progressBar.style.width = percent + '%';
                 startButton.innerText = "Resume Course";
                 startButton.href = matchingCourse.nextChapter;
-                // TODO: Handle on  auth change as well.
-
                 chaptersCompleted.forEach(id => {
                     let i = document.getElementById(lastCourseId+"-"+id);
                     i.classList.remove('es-circle-empty');
@@ -98,7 +96,7 @@ function updateUserLevelsOnEnrolledCourses() {
                 });
             } else {
                 progressContainer.classList.add('disabled');
-                saveCourse.classList.remove('disabled');
+                saveCourse.classList.remove('locked');
             }
         })
     }
@@ -261,12 +259,6 @@ function getCourseData(courseId) {
         )
 }
 
-export function disableSignOutUserOptionsForCourse() {
-    if (isUserLoggedIn())
-        saveCourse.classList.remove('disabled');
-    else
-        saveCourse.classList.add('disabled');
-}
 // Load course reviews
 function getCourseReviews(courseId) {
     getCourseReviewsAPICall(courseId).then(
