@@ -1,7 +1,7 @@
 
-import { getUid, isUserLoggedIn } from "./firebase-config";
-import { signup_selected, getUserPrivateData } from "./setup";
-import { getTopCourses, notification } from './helper';
+import { ALL_COURSES, ALL_STREAMS, USER_PRIVATE_COLLECTION, getUid, readAllDocuments, readAllDocumentsWithLimit, readDocument } from "./firebase-config";
+import { signup_selected } from "./setup";
+import { notification } from './helper';
 const highlightSection = document.querySelector('.highlight-section');
 const quickSelect = document.querySelector('.quick-select');
 const bookContainer = document.querySelector('#enrolled-courses-home');
@@ -33,7 +33,7 @@ function initBanner() {
 }
 // Initializer and Listeners: Popular Courses
 function initPopularCourses() {
-    getTopCourses().then(
+    readAllDocuments(ALL_COURSES).then(
         (coursesData) => {
             const boxContainer = document.querySelector('.courses .flex-container');
 
@@ -94,7 +94,7 @@ function initQuickSelect() {
 // Initializer and Listeners: Streams
 function initStreams() {
     // Get the Stream container
-    getTopStreams().then(
+    readAllDocumentsWithLimit(ALL_STREAMS, 12).then(
         (streams) => {
             const streamContainer = document.getElementById('stream-options');
             streams.forEach(stream => {
@@ -172,14 +172,15 @@ function unloadBanner() {
 
 // On auth state change, call this function to update show/ hide section
 function updateQuickSelectOptions() {
-    homeOptionPrivate.forEach((node) => { if (!isUserLoggedIn()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
-    homeOptionOnlyPublic.forEach((node) => { if (isUserLoggedIn()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
+    homeOptionPrivate.forEach((node) => { if (!getUid()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
+    homeOptionOnlyPublic.forEach((node) => { if (getUid()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
     updateEnrolledCourses();
 }
 // On auth State change, Update enrolled Courses 
 function updateEnrolledCourses() {
-    if (isUserLoggedIn())
-        getUserPrivateData(getUid())
+    let uid = getUid();
+    if (uid)
+        readDocument(USER_PRIVATE_COLLECTION, uid)
             .then(
                 (data) => {
                     var quickCourses = data.enrolledCourses;
@@ -241,7 +242,7 @@ function updateEnrolledCourses() {
             ).catch((e) => {
                 console.log(e);
                 notification(501, 'enrolled courses');
-            });
+            })
     else {
         bookContainer.innerHTML = "";
         enrolledCourses = [];
@@ -287,35 +288,3 @@ function showSlide(index) {
     dots.forEach((node, i) => { if (index - 1 == i) node.classList.replace('es-circle-empty', 'es-circle'); else node.classList.replace('es-circle', 'es-circle-empty'); })
     slides.forEach((node, i) => { if (index - 1 == i) node.classList.remove('disabled'); else node.classList.add('disabled'); })
 }
-
-async function importMockApi() {
-    try {
-        const { mockgetTopStreamsAPICall } = await import('/public/test/mock-api.js');
-        return {
-            mockgetTopStreamsAPICall,
-
-
-        };
-    } catch (error) {
-        console.error('Error importing mock API:', error);
-        throw error;
-    }
-}
-async function getTopStreams() {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // If data is already cached, resolve with the cached data
-
-        // Simulate an API call
-        mockApi.mockgetTopStreamsAPICall()
-            .then(response => {
-                //TODO: Store the API response in the cachedData object
-                resolve(response); // Resolve with the API response
-            })
-            .catch(error => {
-                reject(error); // Reject with the error from the API call
-            });
-
-    });
-}
-

@@ -1,6 +1,6 @@
-import { getUid, getUserToken } from "./firebase-config";
-import { getTopCourses, notification } from "./helper";
-import { createNewUser, emailPasswordSignIn, firebaseSignOut, googleSignIn, isUserLoggedIn, tryPasswordResetEmail } from "./firebase-config";
+import { ALL_COURSES, USER_PRIVATE_COLLECTION, createDocument, getUid, readAllDocuments, readDocument } from "./firebase-config";
+import { notification } from "./helper";
+import { createNewUser, emailPasswordSignIn, firebaseSignOut, googleSignIn, tryPasswordResetEmail } from "./firebase-config";
 
 // Header Button
 const toggleBtn = document.querySelector('#toggle-btn');
@@ -68,7 +68,7 @@ function initSearchBar() {
 
 }
 function initSearchCourses() {
-    getTopCourses().then(
+    readAllDocuments(ALL_COURSES).then(
         (coursesData) => {
             const boxContainer = document.querySelector('.search .flex-container');
             let i = 0;
@@ -454,7 +454,7 @@ function loginSuccess() {
 // Authentication Functions: 
 function signOut() {
     firebaseSignOut().then(() => {
-        if (!isUserLoggedIn()) {
+        if (!getUid()) {
             location.reload();
             notification(204);
         } else {
@@ -465,21 +465,15 @@ function signOut() {
 function signIn(provider, userToken) {
     if (provider == 'Google') {
         googleSignIn().then(() => {
-            if (isUserLoggedIn()) {
-                registerUserAPI(getUid(), getUserToken()).then(() => {
-                    console.log("User Logged In");
-                    loginSuccess();
-                    notification(201);
-                    location.reload();
-                }).catch(() => { notification(505); });
-            }
+            loginSuccess();
+            notification(201);
+            location.reload();
         }).catch(() => {
             notification(503);
         });
     } else if (provider == 'emailAddress') {
         emailPasswordSignIn(userToken).then(() => {
-            if (isUserLoggedIn()) {
-                console.log("User Logged In");
+            if (getUid()) {
                 loginSuccess();
                 notification(201);
                 location.reload();
@@ -489,15 +483,13 @@ function signIn(provider, userToken) {
         });
     }
 }
+
 function signUp(userToken) {
     createNewUser(userToken).then(() => {
-        if (isUserLoggedIn()) {
-            registerUserAPI(getUid(), userToken).then(() => {
-                loginSuccess();
-                location.reload();
-                notification(200);
-                setTimeout(() => { notification(205, userToken.email) }, 5000);
-            }).catch(() => { notification(505); });
+        if (getUid()) {
+            loginSuccess();
+            notification(200);
+            setTimeout(() => { notification(205, userToken.email); location.reload(); }, 5000);
         }
     }).catch(() => {
         notification(505);
@@ -514,14 +506,20 @@ function forgotPassword(email) {
 
 // Update user info on auth status change on header and main sidebar.
 function loadUserPrivateData() {
-    if (isUserLoggedIn()) {
+    console.log('loading private data out');
+
+    if (getUid()) {
         let uid = getUid();
-        getUserPrivateData(uid)
+        readDocument(USER_PRIVATE_COLLECTION, uid)
             .then((userData) => {
+                console.log('loading private data');
+                console.log(userData.userProfileSrc);
+                console.log(userData);
+                 
                 document.getElementById('user-photo-header').src = userData.userProfileSrc;
                 document.getElementById('user-menu-photo').src = userData.userProfileSrc;
                 document.getElementById('user-menu-name').innerHTML = userData.username;
-                document.getElementById('user-menu-mail').innerHTML = userData.mailId;
+                document.getElementById('user-menu-mail').innerHTML = userData.email;
                 profileMenuOnlyPublic.forEach((node) => { node.classList.add('disabled') });
                 profileMenuPrivate.forEach((node) => { node.classList.remove('disabled') });
                 document.getElementById('user-photo-header').classList.remove('disabled');
@@ -604,59 +602,3 @@ function createUserToken(username, email, password) {
     return userToken;
 }
 
-// TODO: Potentially need to remove following function */
-async function importMockApi() {
-    try {
-        const { mockgetUserPrivateDataAPICall, mockCreateUserDataAPICall } = await import('/public/test/mock-api.js');
-        return {
-            mockgetUserPrivateDataAPICall,
-            mockCreateUserDataAPICall
-        };
-    } catch (error) {
-        console.error('Error importing mock API:', error);
-        throw error;
-    }
-}
-export async function getUserPrivateData(uid) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // <Removed bugging cache> If data is already cached, resolve with the cached data
-        // if (cachedPrivateDate) {
-        //     console.log('Read private from cache');
-        //     resolve(cachedPrivateDate);
-        // } else {
-        // Simulate an API call
-        mockApi.mockgetUserPrivateDataAPICall(uid)
-            .then(response => {
-                // TODO: Store the API response in the cachedData object
-                console.log('Resolved');
-                // cachedPrivateDate = response;
-                resolve(response); // Resolve with the API response
-            })
-            .catch(error => {
-                reject(error); // Reject with the error from the API call
-            });
-    });
-}
-
-// create user data in collections on registeration
-/*
- userPRivateProfile
- userPublicProfile
-*/
-async function registerUserAPI(uid, newData) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        mockApi.mockCreateUserDataAPICall(uid, newData)
-            .then(() => {
-                // TODO: Store the API response in the cachedData object
-                console.log('Data Created.');
-                // cachedPrivateDate = response;
-                resolve(); // Resolve with the API response
-            })
-            .catch(() => {
-                console.log("not rejecting the request but uid already exists.");
-                resolve();
-            });
-    });
-}

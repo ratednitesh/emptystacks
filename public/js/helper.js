@@ -121,51 +121,9 @@ export async function initAddOn(page) {
         }
     });
 }
-async function importMockApi() {
-    try {
-        const {
-            mockgetCourseContentDetailsAPICall, mockUpdateUserDataAPICall, mockgetTopCoursesAPICall } = await import('/public/test/mock-api.js');
-        return {
-            mockgetCourseContentDetailsAPICall, mockUpdateUserDataAPICall, mockgetTopCoursesAPICall
-        };
-    } catch (error) {
-        console.error('Error importing mock API:', error);
-        throw error;
-    }
-}
-export async function getCourseContentDetailsAPICalls(courseId) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // If data is already cached, resolve with the cached data
-
-        // Simulate an API call
-        mockApi.mockgetCourseContentDetailsAPICall(courseId)
-            .then(response => {
-                // TODO: Store the API response in the cachedData object
-                resolve(response); // Resolve with the API response
-            })
-            .catch(error => {
-                reject(error); // Reject with the error from the API call
-            });
-    });
-}
 
 export function copyToClipboard(text) {
     navigator.clipboard.writeText(text);
-}
-
-export async function updateUserData(uid, newData) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // Simulate an asynchronous operation (e.g., updating data on the server)
-        mockApi.mockUpdateUserDataAPICall(uid, newData)
-            .then(() => {
-                resolve(); // Resolve the Promise once the data is updated
-            })
-            .catch(error => {
-                reject(error); // Reject with the error from the API call
-            });
-    });
 }
 
 export function getFormattedDate(date) {
@@ -176,21 +134,4 @@ export function getFormattedDate(date) {
 
     // Format the date as a string in DD-MM-YYYY format
     return `${day}-${month}-${year}`;
-}
-export async function getTopCourses() {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // If data is already cached, resolve with the cached data
-
-        // Simulate an API call
-        mockApi.mockgetTopCoursesAPICall()
-            .then(response => {
-                // TODO: Store the API response in the cachedData object
-                resolve(response); // Resolve with the API response
-            })
-            .catch(error => {
-                reject(error); // Reject with the error from the API call
-            });
-
-    });
 }

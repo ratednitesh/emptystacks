@@ -1,6 +1,5 @@
-import { getUid, isUserLoggedIn } from "./firebase-config";
-import { notification, publish, getCourseContentDetailsAPICalls, updateUserData } from "./helper";
-import { getUserPrivateData } from "./setup";
+import { COURSE_DETAILS, USER_PRIVATE_COLLECTION, enrollCourse, getUid, readAllDocuments, readDocument } from "./firebase-config";
+import { notification, publish } from "./helper";
 
 const textCourse = document.querySelector('.text-course');
 const courseStreams = textCourse.querySelector('.streams');
@@ -33,14 +32,13 @@ export function initCoursePage() {
     });
     saveCourse.addEventListener('click', () => {
         // call save course api if is user logged in
-        if (isUserLoggedIn()) {
+        let uid = getUid();
+        if (uid) {
             saveCourse.classList.add('locked');
-            getUserPrivateData(getUid()).then((userData) => {
+            readDocument(USER_PRIVATE_COLLECTION, uid).then((userData) => { //TODO: Do we even need to read when updating ?
                 if (!userData.enrolledCourses.some(course => course.href === courseToken.href)) {
-                    userData.activities["saved-courses"]++;
-                    userData.enrolledCourses.push(courseToken);
                     console.log(userData);
-                    updateUserData("uid", userData).then(() => {
+                    enrollCourse(courseToken).then(() => {
                         notification(208);
                         // TODO: Refresh activities and enrolled courses everywhere else.
                     }).catch((e) => { console.log(e); notification(502); });
@@ -64,7 +62,7 @@ export function loadCoursePage(courseId) {
 function updateUserLevelsOnEnrolledCourses() {
     let uid = getUid();
     if (uid) {
-        getUserPrivateData(uid).then((userData) => {
+        readDocument(USER_PRIVATE_COLLECTION, uid).then((userData) => {
             var coursehref = "/course/" + lastCourseId;
             console.log(coursehref);
             let matchingCourse = userData.enrolledCourses.find(course => course.href === coursehref);
@@ -78,7 +76,7 @@ function updateUserLevelsOnEnrolledCourses() {
                 startButton.innerText = "Resume Course";
                 startButton.href = matchingCourse.nextChapter;
                 chaptersCompleted.forEach(id => {
-                    let i = document.getElementById(lastCourseId+"-"+id);
+                    let i = document.getElementById(lastCourseId + "-" + id);
                     i.classList.remove('es-circle-empty');
                     i.classList.add('es-ok-circled', 'green');
                 });
@@ -103,7 +101,7 @@ function updateUserLevelsOnEnrolledCourses() {
 }
 // Load course Data
 function getCourseData(courseId) {
-    getCourseDetailsAPICalls(courseId).then(
+    readDocument(COURSE_DETAILS, courseId).then(
         (courseData) => {
             if (courseData) {
                 textCourse.querySelectorAll('.chapters').forEach((event) => {
@@ -160,91 +158,82 @@ function getCourseData(courseId) {
                     document.querySelector(".video-container").classList.remove('disabled');
                     document.querySelector(".course-details").classList.add('disabled');
                 }
-                getCourseContentDetailsAPICalls(courseId).then(
-                    (courseContentData) => {
-                        if (courseData.type == "text") {
-                            courseDetails.innerHTML = "";
-                            for (const [course, topics] of Object.entries(courseContentData)) {
-                                const accordionItem = document.createElement("div");
-                                accordionItem.classList.add("accordion-item");
-                                const accordionHeader = document.createElement("div");
-                                accordionHeader.classList.add("accordion-header");
-                                const headerTitle = document.createElement("h2");
-                                const headerIcon = document.createElement("i");
-                                headerIcon.classList.add("es-circle-empty", "bullet");
 
-                                if (topics.id) {
-                                    headerIcon.id = courseId+"-"+topics.id;
-                                    headerTitle.appendChild(headerIcon);
-                                    headerTitle.innerHTML += ` ${course}`;
-                                    const headingLink = document.createElement("a");
-                                    headingLink.href = topics.href;
-                                    headingLink.setAttribute("onclick", "route()");
-                                    headingLink.appendChild(headerTitle);
-                                    accordionHeader.appendChild(headingLink);
-                                    accordionItem.appendChild(accordionHeader);
+                let courseContentData = courseData.chapters;  // TODO: This should be sorted.
+                if (courseData.type == "text") {
+                    courseDetails.innerHTML = "";
+                    for (const [course, topics] of Object.entries(courseContentData)) {
+                        const accordionItem = document.createElement("div");
+                        accordionItem.classList.add("accordion-item");
+                        const accordionHeader = document.createElement("div");
+                        accordionHeader.classList.add("accordion-header");
+                        const headerTitle = document.createElement("h2");
+                        const headerIcon = document.createElement("i");
+                        headerIcon.classList.add("es-circle-empty", "bullet");
 
-                                }
-                                else if (typeof topics === "object") {
-                                    headerTitle.appendChild(headerIcon);
-                                    headerTitle.innerHTML += ` ${course}`;
-                                    const expandIcon = document.createElement("i");
-                                    expandIcon.classList.add("expand", "es-angle-up");
-                                    headerTitle.appendChild(expandIcon);
-                                    accordionHeader.classList.add("expandable");
-                                    accordionHeader.appendChild(headerTitle);
-                                    accordionItem.appendChild(accordionHeader);
-                                    const accordionContent = document.createElement("div");
-                                    accordionContent.classList.add("accordion-content");
+                        if (topics.id) {
+                            headerIcon.id = courseId + "-" + topics.id;
+                            headerTitle.appendChild(headerIcon);
+                            headerTitle.innerHTML += ` ${course}`;
+                            const headingLink = document.createElement("a");
+                            headingLink.href = topics.href;
+                            headingLink.setAttribute("onclick", "route()");
+                            headingLink.appendChild(headerTitle);
+                            accordionHeader.appendChild(headingLink);
+                            accordionItem.appendChild(accordionHeader);
 
-                                    for (const [topic, value] of Object.entries(topics)) {
-                                        const courseList = document.createElement("li");
-                                        courseList.classList.add("course-list");
-                                        const topicLink = document.createElement("a");
-                                        topicLink.href = value.href;
-                                        topicLink.setAttribute("onclick", "route()");
-                                        topicLink.innerHTML = `<i id="${courseId}-${value.id}"class="bullet es-circle-empty"></i>${topic}`;
+                        }
+                        else if (typeof topics === "object") {
+                            headerTitle.appendChild(headerIcon);
+                            headerTitle.innerHTML += ` ${course}`;
+                            const expandIcon = document.createElement("i");
+                            expandIcon.classList.add("expand", "es-angle-up");
+                            headerTitle.appendChild(expandIcon);
+                            accordionHeader.classList.add("expandable");
+                            accordionHeader.appendChild(headerTitle);
+                            accordionItem.appendChild(accordionHeader);
+                            const accordionContent = document.createElement("div");
+                            accordionContent.classList.add("accordion-content");
 
-                                        courseList.appendChild(topicLink);
-                                        accordionContent.appendChild(courseList);
-                                    }
-                                    accordionItem.appendChild(accordionContent);
-                                    accordionItem.classList.add("active");
-                                }
-                                courseDetails.appendChild(accordionItem);
+                            for (const [topic, value] of Object.entries(topics)) {
+                                const courseList = document.createElement("li");
+                                courseList.classList.add("course-list");
+                                const topicLink = document.createElement("a");
+                                topicLink.href = value.href;
+                                topicLink.setAttribute("onclick", "route()");
+                                topicLink.innerHTML = `<i id="${courseId}-${value.id}"class="bullet es-circle-empty"></i>${topic}`;
+
+                                courseList.appendChild(topicLink);
+                                accordionContent.appendChild(courseList);
                             }
-                            // courseDetails.innerHTML = courseData;
-                            document.querySelectorAll('.expandable').forEach(function (header) {
-                                header.addEventListener('click', function () {
-                                    var item = this.parentNode;
-                                    item.classList.toggle('active');
-                                    this.children[0].children[1].classList.toggle('es-angle-up');
-                                    this.children[0].children[1].classList.toggle('es-angle-down');
-                                });
-                            });
+                            accordionItem.appendChild(accordionContent);
+                            accordionItem.classList.add("active");
                         }
-                        else {
-                            videoDetails.innerHTML = "";
-                            for (const [title, cvd] of Object.entries(courseContentData)) {
-                                const videoHtml = document.createElement("a");
-                                videoHtml.href = cvd.href;
-                                videoHtml.setAttribute("onclick", "route()");
-                                videoHtml.classList.add("box");
-                                videoHtml.innerHTML = `<i class="es-play-lg"></i><img class="thumb-md" src="${cvd.thumbnail}"alt=""><h2 class="title"><i id="${courseId}-${cvd.id}" class="es-circle-empty"></i> ${title}</h2>`;
-                                videoDetails.appendChild(videoHtml);
-                            };
-                        }
-                        updateUserLevelsOnEnrolledCourses();
-                        getCourseReviews(courseId);
+                        courseDetails.appendChild(accordionItem);
                     }
-                )
-                    .catch(
-                        (e) => {
-                            console.log(e);
-                            notification(501, 'content details');
-                        }
-                    )
-
+                    // courseDetails.innerHTML = courseData;
+                    document.querySelectorAll('.expandable').forEach(function (header) {
+                        header.addEventListener('click', function () {
+                            var item = this.parentNode;
+                            item.classList.toggle('active');
+                            this.children[0].children[1].classList.toggle('es-angle-up');
+                            this.children[0].children[1].classList.toggle('es-angle-down');
+                        });
+                    });
+                }
+                else {
+                    videoDetails.innerHTML = "";
+                    for (const [title, cvd] of Object.entries(courseContentData)) {
+                        const videoHtml = document.createElement("a");
+                        videoHtml.href = cvd.href;
+                        videoHtml.setAttribute("onclick", "route()");
+                        videoHtml.classList.add("box");
+                        videoHtml.innerHTML = `<i class="es-play-lg"></i><img class="thumb-md" src="${cvd.thumbnail}"alt=""><h2 class="title"><i id="${courseId}-${cvd.id}" class="es-circle-empty"></i> ${title}</h2>`;
+                        videoDetails.appendChild(videoHtml);
+                    };
+                }
+                updateUserLevelsOnEnrolledCourses();
+                getCourseReviews(courseId);
             } else {
                 lastCourseId = 'notFoundRoute';
                 publish('notFoundRoute');
@@ -261,9 +250,10 @@ function getCourseData(courseId) {
 
 // Load course reviews
 function getCourseReviews(courseId) {
-    getCourseReviewsAPICall(courseId).then(
+    readAllDocuments(COURSE_DETAILS + "/" + courseId + "/Reviews").then(
         (courseReview) => {
-            if (courseReview) {
+            console.log(courseReview);
+            if (courseReview.length) {
                 document.querySelector('.reviews').classList.remove('disabled');
                 boxContainer.innerHTML = "";
                 courseReview.forEach((r) => {
@@ -330,48 +320,4 @@ function createCourseToken(courseData) {
         chaptersCompleted: [],
         totalChapters: courseData.chapterCount
     };
-}
-// TODO: Potentially need to remove following function */
-async function importMockApi() {
-    try {
-        const { mockgetCourseReviewAPICall, mockgetTextCourseAPICall } = await import('/public/test/mock-api.js');
-
-        return {
-            mockgetCourseReviewAPICall,
-            mockgetTextCourseAPICall
-
-        };
-    } catch (error) {
-        console.error('Error importing mock API:', error);
-        throw error;
-    }
-}
-async function getCourseReviewsAPICall(courseId) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        mockApi.mockgetCourseReviewAPICall(courseId).then(response => {
-            // TODO: Store the API response in the cachedData object
-            resolve(response);
-        })
-            .catch(error => {
-                reject(error);
-            });
-    });
-}
-async function getCourseDetailsAPICalls(courseId) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // If data is already cached, resolve with the cached data
-
-        // Simulate an API call
-        mockApi.mockgetTextCourseAPICall(courseId)
-            .then(response => {
-                // TODO: Store the API response in the cachedData object
-                resolve(response); // Resolve with the API response
-            })
-            .catch(error => {
-                reject(error); // Reject with the error from the API call
-            });
-
-    });
 }

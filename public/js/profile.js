@@ -1,6 +1,5 @@
-import { getUid } from "./firebase-config";
-import { getUserPrivateData } from "./setup";
-import { notification, updateUserData } from "./helper";
+import { USER_PRIVATE_COLLECTION, USER_PUBLIC_COLLECTION, getUid, readDocument, updateDocument } from "./firebase-config";
+import { notification } from "./helper";
 
 var myProfile = {};
 const dataFields = ["username", "about-me", "work", "location", "tech-stack", "facebook", "instagram", "linkedin", "github"];
@@ -45,7 +44,7 @@ export function initProfile() {
                     notification(313, 30);
                 } else {
                     myProfile[dataField] = newValue;
-                    updateUserData("uid", myProfile).then(() => {
+                    updateDocument(USER_PUBLIC_COLLECTION, getUid(), { [dataField]: newValue }).then(() => {
                         notification(202, dataField);
                     })
                         .catch(() => { notification(502); });
@@ -107,7 +106,7 @@ export function loadProfile(uid, type) {
 }
 // load public profile
 function loadPublicProfile(uid, isMyProfile) {
-    getUserPublicData(uid).then((data) => {
+    readDocument(USER_PUBLIC_COLLECTION, uid).then((data) => {
         if (isMyProfile)
             myProfile = data;
         setUserProfilePhoto(data.userProfileSrc);
@@ -142,8 +141,7 @@ function loadPublicProfile(uid, isMyProfile) {
 
 // load private profile
 function loadPrivateProfile(uid) {
-
-    getUserPrivateData(uid).then((data) => {
+    readDocument(USER_PRIVATE_COLLECTION, uid).then((data) => {
         for (const property in data.activities) {
             initUserActivities(property, data.activities[property]);
         }
@@ -221,34 +219,5 @@ function createCoursesSection(courses, rootElement, type) {
 
         // Append the box div to the container
         container.appendChild(box);
-    });
-}
-
-// TODO: Potentially need to remove following function */
-async function importMockApi() {
-    try {
-        const { mockgetUserDataAPICall } = await import('/public/test/mock-api.js');
-        return {
-            mockgetUserDataAPICall,
-
-        };
-    } catch (error) {
-        console.error('Error importing mock API:', error);
-        throw error;
-    }
-}
-async function getUserPublicData(uid) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-
-        // Simulate an API call
-        mockApi.mockgetUserDataAPICall(uid)
-            .then(response => {
-                //TODO: Store the API response in the cachedData object
-                resolve(response); // Resolve with the API response
-            })
-            .catch(error => {
-                reject(error); // Reject with the error from the API call
-            });
     });
 }

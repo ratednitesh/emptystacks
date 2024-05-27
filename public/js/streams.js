@@ -1,3 +1,4 @@
+import { ALL_STREAMS, COURSES_BY_STREAMS, readAllDocuments, readDocument } from './firebase-config';
 import { notification } from './helper';
 
 const selectedSection = document.querySelector('.streams-selected .streams');
@@ -11,7 +12,7 @@ var coursesByStreams = {};
 export async function initStreams() {
     console.log('init streams done');
     return new Promise((resolve, reject) => {
-        getAllStreams().then(
+        readAllDocuments(ALL_STREAMS).then(
             (streams) => {
                 streams.forEach(stream => {
                     const anchorTag = document.createElement('a');
@@ -87,9 +88,10 @@ function resetSelection() {
 }
 
 function getCoursesByStreams(streamId) {
-    getCoursesByStreamsAPI(streamId).then(
+    readDocument(COURSES_BY_STREAMS, streamId).then(
         coursesData => {
-            coursesData.forEach(course => {
+            coursesByStreams[streamId] = coursesData.courses;
+            coursesByStreams[streamId].forEach(course => {
                 if (!document.getElementById(course.href.replace('/course/', ''))) {
                     // Create box element
                     const box = document.createElement('div');
@@ -137,60 +139,15 @@ function removeCoursesByStream(streamId) {
             // Only remove if no other selected stream contains this course
             let remove = true;
             selectedStreams.forEach(selectedStreamId => {
-                if (coursesByStreams[selectedStreamId]?.some(c => c.href == course.href)) { 
+                if (coursesByStreams[selectedStreamId]?.some(c => c.href == course.href)) {
                     // TODO: Check if this question mark is needed else where? 
                     remove = false;
                 }
             });
             if (remove) {
-                console.log('removing course:'+ course.href);
+                console.log('removing course:' + course.href);
                 boxContainer.removeChild(courseElement);
             }
         }
     });
-}
-
-// TODO: Potentially need to remove following function */
-async function importMockApi() {
-    try {
-        const { mockgetAllStreamsAPICall, mockGetCoursesByStreams } = await import('/public/test/mock-api.js');
-        return {
-            mockgetAllStreamsAPICall,
-            mockGetCoursesByStreams
-        };
-    } catch (error) {
-        console.error('Error importing mock API:', error);
-        throw error;
-    }
-}
-async function getAllStreams() {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        mockApi.mockgetAllStreamsAPICall()
-            .then(response => {
-                resolve(response);
-            })
-            .catch(error => {
-                reject(error);
-            });
-
-    });
-}
-
-async function getCoursesByStreamsAPI(streamId) {
-    const mockApi = await importMockApi();
-    return new Promise(
-        (resolve, reject) => {
-            if (coursesByStreams[streamId])
-                resolve(coursesByStreams[streamId]);
-            else {
-                mockApi.mockGetCoursesByStreams(streamId).then(
-                    response => {
-                        coursesByStreams[streamId] = response;
-                        resolve(response);
-                    }
-                ).catch(error => { reject(error); })
-            }
-        }
-    );
 }

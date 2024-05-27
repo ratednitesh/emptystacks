@@ -1,6 +1,6 @@
-import { publish, getCourseContentDetailsAPICalls, notification, getFormattedDate } from "./helper";
-import { getUid, isUserLoggedIn } from "./firebase-config";
-import { getUserPrivateData, signup_selected } from "./setup";
+import { publish, notification, getFormattedDate } from "./helper";
+import { COURSE_DETAILS, USER_PRIVATE_COLLECTION, addDocument, getUid, readAllDocuments, readDocument } from "./firebase-config";
+import { signup_selected } from "./setup";
 import { copyPathToClipboard } from "./router";
 
 const contentSidebarHtml = document.querySelector('#contentSidebar');
@@ -20,8 +20,9 @@ const completionMarker = contentHtml.querySelector('.completion');
 const courseCompletionModal = document.querySelector('.course-completed-modal');
 const thumbsUp = document.querySelector('.chapter-footer .es-thumbs-up');
 const thumbsDown = document.querySelector('.chapter-footer .es-thumbs-down');
-let lastChapterId;
+let lastChapterPath;
 let lastCourseId;
+let lastChapterId; 
 let showCompletionButton = true;
 let chaptersCompleted;
 export function initContent() {
@@ -31,7 +32,7 @@ export function initContent() {
     showComments.addEventListener('click', () => {
         showComments.classList.add('disabled');
         commentHtml.classList.remove('disabled');
-        getCourseContentCommentsAPICalls(lastChapterId).then(
+        readAllDocuments(COURSE_DETAILS + "/"+lastCourseId+"/Content/"+lastChapterId+"/Comments").then(
             ((commentData) => {
                 comments.innerHTML = "";
                 if (commentData) {
@@ -63,7 +64,7 @@ export function initContent() {
                 "comment": msg,
                 "imageSrc": document.getElementById('user-menu-photo').src
             };
-            addCommentToCourseAPICalls(lastChapterId, commentObject).then(
+            addDocument(COURSE_DETAILS + "/"+lastCourseId+"/Content/"+lastChapterId+"/Comments", commentObject).then(
                 () => {
                     displayComment(commentObject);
                     notification(211);
@@ -93,22 +94,22 @@ export function initContent() {
         // save to db
         // increase counter
         courseCompletionModal.classList.remove('is-visible')
-    
+
     });
-    thumbsUp.addEventListener('click', function() {
+    thumbsUp.addEventListener('click', function () {
         thumbsUp.classList.toggle('red');
         thumbsDown.classList.remove('red');
         notification(213); // Optional: Remove red from thumbs down if it was selected
-      });
-      
-      thumbsDown.addEventListener('click', function() {
+    });
+
+    thumbsDown.addEventListener('click', function () {
         thumbsDown.classList.toggle('red');
         thumbsUp.classList.remove('red'); // Optional: Remove red from thumbs up if it was selected
-      });
+    });
 }
-function checkCourseCompletion(){
+function checkCourseCompletion() {
     var notcompleted = contentSidebarHtml.querySelector('.es-circle-empty')
-    if(!notcompleted)
+    if (!notcompleted)
         courseCompletionModal.classList.add('is-visible');
 
 }
@@ -170,12 +171,17 @@ function displayComment(comment) {
     comments.appendChild(boxDiv);
 }
 // load course content
-export function loadContent(chapterId) {
-    console.log("chapter: " + chapterId);
-    if (lastChapterId != chapterId) {
+export function loadContent(chapterPath) {
+
+    if (lastChapterPath != chapterPath) {
+        lastChapterPath = chapterPath;
+        let ids = chapterPath.split('/');
+        let courseId = ids[0];
+        let chapterId = ids[1];
         lastChapterId = chapterId;
+        console.log("chapter: " + chapterId + " course:" + courseId);
         hideComments();
-        getCourseContentAPICalls(chapterId).then(
+        readDocument(COURSE_DETAILS + "/" + courseId + "/Content", chapterId).then(
             (chapterData) => {
                 if (chapterData) {
                     contentHtml.querySelector('.heading').innerHTML = chapterData.heading;
@@ -185,12 +191,12 @@ export function loadContent(chapterId) {
                     showComments.innerHTML = "Comments (" + chapterData.comments + ")";
                     if (chapterData.previousChapter) {
                         prevBtn.classList.remove('locked');
-                        prevBtn.href = chapterData.previousChapter;
+                        prevBtn.href = "/content/"+courseId+"/"+chapterData.previousChapter;
                     } else
                         prevBtn.classList.add('locked');
                     if (chapterData.nextChapter) {
                         nextBtn.classList.remove('locked');
-                        nextBtn.href = chapterData.nextChapter;
+                        nextBtn.href = "/content/"+courseId+"/"+chapterData.nextChapter;
                     } else
                         nextBtn.classList.add('locked');
 
@@ -206,10 +212,9 @@ export function loadContent(chapterId) {
                         contentHtml.querySelector('.video').src = chapterData.videoId;
                         contentHtml.querySelector('.description').innerHTML = chapterData.description;
                     }
-                    let courseID = chapterId.split('/')[0];
-                    if (lastCourseId != courseID) {
-                        lastCourseId = courseID;
-                        loadContentSidebar(chapterData.courseId, chapterData.courseName, chapterId, chapterData.type);
+                    if (lastCourseId != courseId) {
+                        lastCourseId = courseId;
+                        loadContentSidebar(chapterData.courseId, chapterData.courseName, chapterPath, chapterData.type);
                     } else {
                         showCompletionButton = false;
                         const activeI = document.querySelector('.nano-content .active  >a > i');
@@ -219,7 +224,7 @@ export function loadContent(chapterId) {
                     }
 
                 } else {
-                    lastChapterId = 'notFoundRoute';
+                    lastChapterPath = 'notFoundRoute';
                     publish('notFoundRoute');
                 }
             }
@@ -231,14 +236,14 @@ export function loadContent(chapterId) {
                 }
             )
     }
-    else if (lastChapterId == 'notFoundRoute')
+    else if (lastChapterPath == 'notFoundRoute')
         publish('notFoundRoute');
 }
 
 function hideComments() {
     commentHtml.classList.add('disabled');
     showComments.classList.remove('disabled');
-    if (isUserLoggedIn()) {
+    if (getUid()) {
         commentHtml.querySelector(".add-comment").classList.remove('disabled');
         commentHtml.querySelector(".no-comments").classList.add('disabled');
 
@@ -248,9 +253,10 @@ function hideComments() {
     }
 }
 // load content sidebar
-function loadContentSidebar(courseId, courseName, chapterId, type) {
-    getCourseContentDetailsAPICalls(courseId).then(
-        (chapterDetails) => {
+function loadContentSidebar(courseId, courseName, chapterPath, type) {
+    readDocument(COURSE_DETAILS, courseId).then(
+        (courseData) => {
+            let chapterDetails = courseData.chapters; // TODO: This should be sorted.
             courseTitle.setAttribute("onclick", "route()");
             courseTitle.href = "/course/" + courseId;
             courseTitle.innerHTML = courseName;
@@ -275,7 +281,7 @@ function loadContentSidebar(courseId, courseName, chapterId, type) {
                             subA.innerHTML = `<i  id="sb-${courseId}-${value.id}" class="es-circle-empty"></i>` + topic;
                             subLi.appendChild(subA);
                             subUl.appendChild(subLi);
-                            if ("/content/" + chapterId == value.href) {
+                            if ("/content/" + chapterPath == value.href) {
                                 subLi.classList.add("active");
                                 subUl.classList.remove('disabled');
                                 a.innerHTML = `<i class="es-circle-empty"></i><span> ${chapter}</span><i class="arrow es-angle-double-up pull-right"></i>`;
@@ -286,7 +292,7 @@ function loadContentSidebar(courseId, courseName, chapterId, type) {
                         li.appendChild(subUl);
                     } else {
                         li.classList.add('chapter-menu');
-                        if ("/content/" + chapterId == topics.href)
+                        if ("/content/" + chapterPath == topics.href)
                             li.classList.add("active");
                         const a = document.createElement("a");
                         a.href = topics.href;
@@ -297,7 +303,7 @@ function loadContentSidebar(courseId, courseName, chapterId, type) {
                     ul.appendChild(li);
                 } else {
                     li.classList.add('chapter-menu');
-                    if ("/content/" + chapterId == topics.href)
+                    if ("/content/" + chapterPath == topics.href)
                         li.classList.add("active");
                     li.classList.add("video-list");
                     const a = document.createElement('a');
@@ -335,12 +341,13 @@ function updateUserLevelsOnEnrolledCourses() {
     showCompletionButton = false;
     let uid = getUid();
     if (uid) {
-        getUserPrivateData(uid).then((userData) => {
+        readDocument(USER_PRIVATE_COLLECTION, uid).then((userData) => {
             var coursehref = "/course/" + lastCourseId;
             console.log(coursehref);
             let matchingCourse = userData.enrolledCourses.find(course => course.href === coursehref);
-            chaptersCompleted = matchingCourse.chaptersCompleted;
+            
             if (matchingCourse) {
+                chaptersCompleted = matchingCourse.chaptersCompleted;
                 chaptersCompleted.forEach(id => {
                     let savedId = "sb-" + lastCourseId + "-" + id
                     let i = document.getElementById(savedId);
@@ -403,73 +410,4 @@ function initializeContentSideBarListeners() {
 
     let menuOptions = document.querySelectorAll('.chapter-menu');
     menuOptions.forEach(mo => mo.addEventListener('click', (event) => { menuOptions.forEach(moi => { if (moi == mo) moi.classList.add('active'); else moi.classList.remove('active') }) }))
-}
-
-
-// TODO: Potentially need to remove following function */
-async function importMockApi() {
-    try {
-        const {
-            mockgetCourseContentAPICall, mockgetCourseContentCommentsAPICall, mockCourseContentAddCommentAPICall } = await import('/public/test/mock-api.js');
-
-        return {
-            mockgetCourseContentAPICall,
-            mockgetCourseContentCommentsAPICall,
-            mockCourseContentAddCommentAPICall
-        };
-    } catch (error) {
-        console.error('Error importing mock API:', error);
-        throw error;
-    }
-}
-async function getCourseContentAPICalls(courseId) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // If data is already cached, resolve with the cached data
-
-        // Simulate an API call
-        mockApi.mockgetCourseContentAPICall(courseId)
-            .then(response => {
-                // TODO: Store the API response in the cachedData object
-                resolve(response); // Resolve with the API response
-            })
-            .catch(error => {
-                reject(error); // Reject with the error from the API call
-            });
-
-    });
-}
-async function getCourseContentCommentsAPICalls(courseId) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // If data is already cached, resolve with the cached data
-
-        // Simulate an API call
-        mockApi.mockgetCourseContentCommentsAPICall(courseId)
-            .then(response => {
-                // TODO: Store the API response in the cachedData object
-                resolve(response); // Resolve with the API response
-            })
-            .catch(error => {
-                reject(error); // Reject with the error from the API call
-            });
-
-    });
-}
-
-async function addCommentToCourseAPICalls(courseId, newCommentObject) {
-    const mockApi = await importMockApi();
-    return new Promise((resolve, reject) => {
-        // If data is already cached, resolve with the cached data
-
-        // Simulate an API call
-        mockApi.mockCourseContentAddCommentAPICall(courseId, newCommentObject)
-            .then(() => {
-                resolve(); // Resolve with the API response
-            })
-            .catch(error => {
-                console.log(error);
-                reject(error); // Reject with the error from the API call
-            });
-    });
 }
