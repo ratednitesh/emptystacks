@@ -25,6 +25,7 @@ const statusCodes = {
     211: "Comment Added",
     212: "Review submitted.",
     213: "Added to liked tutorials",
+    214: "Chapter marked Completed!",
 
     301: "Please agree to Terms & Conditions!",
     302: "Username is required!",
@@ -39,6 +40,7 @@ const statusCodes = {
     311: "Password and Confirm Password Strings do not match",
     312: "Comment cannot be blank",
     313: "Max Characters: ",
+    314: "Select a rating, to submit the review.",
 
     500: "Something went wrong, please try again later",
     501: "Something went wrong, unable to load: ",
@@ -47,6 +49,7 @@ const statusCodes = {
     504: "Sign out Failed!",
     505: "Registration Failed!",
     506: "Sorry, This feature is not supported currently."
+
 }
 export function notification(statusCode, message) {
     let el = document.createElement('DIV');
@@ -134,4 +137,16 @@ export function getFormattedDate(date) {
 
     // Format the date as a string in DD-MM-YYYY format
     return `${day}-${month}-${year}`;
+}
+
+export function createCourseToken(courseId, courseData) {
+    return {
+        thumbnail: courseData.thumbnail,
+        title: courseData.courseName,
+        href: "/course/" + courseId,
+        nextChapter: courseData.href,
+        chaptersCompleted: [],
+        totalChapters: courseData.chapterCount,
+        status: "In Progress",
+    };
 }

@@ -47,7 +47,6 @@ const route = (event) => {
     removeMenuOptions();
     var element = event.target;
     var newRoute = element.href;
-    // TODO: Should avoid loop logic
     var MAX_TRY = 5;
     while (newRoute == undefined && MAX_TRY > 0) {
         newRoute = element.parentElement.href;

@@ -1,5 +1,5 @@
-import { publish, notification, getFormattedDate } from "./helper";
-import { COURSE_DETAILS, USER_PRIVATE_COLLECTION, addDocument, getUid, readAllDocuments, readDocument } from "./firebase-config";
+import { publish, notification, getFormattedDate, createCourseToken } from "./helper";
+import { addDocument, updateEnrolledCourse, getUid, readAllDocuments, readDocument } from "./firebase-config";
 import { signup_selected } from "./setup";
 import { copyPathToClipboard } from "./router";
 
@@ -22,7 +22,7 @@ const thumbsUp = document.querySelector('.chapter-footer .es-thumbs-up');
 const thumbsDown = document.querySelector('.chapter-footer .es-thumbs-down');
 let lastChapterPath;
 let lastCourseId;
-let lastChapterId; 
+let lastChapterId;
 let showCompletionButton = true;
 let chaptersCompleted;
 export function initContent() {
@@ -32,7 +32,7 @@ export function initContent() {
     showComments.addEventListener('click', () => {
         showComments.classList.add('disabled');
         commentHtml.classList.remove('disabled');
-        readAllDocuments(COURSE_DETAILS + "/"+lastCourseId+"/Content/"+lastChapterId+"/Comments").then(
+        readAllDocuments("CourseDetails/" + lastCourseId + "/Content/" + lastChapterId + "/Comments").then(
             ((commentData) => {
                 comments.innerHTML = "";
                 if (commentData) {
@@ -64,7 +64,7 @@ export function initContent() {
                 "comment": msg,
                 "imageSrc": document.getElementById('user-menu-photo').src
             };
-            addDocument(COURSE_DETAILS + "/"+lastCourseId+"/Content/"+lastChapterId+"/Comments", commentObject).then(
+            addDocument("CourseDetails/" + lastCourseId + "/Content/" + lastChapterId + "/Comments", commentObject).then(
                 () => {
                     displayComment(commentObject);
                     notification(211);
@@ -76,25 +76,88 @@ export function initContent() {
 
     })
     completionMarker.querySelector('a').addEventListener('click', () => {
-        // TODO: update to db changes. Add to enrolled courses - completed courses.
+
         const activeI = document.querySelector('.nano-content .active  >a > i');
+        let id = activeI.id;
+        const regex = /-(\d+)$/;
+        let index = id.match(regex)[1];
+        console.log("index: " + index);
         activeI.classList.add('es-ok-circled', 'green');
         activeI.classList.remove('es-circle-empty');
         markParentMenuComplete();
         completionMarker.classList.add('disabled');
-        checkCourseCompletion();
-        // TODO: if all green mark the course as completed in Db. 
+        let courseToken;
+        let incrementer;
+        readDocument("UsersPrivate", getUid()).then(async (userData) => {
+            let matchingCourse = Object.keys(userData.enrolledCourses).find(course => course === lastCourseId);
+            if (!matchingCourse) {
+                await readDocument("CourseDetails", lastCourseId).then(
+                    (courseData) => {
+                        courseToken = createCourseToken(lastCourseId, courseData);
+                        courseToken.chaptersCompleted.push(index);
+                    });
+                incrementer = "saved";
+            } else {
+                courseToken = userData.enrolledCourses[matchingCourse];
+                courseToken.chaptersCompleted.push(index);
+            }
+            if (nextBtn.href) {
+                console.log(nextBtn);
+                console.log(nextBtn.id);
+                courseToken.nextChapter = new URL(nextBtn.href).pathname;
+            }
+            if (checkCourseCompletion()) {
+                courseToken.status = "Completed"
+                incrementer = "completed";
+            }
+            console.log(courseToken);
+            updateEnrolledCourse(lastCourseId, courseToken, incrementer).then(() => {
+                notification(214);
+            }).catch((e) => { console.log(e); notification(500); });
+        })
     });
     courseCompletionModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
-        // Prevent the default form submission
+        
         event.preventDefault();
-        // TODO: Complete this.
-        notification(212);
-        // TODO: Refresh on page change 
-        // save to db
-        // increase counter
-        courseCompletionModal.classList.remove('is-visible')
 
+        const ratings = document.querySelectorAll('.ratings input[name="rate"]');
+        let selectedRating = null;
+        ratings.forEach(radio => {
+            if (radio.checked) {
+                selectedRating = radio.value;
+            }
+        });
+        if (selectedRating) {
+            console.log(`Selected rating: ${selectedRating}`);
+            let review = document.getElementById('submit-review').value;
+            if (review) {
+                console.log(`Review: ${review}`);
+            } else {
+                console.log('No rating selected');
+            }
+
+            var reviewObject = {
+                "rating": selectedRating,
+                "review": review,
+                "user": {
+                    "uid": getUid(),
+                    "name": document.getElementById('user-menu-name').innerHTML,
+                    "commentDate": getFormattedDate(new Date()),
+                    "userProfileSrc": document.getElementById('user-menu-photo').src
+                }
+            };
+            addDocument("CourseDetails/" + lastCourseId + "/Reviews", reviewObject).then(
+                () => {
+                    courseCompletionModal.classList.remove('is-visible');
+                    notification(212);
+                }
+            ).catch(
+                (e) => { console.log(e); notification(500) }
+            );
+        } else {
+            console.log('No rating selected');
+            notification(314);
+        }
     });
     thumbsUp.addEventListener('click', function () {
         thumbsUp.classList.toggle('red');
@@ -109,9 +172,11 @@ export function initContent() {
 }
 function checkCourseCompletion() {
     var notcompleted = contentSidebarHtml.querySelector('.es-circle-empty')
-    if (!notcompleted)
+    if (!notcompleted) {
         courseCompletionModal.classList.add('is-visible');
-
+        return true;
+    } else
+        return false;
 }
 function displayComment(comment) {
     const boxDiv = document.createElement("div");
@@ -181,7 +246,7 @@ export function loadContent(chapterPath) {
         lastChapterId = chapterId;
         console.log("chapter: " + chapterId + " course:" + courseId);
         hideComments();
-        readDocument(COURSE_DETAILS + "/" + courseId + "/Content", chapterId).then(
+        readDocument("CourseDetails/" + courseId + "/Content/", chapterId).then(
             (chapterData) => {
                 if (chapterData) {
                     contentHtml.querySelector('.heading').innerHTML = chapterData.heading;
@@ -191,12 +256,12 @@ export function loadContent(chapterPath) {
                     showComments.innerHTML = "Comments (" + chapterData.comments + ")";
                     if (chapterData.previousChapter) {
                         prevBtn.classList.remove('locked');
-                        prevBtn.href = "/content/"+courseId+"/"+chapterData.previousChapter;
+                        prevBtn.href = "/content/" + courseId + "/" + chapterData.previousChapter;
                     } else
                         prevBtn.classList.add('locked');
                     if (chapterData.nextChapter) {
                         nextBtn.classList.remove('locked');
-                        nextBtn.href = "/content/"+courseId+"/"+chapterData.nextChapter;
+                        nextBtn.href = "/content/" + courseId + "/" + chapterData.nextChapter;
                     } else
                         nextBtn.classList.add('locked');
 
@@ -254,9 +319,10 @@ function hideComments() {
 }
 // load content sidebar
 function loadContentSidebar(courseId, courseName, chapterPath, type) {
-    readDocument(COURSE_DETAILS, courseId).then(
+    readDocument("CourseDetails", courseId).then(
         (courseData) => {
-            let chapterDetails = courseData.chapters; // TODO: This should be sorted.
+            let chapterDetails = courseData.chapters; // This should be sorted. store as array of object OR sort post retreival
+            console.log(JSON.stringify(chapterDetails));
             courseTitle.setAttribute("onclick", "route()");
             courseTitle.href = "/course/" + courseId;
             courseTitle.innerHTML = courseName;
@@ -341,11 +407,11 @@ function updateUserLevelsOnEnrolledCourses() {
     showCompletionButton = false;
     let uid = getUid();
     if (uid) {
-        readDocument(USER_PRIVATE_COLLECTION, uid).then((userData) => {
+        readDocument("UsersPrivate", uid).then((userData) => {
             var coursehref = "/course/" + lastCourseId;
             console.log(coursehref);
-            let matchingCourse = userData.enrolledCourses.find(course => course.href === coursehref);
-            
+            let matchingCourse = Object.values(userData.enrolledCourses).find(course => course.href === coursehref);
+
             if (matchingCourse) {
                 chaptersCompleted = matchingCourse.chaptersCompleted;
                 chaptersCompleted.forEach(id => {
@@ -404,7 +470,7 @@ function initializeContentSideBarListeners() {
                 link.nextElementSibling.classList.add('disabled');
             }
             // Prevent the click event from propagating up the DOM hierarchy
-            e.stopPropagation(); // TODO: may be needed at all places as well.
+            e.stopPropagation();
         });
     });
 

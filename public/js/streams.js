@@ -1,4 +1,4 @@
-import { ALL_STREAMS, COURSES_BY_STREAMS, readAllDocuments, readDocument } from './firebase-config';
+import { readAllDocuments, readDocument } from './firebase-config';
 import { notification } from './helper';
 
 const selectedSection = document.querySelector('.streams-selected .streams');
@@ -12,7 +12,7 @@ var coursesByStreams = {};
 export async function initStreams() {
     console.log('init streams done');
     return new Promise((resolve, reject) => {
-        readAllDocuments(ALL_STREAMS).then(
+        readAllDocuments("AllStreams").then(
             (streams) => {
                 streams.forEach(stream => {
                     const anchorTag = document.createElement('a');
@@ -66,7 +66,6 @@ function initAllStreamsListeners() {
 }
 
 export function loadStreams(streamId) {
-    // TODO: Reset Courses section as well.
     console.log('loading streams from load: ' + streamId);
     resetSelection();
     if (streamId != undefined) {
@@ -75,6 +74,9 @@ export function loadStreams(streamId) {
             noStreamMessage.classList.add('disabled');
             selectedSection.appendChild(a);
             selectedStreams.add(streamId);
+            while (boxContainer.firstChild) {
+                boxContainer.removeChild(boxContainer.firstChild);
+            }
             getCoursesByStreams(streamId);
         }
     }
@@ -88,7 +90,7 @@ function resetSelection() {
 }
 
 function getCoursesByStreams(streamId) {
-    readDocument(COURSES_BY_STREAMS, streamId).then(
+    readDocument("CoursesByStreams", streamId).then(
         coursesData => {
             coursesByStreams[streamId] = coursesData.courses;
             coursesByStreams[streamId].forEach(course => {
@@ -140,7 +142,6 @@ function removeCoursesByStream(streamId) {
             let remove = true;
             selectedStreams.forEach(selectedStreamId => {
                 if (coursesByStreams[selectedStreamId]?.some(c => c.href == course.href)) {
-                    // TODO: Check if this question mark is needed else where? 
                     remove = false;
                 }
             });

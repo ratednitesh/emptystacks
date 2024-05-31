@@ -84,7 +84,6 @@
      color: var(--black);
  }
 
-/* TODO: Review Media Queries below */
 
 @media(max-width:991px) {
     html {

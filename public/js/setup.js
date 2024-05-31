@@ -1,4 +1,4 @@
-import { ALL_COURSES, USER_PRIVATE_COLLECTION, createDocument, getUid, readAllDocuments, readDocument } from "./firebase-config";
+import { getUid, readAllDocuments, readDocument } from "./firebase-config";
 import { notification } from "./helper";
 import { createNewUser, emailPasswordSignIn, firebaseSignOut, googleSignIn, tryPasswordResetEmail } from "./firebase-config";
 
@@ -68,7 +68,7 @@ function initSearchBar() {
 
 }
 function initSearchCourses() {
-    readAllDocuments(ALL_COURSES).then(
+    readAllDocuments("AllCourses").then(
         (coursesData) => {
             const boxContainer = document.querySelector('.search .flex-container');
             let i = 0;
@@ -397,7 +397,6 @@ function modalListeners() {
         var email = document.getElementById("reg-tutor-email").value.trim();
         var msg = document.getElementById("reg-tutor-msg").value.trim();
         var pdfFile = document.getElementById("reg-tutor-pdfFile").value.trim();
-        // TODO: Complete this.
         if (name === '' || email === '' || msg === '') {
             notification(310);
             return;
@@ -419,7 +418,6 @@ function modalListeners() {
         else if (newp != conf)
             notification(311);
         else if (validatePassword(newp)) {
-            // TODO: actually call firebase password change function
             notification(210);
             accSettModal.classList.remove('is-visible');
             setTimeout(() => { signOut() }, 5000);
@@ -510,16 +508,16 @@ function loadUserPrivateData() {
 
     if (getUid()) {
         let uid = getUid();
-        readDocument(USER_PRIVATE_COLLECTION, uid)
+        readDocument("UsersPrivate", uid)
             .then((userData) => {
                 console.log('loading private data');
                 console.log(userData.userProfileSrc);
                 console.log(userData);
-                 
+
                 document.getElementById('user-photo-header').src = userData.userProfileSrc;
                 document.getElementById('user-menu-photo').src = userData.userProfileSrc;
                 document.getElementById('user-menu-name').innerHTML = userData.username;
-                document.getElementById('user-menu-mail').innerHTML = userData.email;
+                document.getElementById('user-menu-mail').innerHTML = userData.mailId;
                 profileMenuOnlyPublic.forEach((node) => { node.classList.add('disabled') });
                 profileMenuPrivate.forEach((node) => { node.classList.remove('disabled') });
                 document.getElementById('user-photo-header').classList.remove('disabled');

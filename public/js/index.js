@@ -12,13 +12,11 @@ import "../css/divs.css"; // All Div level css
 import "../css/helper.css"; // hlper css
 import "../css/others.css"; // other page specific css
 
-/* TODO: We probably can refine below css more */
 import "../css/header.css";
 import "../css/sidebar.css";
 import "../css/modals.css";
 import "../css/reviews.css";
 
-// TODO: Remaining css 
 import "../css/comment.css";
 import "../css/textsection.css";
 import "../css/watchvideo.css";

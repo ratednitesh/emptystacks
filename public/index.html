@@ -252,7 +252,6 @@
                     <p>Your Name <span>*</span></p>
                     <input id='reg-tutor-name' type="text" name="name" placeholder="enter your name" class="box"
                         maxlength="100" required>
-                    <!-- // TODO: put  Required in other places. -->
                     <p>Your email <span>*</span></p>
                     <input id='reg-tutor-email' type="email" name="email" placeholder="enter your email" class="box"
                         maxlength="100" required>
@@ -277,20 +276,20 @@
                     <h2><i class="es-ok-circled green"></i>Congratulations! You have completed this course.</h2>
                     <p>Rate this course</p>
                     <div class="ratings">
-                        <input type="radio" name="rate" id="rate-5">
+                        <input type="radio" name="rate" id="rate-5" value="5">
                         <label for="rate-5"><i class="es-star"></i></label>
-                        <input type="radio" name="rate" id="rate-4">
+                        <input type="radio" name="rate" id="rate-4" value="4">
                         <label for="rate-4"><i class="es-star"></i></label>
-                        <input type="radio" name="rate" id="rate-3">
+                        <input type="radio" name="rate" id="rate-3" value="3">
                         <label for="rate-3"><i class="es-star"></i></label>
-                        <input type="radio" name="rate" id="rate-2">
+                        <input type="radio" name="rate" id="rate-2" value="2">
                         <label for="rate-2"><i class="es-star"></i></label>
-                        <input type="radio" name="rate" id="rate-1">
+                        <input type="radio" name="rate" id="rate-1" value="1">
                         <label for="rate-1"><i class="es-star"></i></label>
 
                     </div>
                     <p>Write your Review </p>
-                    <textarea name="msg" class="box" placeholder="enter your message" cols="30" rows="5"></textarea>
+                    <textarea id="submit-review" name="msg" class="box" placeholder="enter your message" cols="30" rows="5"></textarea>
                     <input type="submit" name="submit" value="Submit" class="btn">
                 </form>
             </section>

@@ -1,5 +1,5 @@
 
-import { ALL_COURSES, ALL_STREAMS, USER_PRIVATE_COLLECTION, getUid, readAllDocuments, readAllDocumentsWithLimit, readDocument } from "./firebase-config";
+import { getUid, readAllDocuments, readAllDocumentsWithLimit, readDocument } from "./firebase-config";
 import { signup_selected } from "./setup";
 import { notification } from './helper';
 const highlightSection = document.querySelector('.highlight-section');
@@ -33,7 +33,7 @@ function initBanner() {
 }
 // Initializer and Listeners: Popular Courses
 function initPopularCourses() {
-    readAllDocuments(ALL_COURSES).then(
+    readAllDocuments("AllCourses").then(
         (coursesData) => {
             const boxContainer = document.querySelector('.courses .flex-container');
 
@@ -94,7 +94,7 @@ function initQuickSelect() {
 // Initializer and Listeners: Streams
 function initStreams() {
     // Get the Stream container
-    readAllDocumentsWithLimit(ALL_STREAMS, 12).then(
+    readAllDocumentsWithLimit("AllStreams", 12).then(
         (streams) => {
             const streamContainer = document.getElementById('stream-options');
             streams.forEach(stream => {
@@ -153,6 +153,7 @@ export function loadHome(args) {
             loadBanner();
             isBannerLoaded = true;
         }
+        updateEnrolledCourses();
     }
 }
 // Unload Home / Courses
@@ -180,10 +181,10 @@ function updateQuickSelectOptions() {
 function updateEnrolledCourses() {
     let uid = getUid();
     if (uid)
-        readDocument(USER_PRIVATE_COLLECTION, uid)
+        readDocument("UsersPrivate", uid)
             .then(
                 (data) => {
-                    var quickCourses = data.enrolledCourses;
+                    var quickCourses = Object.values(data.enrolledCourses);
                     // Reference to the book container
                     bookContainer.innerHTML = "";
                     // Iterate over quickCourses array

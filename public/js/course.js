@@ -1,5 +1,5 @@
-import { COURSE_DETAILS, USER_PRIVATE_COLLECTION, enrollCourse, getUid, readAllDocuments, readDocument } from "./firebase-config";
-import { notification, publish } from "./helper";
+import { updateEnrolledCourse, getUid, readAllDocuments, readDocument } from "./firebase-config";
+import { createCourseToken, notification, publish } from "./helper";
 
 const textCourse = document.querySelector('.text-course');
 const courseStreams = textCourse.querySelector('.streams');
@@ -35,15 +35,9 @@ export function initCoursePage() {
         let uid = getUid();
         if (uid) {
             saveCourse.classList.add('locked');
-            readDocument(USER_PRIVATE_COLLECTION, uid).then((userData) => { //TODO: Do we even need to read when updating ?
-                if (!userData.enrolledCourses.some(course => course.href === courseToken.href)) {
-                    console.log(userData);
-                    enrollCourse(courseToken).then(() => {
-                        notification(208);
-                        // TODO: Refresh activities and enrolled courses everywhere else.
-                    }).catch((e) => { console.log(e); notification(502); });
-                }
-            }).catch((e) => { console.log(e); notification(501, 'user profile') });
+            updateEnrolledCourse(lastCourseId, courseToken, "saved").then(() => {
+                notification(208);
+            }).catch((e) => { console.log(e); notification(502); });
         }
     });
 }
@@ -62,10 +56,10 @@ export function loadCoursePage(courseId) {
 function updateUserLevelsOnEnrolledCourses() {
     let uid = getUid();
     if (uid) {
-        readDocument(USER_PRIVATE_COLLECTION, uid).then((userData) => {
+        readDocument("UsersPrivate", uid).then((userData) => {
             var coursehref = "/course/" + lastCourseId;
             console.log(coursehref);
-            let matchingCourse = userData.enrolledCourses.find(course => course.href === coursehref);
+            let matchingCourse = Object.values(userData.enrolledCourses).find(course => course.href === coursehref); 
             if (matchingCourse) {
                 saveCourse.classList.add('locked');
                 progressContainer.classList.remove('disabled');
@@ -101,7 +95,7 @@ function updateUserLevelsOnEnrolledCourses() {
 }
 // Load course Data
 function getCourseData(courseId) {
-    readDocument(COURSE_DETAILS, courseId).then(
+    readDocument("CourseDetails", courseId).then(
         (courseData) => {
             if (courseData) {
                 textCourse.querySelectorAll('.chapters').forEach((event) => {
@@ -133,7 +127,7 @@ function getCourseData(courseId) {
                 });
 
                 textCourse.querySelector('#description').innerHTML = courseData.description;
-                startButton.href = courseData.href; //TODO: on click here it should also save the course if not already.
+                startButton.href = courseData.href;
                 const level = courseData.level;
                 const n = 4 - level; // Calculate the value of n based on the level
                 textCourse.querySelector('#course-level').innerHTML = levelNames[level - 1];
@@ -149,7 +143,7 @@ function getCourseData(courseId) {
                 textCourse.querySelector('#tutor-img').src = tutorData.userProfileSrc;
                 textCourse.querySelector('#tutor-name').innerHTML = tutorData.name;
                 textCourse.querySelector('#tutor-role').innerHTML = tutorData.role;
-                createCourseToken(courseData);
+                courseToken = createCourseToken(lastCourseId, courseData);
                 if (courseData.type == "text") {
                     document.querySelector(".course-details").classList.remove('disabled');
                     document.querySelector(".video-container").classList.add('disabled');
@@ -159,7 +153,7 @@ function getCourseData(courseId) {
                     document.querySelector(".course-details").classList.add('disabled');
                 }
 
-                let courseContentData = courseData.chapters;  // TODO: This should be sorted.
+                let courseContentData = courseData.chapters;
                 if (courseData.type == "text") {
                     courseDetails.innerHTML = "";
                     for (const [course, topics] of Object.entries(courseContentData)) {
@@ -250,7 +244,7 @@ function getCourseData(courseId) {
 
 // Load course reviews
 function getCourseReviews(courseId) {
-    readAllDocuments(COURSE_DETAILS + "/" + courseId + "/Reviews").then(
+    readAllDocuments("CourseDetails/" + courseId + "/Reviews").then(
         (courseReview) => {
             console.log(courseReview);
             if (courseReview.length) {
@@ -310,14 +304,4 @@ function generateStarRating(rating) {
         '<i class="es-star-empty"></i>'.repeat(5 - Math.ceil(rating)) +
         '</div>';
 
-}
-function createCourseToken(courseData) {
-    courseToken = {
-        thumbnail: courseData.thumbnail,
-        title: courseData.courseName,
-        href: "/course/" + lastCourseId,
-        nextChapter: courseData.href,
-        chaptersCompleted: [],
-        totalChapters: courseData.chapterCount
-    };
 }

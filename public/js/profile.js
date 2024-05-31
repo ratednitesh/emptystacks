@@ -1,5 +1,5 @@
-import { USER_PRIVATE_COLLECTION, USER_PUBLIC_COLLECTION, getUid, readDocument, updateDocument } from "./firebase-config";
-import { notification } from "./helper";
+import { getUid, readDocument, updateDocument } from "./firebase-config";
+import { notification, publish } from "./helper";
 
 var myProfile = {};
 const dataFields = ["username", "about-me", "work", "location", "tech-stack", "facebook", "instagram", "linkedin", "github"];
@@ -37,14 +37,13 @@ export function initProfile() {
                 crossIcon.classList.toggle('inactive');
             })
             checkIcon.addEventListener("click", () => {
-                //TODO: add validations for fields change old value = new value
                 var newValue = dataFieldElement.innerHTML;
                 //Validations
                 if (newValue.length > 30) {
                     notification(313, 30);
                 } else {
                     myProfile[dataField] = newValue;
-                    updateDocument(USER_PUBLIC_COLLECTION, getUid(), { [dataField]: newValue }).then(() => {
+                    updateDocument("UsersPublic", getUid(), { [dataField]: newValue }).then(() => {
                         notification(202, dataField);
                     })
                         .catch(() => { notification(502); });
@@ -106,7 +105,7 @@ export function loadProfile(uid, type) {
 }
 // load public profile
 function loadPublicProfile(uid, isMyProfile) {
-    readDocument(USER_PUBLIC_COLLECTION, uid).then((data) => {
+    readDocument("UsersPublic", uid).then((data) => {
         if (isMyProfile)
             myProfile = data;
         setUserProfilePhoto(data.userProfileSrc);
@@ -121,7 +120,7 @@ function loadPublicProfile(uid, isMyProfile) {
             for (const property in data.tutorDetails.stats) {
                 initUserActivities(property, data.tutorDetails.stats[property]);
             }
-            createCoursesSection(data.tutorDetails.publishedCourses, '.flex-container.published-courses', 'published');
+            createCoursesSection(Object.values(data.tutorDetails.publishedCourses), '.flex-container.published-courses', 'published');
             profileDiv.querySelectorAll('.tutor').forEach(function (event) {
                 event.classList.remove("disabled");
             });
@@ -130,8 +129,6 @@ function loadPublicProfile(uid, isMyProfile) {
                 event.classList.add("disabled");
             });
         }
-        // TODO:  publish('notFoundRoute');
-
     }).catch((e) => {
         console.log(e);
         notification(501, 'profile');
@@ -141,11 +138,11 @@ function loadPublicProfile(uid, isMyProfile) {
 
 // load private profile
 function loadPrivateProfile(uid) {
-    readDocument(USER_PRIVATE_COLLECTION, uid).then((data) => {
+    readDocument("UsersPrivate", uid).then((data) => {
         for (const property in data.activities) {
             initUserActivities(property, data.activities[property]);
         }
-        createCoursesSection(data.enrolledCourses, '.flex-container.enrolled-courses', 'enrolled');
+        createCoursesSection(Object.values(data.enrolledCourses), '.flex-container.enrolled-courses', 'enrolled');
     }
     ).catch(() => {
         notification(501, 'user private profile');
@@ -155,7 +152,10 @@ function loadPrivateProfile(uid) {
 // load my courses
 export function loadMyCourses() {
     let uid = getUid();
-    loadProfile(uid, 'only-course');
+    if (uid)
+        loadProfile(uid, 'only-course');
+    else
+        publish('notFoundRoute');
 
 }
 

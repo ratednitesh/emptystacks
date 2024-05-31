@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore/lite';
+import { getFirestore, orderBy } from 'firebase/firestore/lite';
 import { doc, setDoc, getDoc, deleteField, updateDoc, query, where, getDocs, increment, arrayUnion, collection, addDoc, limit } from "firebase/firestore/lite";
 
 import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile } from "firebase/auth";
@@ -13,12 +13,7 @@ const firebaseConfig = {
     appId: process.env.FIREBASE_APP_ID,
     measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
-export const USER_PRIVATE_COLLECTION = "UsersPrivate";
-export const USER_PUBLIC_COLLECTION = "UsersPublic";
-export const ALL_STREAMS = "AllStreams";
-export const COURSES_BY_STREAMS = "CoursesByStreams";
-export const ALL_COURSES = "AllCourses";
-export const COURSE_DETAILS = "CourseDetails";
+
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 const auth = getAuth();
@@ -59,7 +54,7 @@ export async function createNewUser(userToken) {
         console.log('User created and email verification sent.');
 
         // Create User Profile / Document
-        if (!await readDocument(USER_PRIVATE_COLLECTION, user.uid)) {
+        if (!await readDocument("UsersPrivate", user.uid)) {
             await createUserProfile(user);
         }
     } catch (error) {
@@ -77,7 +72,7 @@ export async function googleSignIn() {
         const credential = GoogleAuthProvider.credentialFromResult(userCredential);
         // const token = credential.accessToken;
         const user = userCredential.user;
-        if (!await readDocument(USER_PRIVATE_COLLECTION, user.uid)) {
+        if (!await readDocument("UsersPrivate", user.uid)) {
             console.log('user not registered. Create user private / public docs' + user.uid)
             await createUserProfile(user);
         }
@@ -148,49 +143,77 @@ export async function addDocument(collectionName, data) {
 
 // READ
 export async function readDocument(collectionName, id) {
-    const docRef = doc(db, collectionName, id);
-    const docSnap = await getDoc(docRef);
+    try {
+        const docRef = doc(db, collectionName, id);
+        const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-        return docSnap.data();
-    } else {
-        // docSnap.data() will be undefined in this case
-        console.log("No such document!");
-        return false;
+        if (docSnap.exists()) {
+            console.log("Document data:", docSnap.data());
+            return docSnap.data();
+        } else {
+            // docSnap.data() will be undefined in this case
+            console.log("No such document!");
+            return false;
+        }
+    } catch (e) {
+        console.error("Error updating document: ", e);
+        throw e;
     }
 }
 
 // READ MULTIPLE
 // export async function readDocuments(collectionName, queryString) {
-//     const q = query(collection(db, collectionName), limit());// TODO: where("capital", "==", true));
+//     const q = query(collection(db, collectionName), limit());// where("capital", "==", true));
 //     const querySnapshot = await getDocs(q);
 //     querySnapshot.forEach((doc) => {
 //         // doc.data() is never undefined for query doc snapshots
 //         console.log(doc.id, " => ", doc.data());
-//         // TODO: return from here.
+//         //  return from here.
 //     });
 // }
 // READ ALL DOCUMENTS
 export async function readAllDocuments(collectionName) {
-    const q = query(collection(db, collectionName));
-    const querySnapshot = await getDocs(q);
-    const allData = querySnapshot.docs.map(doc => doc.data()); //All Data as an array.
-    return allData;
+    try {
+        const q = query(collection(db, collectionName));
+        const querySnapshot = await getDocs(q);
+        const allData = querySnapshot.docs.map(doc => doc.data()); //All Data as an array.
+        return allData;
+    } catch (e) {
+        console.error("Error updating document: ", e);
+        throw e;
+    }
 }
 
 // READ LIMITED DOCUMENTS
 export async function readAllDocumentsWithLimit(collectionName, maxLimit) {
-    const q = query(collection(db, collectionName), limit(maxLimit));
-    const querySnapshot = await getDocs(q);
-    const allData = querySnapshot.docs.map(doc => doc.data()); //All Data as an array.
-    return allData;
+    try {
+        const q = query(collection(db, collectionName), limit(maxLimit));
+        const querySnapshot = await getDocs(q);
+        const allData = querySnapshot.docs.map(doc => doc.data()); //All Data as an array.
+        return allData;
+    } catch (e) {
+        console.error("Error updating document: ", e);
+        throw e;
+    }
+}
+
+// READ SORTED DOCUMENTS
+export async function readAllDocumentsSorted(collectionName, sortBy) {
+    try {
+        const q = query(collection(db, collectionName), orderBy(sortBy));
+        const querySnapshot = await getDocs(q);
+        const allData = querySnapshot.docs.map(doc => doc.data()); //All Data as an array.
+        return allData;
+    } catch (e) {
+        console.error("Error updating document: ", e);
+        throw e;
+    }
 }
 // UPDATE 
 export async function updateDocument(collectionName, id, data) {
     try {
         await updateDoc(doc(db, collectionName, id), data);
-        console.log(`Document: ${collectionName} with id: ${id} updated.`);
+        console.log(`Document: ${collectionName} with id: ${id} updated. ${data}`);
 
     } catch (e) {
         console.error("Error updating document: ", e);
@@ -198,12 +221,14 @@ export async function updateDocument(collectionName, id, data) {
     }
 }
 
-export async function enrollCourse(courseToken) {
+export async function updateEnrolledCourse(courseId, courseToken, incrementer) {
+    let key = "enrolledCourses." + courseId;
     let updates = {
-        "enrolledCourses": arrayUnion(courseToken),
-        "activities.saved-courses": increment(1)
+        [key]: courseToken,
+        "activities.saved-courses": increment(incrementer == "saved" ? 1 : 0), // only for the first time
+        "activities.completed-courses": increment(incrementer == "completed" ? 1 : 0)
     };
-    await updateDocument(USER_PRIVATE_COLLECTION, getUid(), updates);
+    await updateDocument("UsersPrivate", getUid(), updates);
 }
 
 // DELETE FIELD
@@ -260,8 +285,8 @@ function getUserPublicToken() {
 
 async function createUserProfile(user) {
     try {
-        await createDocument(USER_PRIVATE_COLLECTION, user.uid, getUserPrivateToken(), false);
-        await createDocument(USER_PUBLIC_COLLECTION, user.uid, getUserPublicToken(), false);
+        await createDocument("UsersPrivate", user.uid, getUserPrivateToken(), false);
+        await createDocument("UsersPublic", user.uid, getUserPublicToken(), false);
     } catch (error) {
         throw error;
     }
