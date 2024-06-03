@@ -26,6 +26,7 @@ const statusCodes = {
     212: "Review submitted.",
     213: "Added to liked tutorials",
     214: "Chapter marked Completed!",
+    215: "Comment Deleted",
 
     301: "Please agree to Terms & Conditions!",
     302: "Username is required!",
@@ -41,6 +42,9 @@ const statusCodes = {
     312: "Comment cannot be blank",
     313: "Max Characters: ",
     314: "Select a rating, to submit the review.",
+    315: "You need to sign-in in order to proceed",
+    316: "Min Characters: ",
+    317: "You request is already in process.",
 
     500: "Something went wrong, please try again later",
     501: "Something went wrong, unable to load: ",
@@ -48,7 +52,8 @@ const statusCodes = {
     503: "Sign In Failed!",
     504: "Sign out Failed!",
     505: "Registration Failed!",
-    506: "Sorry, This feature is not supported currently."
+    506: "Sorry, This feature is not supported currently.",
+    507: "",
 
 }
 export function notification(statusCode, message) {
@@ -149,4 +154,50 @@ export function createCourseToken(courseId, courseData) {
         totalChapters: courseData.chapterCount,
         status: "In Progress",
     };
+}
+
+export function sortChapters(chapters) {
+    // Extract all items into an array with their ids
+    const items = [];
+
+    for (const [key, value] of Object.entries(chapters)) {
+        if (value.href) {
+            items.push({ name: key, ...value });
+        } else {
+            items.push({ name: key, ...value });
+            for (const [subKey, subValue] of Object.entries(value)) {
+                if (subKey !== "id" && typeof subValue === "object") {
+                    items.push({ name: subKey, ...subValue, parent: key });
+                }
+            }
+        }
+    }
+
+    // Sort the array based on ids
+    items.sort((a, b) => a.id - b.id);
+
+    // Construct a new sorted object
+    const sortedData = {};
+    for (const item of items) {
+        if (item.parent) {
+            if (!sortedData[item.parent]) {
+                sortedData[item.parent] = { id: chapters[item.parent].id };
+                // Copy additional fields at the parent level
+                Object.keys(chapters[item.parent]).forEach(field => {
+                    if (field !== 'id' && typeof chapters[item.parent][field] !== 'object') {
+                        sortedData[item.parent][field] = chapters[item.parent][field];
+                    }
+                });
+            }
+            sortedData[item.parent][item.name] = { ...item };
+            delete sortedData[item.parent][item.name].name;
+            delete sortedData[item.parent][item.name].parent;
+        } else {
+            sortedData[item.name] = { ...item };
+            delete sortedData[item.name].name;
+        }
+    }
+
+    console.log(JSON.stringify(sortedData, null, 2));
+    return sortedData;
 }

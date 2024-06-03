@@ -1,5 +1,5 @@
 import { updateEnrolledCourse, getUid, readAllDocuments, readDocument } from "./firebase-config";
-import { createCourseToken, notification, publish } from "./helper";
+import { createCourseToken, notification, publish, sortChapters } from "./helper";
 
 const textCourse = document.querySelector('.text-course');
 const courseStreams = textCourse.querySelector('.streams');
@@ -40,14 +40,22 @@ export function initCoursePage() {
             }).catch((e) => { console.log(e); notification(502); });
         }
     });
+    startButton.addEventListener('click', () => {
+        if (startButton.innerText == "Start Course" && getUid() ){
+            saveCourse.classList.add('locked');
+            updateEnrolledCourse(lastCourseId, courseToken, "saved").then(() => {
+                notification(208);
+            }).catch((e) => { console.log(e); notification(502); });
+        }
+    });
 }
 
 // Load course page
 export function loadCoursePage(courseId) {
     saveCourse.classList.add('locked');
     progressContainer.classList.add('disabled');
-    startButton.innerText = "Start Course";
     if (lastCourseId != courseId) {
+        startButton.innerText = "Start Course";
         lastCourseId = courseId;
         getCourseData(courseId);
     } else if (lastCourseId == 'notFoundRoute')
@@ -59,7 +67,8 @@ function updateUserLevelsOnEnrolledCourses() {
         readDocument("UsersPrivate", uid).then((userData) => {
             var coursehref = "/course/" + lastCourseId;
             console.log(coursehref);
-            let matchingCourse = Object.values(userData.enrolledCourses).find(course => course.href === coursehref); 
+            let matchingCourse = Object.values(userData.enrolledCourses).find(course => course.href === coursehref);
+            console.log("matching: " + matchingCourse);
             if (matchingCourse) {
                 saveCourse.classList.add('locked');
                 progressContainer.classList.remove('disabled');
@@ -153,7 +162,9 @@ function getCourseData(courseId) {
                     document.querySelector(".course-details").classList.add('disabled');
                 }
 
-                let courseContentData = courseData.chapters;
+                let courseContentData = sortChapters(courseData.chapters);
+                console.log('chapters')
+                console.log(courseContentData);
                 if (courseData.type == "text") {
                     courseDetails.innerHTML = "";
                     for (const [course, topics] of Object.entries(courseContentData)) {
@@ -165,7 +176,7 @@ function getCourseData(courseId) {
                         const headerIcon = document.createElement("i");
                         headerIcon.classList.add("es-circle-empty", "bullet");
 
-                        if (topics.id) {
+                        if (topics.href) {
                             headerIcon.id = courseId + "-" + topics.id;
                             headerTitle.appendChild(headerIcon);
                             headerTitle.innerHTML += ` ${course}`;
@@ -177,7 +188,7 @@ function getCourseData(courseId) {
                             accordionItem.appendChild(accordionHeader);
 
                         }
-                        else if (typeof topics === "object") {
+                        else {
                             headerTitle.appendChild(headerIcon);
                             headerTitle.innerHTML += ` ${course}`;
                             const expandIcon = document.createElement("i");
@@ -190,15 +201,17 @@ function getCourseData(courseId) {
                             accordionContent.classList.add("accordion-content");
 
                             for (const [topic, value] of Object.entries(topics)) {
-                                const courseList = document.createElement("li");
-                                courseList.classList.add("course-list");
-                                const topicLink = document.createElement("a");
-                                topicLink.href = value.href;
-                                topicLink.setAttribute("onclick", "route()");
-                                topicLink.innerHTML = `<i id="${courseId}-${value.id}"class="bullet es-circle-empty"></i>${topic}`;
+                                if (topic != "id") {
+                                    const courseList = document.createElement("li");
+                                    courseList.classList.add("course-list");
+                                    const topicLink = document.createElement("a");
+                                    topicLink.href = value.href;
+                                    topicLink.setAttribute("onclick", "route()");
+                                    topicLink.innerHTML = `<i id="${courseId}-${value.id}"class="bullet es-circle-empty"></i>${topic}`;
 
-                                courseList.appendChild(topicLink);
-                                accordionContent.appendChild(courseList);
+                                    courseList.appendChild(topicLink);
+                                    accordionContent.appendChild(courseList);
+                                }
                             }
                             accordionItem.appendChild(accordionContent);
                             accordionItem.classList.add("active");
@@ -247,10 +260,10 @@ function getCourseReviews(courseId) {
     readAllDocuments("CourseDetails/" + courseId + "/Reviews").then(
         (courseReview) => {
             console.log(courseReview);
-            if (courseReview.length) {
+            if (courseReview) {
                 document.querySelector('.reviews').classList.remove('disabled');
                 boxContainer.innerHTML = "";
-                courseReview.forEach((r) => {
+                Object.values(courseReview).forEach((r) => {
                     var userInfo = r.user;
                     const reviewBox = document.createElement('div');
                     reviewBox.classList.add('box');

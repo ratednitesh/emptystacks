@@ -11,7 +11,7 @@ import "../css/images.css" // All images related css
 import "../css/divs.css"; // All Div level css
 import "../css/helper.css"; // hlper css
 import "../css/others.css"; // other page specific css
-
+// OTHER CSS
 import "../css/header.css";
 import "../css/sidebar.css";
 import "../css/modals.css";

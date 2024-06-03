@@ -1,5 +1,5 @@
-import { publish, notification, getFormattedDate, createCourseToken } from "./helper";
-import { addDocument, updateEnrolledCourse, getUid, readAllDocuments, readDocument } from "./firebase-config";
+import { publish, notification, getFormattedDate, createCourseToken, sortChapters } from "./helper";
+import { addDocument, updateEnrolledCourse, getUid, readAllDocuments, readDocument, deleteDocument, updateDocument } from "./firebase-config";
 import { signup_selected } from "./setup";
 import { copyPathToClipboard } from "./router";
 
@@ -25,6 +25,8 @@ let lastCourseId;
 let lastChapterId;
 let showCompletionButton = true;
 let chaptersCompleted;
+let commentCollection;
+let oldComment = {};
 export function initContent() {
     document.querySelector('#start-journey-content').addEventListener("click", () => {
         signup_selected();
@@ -32,12 +34,15 @@ export function initContent() {
     showComments.addEventListener('click', () => {
         showComments.classList.add('disabled');
         commentHtml.classList.remove('disabled');
-        readAllDocuments("CourseDetails/" + lastCourseId + "/Content/" + lastChapterId + "/Comments").then(
+        commentCollection = "CourseDetails/" + lastCourseId + "/Content/" + lastChapterId + "/Comments";
+        readAllDocuments(commentCollection).then(
             ((commentData) => {
                 comments.innerHTML = "";
                 if (commentData) {
-                    for (const comment of commentData) {
-                        displayComment(comment);
+                    for (const [commentId, comment] of Object.entries(commentData)) {
+                        console.log('comment');
+                        console.log(comment);
+                        displayComment(commentId, comment);
                     }
                 }
             }))
@@ -65,8 +70,8 @@ export function initContent() {
                 "imageSrc": document.getElementById('user-menu-photo').src
             };
             addDocument("CourseDetails/" + lastCourseId + "/Content/" + lastChapterId + "/Comments", commentObject).then(
-                () => {
-                    displayComment(commentObject);
+                (id) => {
+                    displayComment(id, commentObject);
                     notification(211);
                 }
             ).catch(
@@ -102,8 +107,6 @@ export function initContent() {
                 courseToken.chaptersCompleted.push(index);
             }
             if (nextBtn.href) {
-                console.log(nextBtn);
-                console.log(nextBtn.id);
                 courseToken.nextChapter = new URL(nextBtn.href).pathname;
             }
             if (checkCourseCompletion()) {
@@ -117,7 +120,7 @@ export function initContent() {
         })
     });
     courseCompletionModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
-        
+
         event.preventDefault();
 
         const ratings = document.querySelectorAll('.ratings input[name="rate"]');
@@ -169,6 +172,28 @@ export function initContent() {
         thumbsDown.classList.toggle('red');
         thumbsUp.classList.remove('red'); // Optional: Remove red from thumbs up if it was selected
     });
+    nextBtn.addEventListener('click', () => {
+        console.log('YEah  Ia m hre');
+        document.querySelectorAll(".sidebar .sub-menu ul").forEach(function (submenu) {
+            submenu.classList.add('disabled');
+        });
+        let menuOptions = document.querySelectorAll('.chapter-menu');
+        menuOptions.forEach(li => {
+            let anchor = li.querySelector('a');
+
+            console.log(anchor.getAttribute('href') + " " + new URL(nextBtn.href).pathname);
+            if (anchor && anchor.getAttribute('href') === new URL(nextBtn.href).pathname) {
+                li.classList.add('active');
+                let parentUl = li.closest('ul');
+                console.log(parentUl);
+                // Check if the parent <ul> has the 'disabled' attribute and remove it if it exists
+                if (parentUl) {
+                    parentUl.classList.remove('disabled');
+                }
+            }
+            else li.classList.remove('active')
+        });
+    })
 }
 function checkCourseCompletion() {
     var notcompleted = contentSidebarHtml.querySelector('.es-circle-empty')
@@ -178,9 +203,10 @@ function checkCourseCompletion() {
     } else
         return false;
 }
-function displayComment(comment) {
+function displayComment(commentId, comment) {
     const boxDiv = document.createElement("div");
     boxDiv.classList.add("box");
+    boxDiv.id = commentId;
     const userParentDiv = document.createElement("div");
     userParentDiv.classList.add("user-parent");
     const userDiv = document.createElement("div");
@@ -209,7 +235,7 @@ function displayComment(comment) {
 
     const commentText = document.createElement("p");
     commentText.classList.add("text");
-    commentText.textContent = comment.comment;
+    commentText.innerText = comment.comment;
     userParentDiv.appendChild(userDiv);
     let uid = getUid();
     if (comment.uid == uid) {
@@ -224,10 +250,57 @@ function displayComment(comment) {
         // Create delete button
         var deleteButton = document.createElement("i");
         deleteButton.classList.add("es-trash");
-        editButton.addEventListener("click", () => { console.log("now you can edit comment") });
-        deleteButton.addEventListener("click", () => { console.log("comment deleted.") });
+        var confirmButton = document.createElement("i");
+        confirmButton.classList.add("es-ok", "disabled");
+        var cancelButton = document.createElement("i");
+        cancelButton.classList.add("es-cancel", "disabled");
+        editButton.addEventListener("click", () => {
+            console.log("now you can edit comment");
+            editButton.classList.add('disabled');
+            commentText.contentEditable = true;
+            console.log(commentText.innerText)
+            commentText.focus();
+            confirmButton.classList.remove('disabled');
+            cancelButton.classList.remove('disabled');
+            oldComment[commentId] = commentText.innerText;
+        });
+        deleteButton.addEventListener("click", () => {
+            deleteDocument(commentCollection, commentId).then(() => {
+                const boxElement = editButton.closest('.box');
+                if (boxElement) {
+                    boxElement.remove();
+                    notification(215);
+                }
+            })
+        });
+        confirmButton.addEventListener("click", () => {
+            let newComment = commentText.innerText;
+            commentText.contentEditable = false;
+            editButton.classList.remove('disabled');
+            confirmButton.classList.add('disabled');
+            cancelButton.classList.add('disabled');
+            if (newComment == oldComment[commentId])
+                notification(202, "comment");
+            else {
+                let update = { comment: newComment };
+                updateDocument(commentCollection, commentId, update).then(() => {
+                    console.log(newComment);
+                    notification(202, "comment");
+                }).catch(() => { notification(502); });;
+            }
+        });
+        cancelButton.addEventListener("click", () => {
+            commentText.contentEditable = false;
+            commentText.innerText = oldComment[commentId];
+            editButton.classList.remove('disabled');
+            confirmButton.classList.add('disabled');
+            cancelButton.classList.add('disabled');
+        });
+
         // Append buttons to div
         editDiv.appendChild(editButton);
+        editDiv.appendChild(confirmButton);
+        editDiv.appendChild(cancelButton);
         editDiv.appendChild(deleteButton);
         userParentDiv.appendChild(editDiv);
     }
@@ -321,7 +394,7 @@ function hideComments() {
 function loadContentSidebar(courseId, courseName, chapterPath, type) {
     readDocument("CourseDetails", courseId).then(
         (courseData) => {
-            let chapterDetails = courseData.chapters; // This should be sorted. store as array of object OR sort post retreival
+            let chapterDetails = sortChapters(courseData.chapters);
             console.log(JSON.stringify(chapterDetails));
             courseTitle.setAttribute("onclick", "route()");
             courseTitle.href = "/course/" + courseId;
@@ -331,7 +404,7 @@ function loadContentSidebar(courseId, courseName, chapterPath, type) {
                 const li = document.createElement("li");
                 li.classList.add("menu-options");
                 if (type == "text") {
-                    if (!topics.id) {
+                    if (!topics.href) {
                         li.classList.add("sub-menu");
                         const a = document.createElement("a");
                         a.href = "javascript:void(0);";
@@ -339,21 +412,22 @@ function loadContentSidebar(courseId, courseName, chapterPath, type) {
                         const subUl = document.createElement("ul");
                         subUl.classList.add('disabled');
                         for (const [topic, value] of Object.entries(topics)) {
-                            const subLi = document.createElement("li");
-                            const subA = document.createElement("a");
-                            subLi.classList.add("sub-menu-options", 'chapter-menu');
-                            subA.href = value.href;
-                            subA.setAttribute("onclick", "route()");
-                            subA.innerHTML = `<i  id="sb-${courseId}-${value.id}" class="es-circle-empty"></i>` + topic;
-                            subLi.appendChild(subA);
-                            subUl.appendChild(subLi);
-                            if ("/content/" + chapterPath == value.href) {
-                                subLi.classList.add("active");
-                                subUl.classList.remove('disabled');
-                                a.innerHTML = `<i class="es-circle-empty"></i><span> ${chapter}</span><i class="arrow es-angle-double-up pull-right"></i>`;
+                            if (topic != "id") {
+                                const subLi = document.createElement("li");
+                                const subA = document.createElement("a");
+                                subLi.classList.add("sub-menu-options", 'chapter-menu');
+                                subA.href = value.href;
+                                subA.setAttribute("onclick", "route()");
+                                subA.innerHTML = `<i  id="sb-${courseId}-${value.id}" class="es-circle-empty"></i>` + topic;
+                                subLi.appendChild(subA);
+                                subUl.appendChild(subLi);
+                                if ("/content/" + chapterPath == value.href) {
+                                    subLi.classList.add("active");
+                                    subUl.classList.remove('disabled');
+                                    a.innerHTML = `<i class="es-circle-empty"></i><span> ${chapter}</span><i class="arrow es-angle-double-up pull-right"></i>`;
+                                }
                             }
                         }
-
                         li.appendChild(a);
                         li.appendChild(subUl);
                     } else {

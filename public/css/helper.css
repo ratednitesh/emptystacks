@@ -114,6 +114,9 @@
 
 }
 
+.video-container .flex-container .box {
+    position: relative;
+}
 
 i.es-play-lg {
     position: absolute;

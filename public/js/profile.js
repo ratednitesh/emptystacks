@@ -42,18 +42,23 @@ export function initProfile() {
                 if (newValue.length > 30) {
                     notification(313, 30);
                 } else {
-                    myProfile[dataField] = newValue;
-                    updateDocument("UsersPublic", getUid(), { [dataField]: newValue }).then(() => {
-                        notification(202, dataField);
-                    })
-                        .catch(() => { notification(502); });
                     dataFieldElement.contentEditable = false;
                     dataFieldElement.classList.remove("editable");
                     editIcon.classList.toggle('inactive');
                     checkIcon.classList.toggle('inactive');
                     crossIcon.classList.toggle('inactive');
-                }
+                    if (newValue == myProfile[dataField]) {
+                        notification(202, dataField);
+                    } else {
+                        myProfile[dataField] = newValue;
+                        updateDocument("UsersPublic", getUid(), { [dataField]: newValue }).then(() => {
+                            notification(202, dataField);
+                        })
+                            .catch(() => { notification(502); });
 
+                    }
+
+                }
             });
             crossIcon.addEventListener("click", () => {
                 dataFieldElement.innerHTML = myProfile[dataField];

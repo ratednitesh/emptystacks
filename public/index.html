@@ -12,8 +12,7 @@
     <!-- font -->
     <link rel="preconnect" href="https://fonts.gstatic.com/">
     <link rel="preconnect" href="https://securetoken.googleapis.com">
-    <link rel="preload" fetchpriority="high" as="image" href="images/banners/1.jpg">
-    <link rel="preload" fetchpriority="high" as="image" href="images/thumbnails/thumbnail sample.jpg">
+    <!-- <link rel="preload" fetchpriority="high" as="image" href="images/banners/1.jpg"> -->
 </head>
 
 <body>
@@ -226,16 +225,16 @@
                     <input type="text" id="acc-sett-name" name="name" placeholder="" class="box" maxlength="100"
                         readonly>
                     <p>Your email</p>
-                    <input type="email" id="acc-sett-mail" name="email" placeholder="" class="box" maxlength="100"
+                    <input type="email" id="acc-sett-mail" autocomplete="email" name="email" placeholder="" class="box" maxlength="100"
                         readonly>
                     <p>Old password <span>*</span></p>
-                    <input type="password" id="acc-old-pass" name="old_pass" placeholder="enter your old password"
+                    <input type="password" id="acc-old-pass" autocomplete="current-password" name="old_pass" placeholder="enter your old password"
                         class="box" maxlength="50" required>
                     <p>New Password <span>*</span></p>
-                    <input type="password" id="acc-new-pass" name="new_pass" placeholder="enter your new password"
+                    <input type="password" id="acc-new-pass" autocomplete="new-password" name="new_pass" placeholder="enter your new password"
                         class="box" maxlength="50" required>
                     <p>Confirm password <span>*</span></p>
-                    <input type="password" id="acc-conf-pass" name="confirm_pass"
+                    <input type="password" id="acc-conf-pass" autocomplete="new-password" name="confirm_pass"
                         placeholder="confirm your new password" class="box" maxlength="50" required>
                     <input type="submit" name="submit" value="Submit" class="btn">
                 </form>
@@ -249,19 +248,19 @@
             <section class="form-container">
                 <form action="" method="post" enctype="multipart/form-data">
                     <h2>Become a Tutor!</h2>
-                    <p>Your Name <span>*</span></p>
+                    <!-- <p>Your Name <span>*</span></p>
                     <input id='reg-tutor-name' type="text" name="name" placeholder="enter your name" class="box"
                         maxlength="100" required>
                     <p>Your email <span>*</span></p>
                     <input id='reg-tutor-email' type="email" name="email" placeholder="enter your email" class="box"
-                        maxlength="100" required>
+                        maxlength="100" required> -->
                     <p>Describe your industry, experience level and hours you can spend on preparing courses weekly.
                         <span>*</span>
                     </p>
                     <textarea id='reg-tutor-msg' name="msg" class="box" placeholder="enter your message" cols="30"
-                        rows="5"></textarea>
-                    <p>Attach Resume [pdf]</p>
-                    <input id='reg-tutor-pdfFile' type="file" name="pdfFile" accept="application/pdf" class="box">
+                        rows="5" required></textarea>
+                    <!-- <p>Attach Resume [pdf]</p>
+                    <input id='reg-tutor-pdfFile' type="file" name="pdfFile" accept="application/pdf" class="box"> -->
                     <input type="submit" name="submit" value="Submit" class="btn">
                 </form>
             </section>

@@ -1,8 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, orderBy } from 'firebase/firestore/lite';
-import { doc, setDoc, getDoc, deleteField, updateDoc, query, where, getDocs, increment, arrayUnion, collection, addDoc, limit } from "firebase/firestore/lite";
+import { doc, setDoc, getDoc, deleteField, updateDoc, query, where, getDocs, increment, arrayUnion, deleteDoc, collection, addDoc, limit } from "firebase/firestore/lite";
 
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -108,6 +108,35 @@ export async function tryPasswordResetEmail(email) {
     }
 }
 
+// Change Password
+export async function changePassword(currentPassword, newPassword) {
+    const user = auth.currentUser;
+
+    if (!user) {
+        console.error("No user is currently signed in.");
+        throw "User not logged In";
+    }
+
+    // Get credentials (e.g., email and password)
+    const credentials = EmailAuthProvider.credential(user.email, currentPassword);
+    // Reauthenticate the user
+    try {
+        await reauthenticateWithCredential(user, credentials);
+        console.log("User reauthenticated");
+    }
+    catch (e) {
+        throw "Incorrect Old Password."
+    }
+    try {
+        // Update the password
+        await updatePassword(user, newPassword);
+        console.log("Password updated successfully!");
+    }
+    catch(e){
+        throw "Something went wrong. Please try again later."
+    }
+}
+
 // Sign Out
 export async function firebaseSignOut() {
     try {
@@ -134,8 +163,9 @@ export async function addDocument(collectionName, data) {
     try {
         // use merge : true if want to create new doc if not already present.
         console.log(data);
-        await addDoc(collection(db, collectionName), data);
-        console.log(`Document: ${collectionName} added.`);
+        const docRef = await addDoc(collection(db, collectionName), data);
+        console.log(`Document: ${collectionName} added with doc Id: ${docRef.id}`);
+        return docRef.id;
     } catch (e) {
         console.error("Error adding document: ", e);
     }
@@ -156,7 +186,7 @@ export async function readDocument(collectionName, id) {
             return false;
         }
     } catch (e) {
-        console.error("Error updating document: ", e);
+        console.error("Error reading document: ", e);
         throw e;
     }
 }
@@ -176,39 +206,39 @@ export async function readAllDocuments(collectionName) {
     try {
         const q = query(collection(db, collectionName));
         const querySnapshot = await getDocs(q);
-        const allData = querySnapshot.docs.map(doc => doc.data()); //All Data as an array.
-        return allData;
+        const allData = querySnapshot.docs.map(doc => { return { [doc.id]: doc.data() } });
+        console.log('all data');
+        let result = {};
+        querySnapshot.forEach(doc => {
+            result[doc.id] = doc.data();
+        });
+        console.log(allData);
+        console.log(result);
+        return result;
     } catch (e) {
         console.error("Error updating document: ", e);
         throw e;
     }
 }
-
 // READ LIMITED DOCUMENTS
 export async function readAllDocumentsWithLimit(collectionName, maxLimit) {
     try {
         const q = query(collection(db, collectionName), limit(maxLimit));
         const querySnapshot = await getDocs(q);
-        const allData = querySnapshot.docs.map(doc => doc.data()); //All Data as an array.
-        return allData;
+        const allData = querySnapshot.docs.map(doc => { return { [doc.id]: doc.data() } }); //All Data as an array.
+        let result = {};
+        querySnapshot.forEach(doc => {
+            result[doc.id] = doc.data();
+        });
+        console.log(allData);
+        console.log(result);
+        return result;
     } catch (e) {
         console.error("Error updating document: ", e);
         throw e;
     }
 }
 
-// READ SORTED DOCUMENTS
-export async function readAllDocumentsSorted(collectionName, sortBy) {
-    try {
-        const q = query(collection(db, collectionName), orderBy(sortBy));
-        const querySnapshot = await getDocs(q);
-        const allData = querySnapshot.docs.map(doc => doc.data()); //All Data as an array.
-        return allData;
-    } catch (e) {
-        console.error("Error updating document: ", e);
-        throw e;
-    }
-}
 // UPDATE 
 export async function updateDocument(collectionName, id, data) {
     try {
@@ -231,6 +261,15 @@ export async function updateEnrolledCourse(courseId, courseToken, incrementer) {
     await updateDocument("UsersPrivate", getUid(), updates);
 }
 
+// DELETE DOC
+export async function deleteDocument(collectionName, docId) {
+    try {
+        await deleteDoc(doc(db, collectionName, docId));
+        console.log("Document successfully deleted!");
+    } catch (error) {
+        console.error("Error removing document: ", error);
+    }
+}
 // DELETE FIELD
 export async function deleteFieldInADocument(collectionName, id, dataField) {
     try {

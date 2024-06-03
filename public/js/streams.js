@@ -14,7 +14,7 @@ export async function initStreams() {
     return new Promise((resolve, reject) => {
         readAllDocuments("AllStreams").then(
             (streams) => {
-                streams.forEach(stream => {
+                Object.values(streams).forEach(stream => {
                     const anchorTag = document.createElement('a');
                     anchorTag.classList.add('toggle-section');
                     anchorTag.id = stream.text;

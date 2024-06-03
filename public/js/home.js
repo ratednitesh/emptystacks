@@ -38,7 +38,7 @@ function initPopularCourses() {
             const boxContainer = document.querySelector('.courses .flex-container');
 
             // Iterate over coursesData and create HTML elements
-            coursesData.forEach(course => {
+            Object.values(coursesData).forEach(course => {
                 // Create box element
                 const box = document.createElement('div');
                 box.classList.add('box');
@@ -97,7 +97,7 @@ function initStreams() {
     readAllDocumentsWithLimit("AllStreams", 12).then(
         (streams) => {
             const streamContainer = document.getElementById('stream-options');
-            streams.forEach(stream => {
+            Object.values(streams).forEach(stream => {
                 // Create the anchor tag
                 const anchorTag = document.createElement('a');
                 anchorTag.href = '/streams/' + stream.text;

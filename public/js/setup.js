@@ -1,4 +1,4 @@
-import { getUid, readAllDocuments, readDocument } from "./firebase-config";
+import { addDocument, changePassword, createDocument, getUid, readAllDocuments, readDocument } from "./firebase-config";
 import { notification } from "./helper";
 import { createNewUser, emailPasswordSignIn, firebaseSignOut, googleSignIn, tryPasswordResetEmail } from "./firebase-config";
 
@@ -73,7 +73,7 @@ function initSearchCourses() {
             const boxContainer = document.querySelector('.search .flex-container');
             let i = 0;
             // Iterate over coursesData and create HTML elements
-            coursesData.forEach(course => {
+            Object.values(coursesData).forEach(course => {
                 // Create box element
                 const box = document.createElement('div');
                 box.classList.add('box');
@@ -388,21 +388,46 @@ function modalListeners() {
     document.querySelectorAll('.apple-btn').forEach((event) => event.addEventListener("click", () => { notification(506) }));
     document.querySelectorAll('.github-btn').forEach((event) => event.addEventListener("click", () => { notification(506) }));
 
-    regTutorModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
+    regTutorModal.querySelector('input[type="submit"]').addEventListener("click", async function (event) {
         // Prevent the default form submission
         event.preventDefault();
-
+        let uid = getUid();
+        if (!uid) {
+            notification(315);
+            return;
+        }
         // Validate form fields
-        var name = document.getElementById("reg-tutor-name").value.trim();
-        var email = document.getElementById("reg-tutor-email").value.trim();
+        // var name = document.getElementById("reg-tutor-name").value.trim();
+        // var email = document.getElementById("reg-tutor-email").value.trim();
         var msg = document.getElementById("reg-tutor-msg").value.trim();
-        var pdfFile = document.getElementById("reg-tutor-pdfFile").value.trim();
-        if (name === '' || email === '' || msg === '') {
+        // var pdfFile = document.getElementById("reg-tutor-pdfFile").value.trim();
+        if (msg === '') {
             notification(310);
             return;
         }
-        notification(209);
-        forms_modal.forEach(f => f.classList.remove('is-visible'));
+        if (msg.length < 30) {
+            notification(316, "30");
+            return;
+        }
+        if (msg.length > 500) {
+            notification(313, "500");
+            return;
+        }
+        let formData = {
+            message: msg,
+        };
+        let hasApplied = await readDocument('TutorApplications', uid);
+        if (!hasApplied) {
+            createDocument('TutorApplications', uid, formData, false).then(
+                () => {
+                    notification(209);
+                    forms_modal.forEach(f => f.classList.remove('is-visible'));
+                }
+            )
+        }else{
+            notification(317);
+        }
+
     });
 
     accSettModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
@@ -418,9 +443,13 @@ function modalListeners() {
         else if (newp != conf)
             notification(311);
         else if (validatePassword(newp)) {
-            notification(210);
-            accSettModal.classList.remove('is-visible');
-            setTimeout(() => { signOut() }, 5000);
+            changePassword( old, newp).then(()=>{
+                notification(210);
+                accSettModal.classList.remove('is-visible');
+                setTimeout(() => { signOut() }, 2500);
+            }).catch((e)=>{
+                notification(507,e);
+            });
         }
     });
 }
