@@ -184,7 +184,7 @@ function updateEnrolledCourses() {
         readDocument("UsersPrivate", uid)
             .then(
                 (data) => {
-                    var quickCourses = Object.values(data.enrolledCourses);
+                    var quickCourses = Object.values(data.enrolledCourses).filter(course => course.status === "In Progress");
                     // Reference to the book container
                     bookContainer.innerHTML = "";
                     // Iterate over quickCourses array

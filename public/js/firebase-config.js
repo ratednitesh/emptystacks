@@ -132,7 +132,7 @@ export async function changePassword(currentPassword, newPassword) {
         await updatePassword(user, newPassword);
         console.log("Password updated successfully!");
     }
-    catch(e){
+    catch (e) {
         throw "Something went wrong. Please try again later."
     }
 }
@@ -151,7 +151,7 @@ export async function firebaseSignOut() {
 // CREATE 
 export async function createDocument(collectionName, id, data, mergeStatus) {
     try {
-        // use merge : true if want to create new doc if not already present.
+        // use merge : true if want to create new doc if not already present. Is it? 
         await setDoc(doc(db, collectionName, id), data, { merge: mergeStatus });
         console.log(`Document: ${collectionName} with id: ${id} added.`);
     } catch (e) {
@@ -161,7 +161,6 @@ export async function createDocument(collectionName, id, data, mergeStatus) {
 
 export async function addDocument(collectionName, data) {
     try {
-        // use merge : true if want to create new doc if not already present.
         console.log(data);
         const docRef = await addDoc(collection(db, collectionName), data);
         console.log(`Document: ${collectionName} added with doc Id: ${docRef.id}`);
@@ -251,16 +250,31 @@ export async function updateDocument(collectionName, id, data) {
     }
 }
 
-export async function updateEnrolledCourse(courseId, courseToken, incrementer) {
+export async function updateEnrolledCourse(courseId, courseToken) {
     let key = "enrolledCourses." + courseId;
     let updates = {
         [key]: courseToken,
-        "activities.saved-courses": increment(incrementer == "saved" ? 1 : 0), // only for the first time
-        "activities.completed-courses": increment(incrementer == "completed" ? 1 : 0)
     };
     await updateDocument("UsersPrivate", getUid(), updates);
 }
 
+export async function likedTutorial(courseId, chapterId, chapterPath, chapterName, status) {
+    let key = "likedTutorials." + courseId + "+" + chapterId;
+    let updates;
+    if (status == 'deleted')
+        updates = {
+            [key]: deleteField()
+        };
+    else
+        updates = {
+            [key]: {
+                href: chapterPath,
+                title: chapterName,
+                status: status == 'liked' ? true : false
+            },
+        };
+    await updateDocument("UsersPrivate", getUid(), updates);
+}
 // DELETE DOC
 export async function deleteDocument(collectionName, docId) {
     try {
@@ -293,11 +307,6 @@ function getUserPrivateToken() {
     if (getUid()) {
         return {
             "username": auth.currentUser.displayName, "email": auth.currentUser.email, "userProfileSrc": auth.currentUser.photoURL, "role": "Stack Explorer",
-            "activities": {
-                "saved-courses": 0,
-                "liked-tutorials": 0,
-                "completed-courses": 0,
-            },
             "enrolledCourses": []
         }
     }

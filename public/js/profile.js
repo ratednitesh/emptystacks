@@ -4,7 +4,9 @@ import { notification, publish } from "./helper";
 var myProfile = {};
 const dataFields = ["username", "about-me", "work", "location", "tech-stack", "facebook", "instagram", "linkedin", "github"];
 const profileDiv = document.querySelector('#profile');
-
+const inProgressCourses = {};
+const completedCourses = {};
+const likedTutorials = {};
 // Initializers and Listeners: Profile 
 export function initProfile() {
     for (const dataField of dataFields) {
@@ -144,8 +146,25 @@ function loadPublicProfile(uid, isMyProfile) {
 // load private profile
 function loadPrivateProfile(uid) {
     readDocument("UsersPrivate", uid).then((data) => {
-        for (const property in data.activities) {
-            initUserActivities(property, data.activities[property]);
+
+        for (const [courseKey, courseDetails] of Object.entries(data.enrolledCourses)) {
+            if (courseDetails.status === "In Progress") {
+                inProgressCourses[courseKey] = courseDetails;
+            } else if (courseDetails.status === "Completed") {
+                completedCourses[courseKey] = courseDetails;
+            }
+        }
+        for (const [chapterKey, chapterDetails] of Object.entries(data.likedTutorials)) {
+            if (chapterDetails.status)
+                likedTutorials[chapterKey] = chapterDetails;
+        }
+        let activities = {
+            "saved-courses": Object.keys(inProgressCourses).length,
+            "liked-tutorials": Object.keys(likedTutorials).length,
+            "completed-courses": Object.keys(completedCourses).length,
+        };
+        for (const property in activities) {
+            initUserActivities(property, activities[property]);
         }
         createCoursesSection(Object.values(data.enrolledCourses), '.flex-container.enrolled-courses', 'enrolled');
     }

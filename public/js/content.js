@@ -1,5 +1,5 @@
-import { publish, notification, getFormattedDate, createCourseToken, sortChapters } from "./helper";
-import { addDocument, updateEnrolledCourse, getUid, readAllDocuments, readDocument, deleteDocument, updateDocument } from "./firebase-config";
+import { publish, notification, getFormattedDate, createCourseToken, sortChapters, enrollUserToCourse, addUserToChapterLikes } from "./helper";
+import { addDocument, updateEnrolledCourse, getUid, readAllDocuments, readDocument, deleteDocument, updateDocument, likedTutorial, getDocCounts } from "./firebase-config";
 import { signup_selected } from "./setup";
 import { copyPathToClipboard } from "./router";
 
@@ -27,6 +27,7 @@ let showCompletionButton = true;
 let chaptersCompleted;
 let commentCollection;
 let oldComment = {};
+let likedTutorials = {};
 export function initContent() {
     document.querySelector('#start-journey-content').addEventListener("click", () => {
         signup_selected();
@@ -92,7 +93,6 @@ export function initContent() {
         markParentMenuComplete();
         completionMarker.classList.add('disabled');
         let courseToken;
-        let incrementer;
         readDocument("UsersPrivate", getUid()).then(async (userData) => {
             let matchingCourse = Object.keys(userData.enrolledCourses).find(course => course === lastCourseId);
             if (!matchingCourse) {
@@ -101,7 +101,8 @@ export function initContent() {
                         courseToken = createCourseToken(lastCourseId, courseData);
                         courseToken.chaptersCompleted.push(index);
                     });
-                incrementer = "saved";
+                enrollUserToCourse(lastCourseId);
+
             } else {
                 courseToken = userData.enrolledCourses[matchingCourse];
                 courseToken.chaptersCompleted.push(index);
@@ -111,10 +112,9 @@ export function initContent() {
             }
             if (checkCourseCompletion()) {
                 courseToken.status = "Completed"
-                incrementer = "completed";
             }
             console.log(courseToken);
-            updateEnrolledCourse(lastCourseId, courseToken, incrementer).then(() => {
+            updateEnrolledCourse(lastCourseId, courseToken).then(() => {
                 notification(214);
             }).catch((e) => { console.log(e); notification(500); });
         })
@@ -162,15 +162,33 @@ export function initContent() {
             notification(314);
         }
     });
-    thumbsUp.addEventListener('click', function () {
+    thumbsUp.addEventListener('click', async function () {
         thumbsUp.classList.toggle('red');
         thumbsDown.classList.remove('red');
-        notification(213); // Optional: Remove red from thumbs down if it was selected
+        if (thumbsUp.classList.contains('red')) {
+            addUserToChapterLikes(lastCourseId, lastChapterId, true);
+            await likedTutorial(lastCourseId, lastChapterId, lastChapterPath, contentHtml.querySelector('.heading').innerHTML, "liked");
+            notification(213);
+        }
+
+        else {
+            addUserToChapterLikes(lastCourseId, lastChapterId, false);
+            await likedTutorial(lastCourseId, lastChapterId, lastChapterPath, contentHtml.querySelector('.heading').innerHTML, "deleted");
+        }
+
+
     });
 
-    thumbsDown.addEventListener('click', function () {
+    thumbsDown.addEventListener('click', async () => {
         thumbsDown.classList.toggle('red');
-        thumbsUp.classList.remove('red'); // Optional: Remove red from thumbs up if it was selected
+        thumbsUp.classList.remove('red');
+        addUserToChapterLikes(lastCourseId, lastChapterId, false);
+        if (thumbsDown.classList.contains('red')) {
+            await likedTutorial(lastCourseId, lastChapterId, lastChapterPath, contentHtml.querySelector('.heading').innerHTML, "disliked");
+        }
+        else {
+            await likedTutorial(lastCourseId, lastChapterId, lastChapterPath, contentHtml.querySelector('.heading').innerHTML, "deleted");
+        }
     });
     nextBtn.addEventListener('click', () => {
         console.log('YEah  Ia m hre');
@@ -320,7 +338,7 @@ export function loadContent(chapterPath) {
         console.log("chapter: " + chapterId + " course:" + courseId);
         hideComments();
         readDocument("CourseDetails/" + courseId + "/Content/", chapterId).then(
-            (chapterData) => {
+            async (chapterData) => {
                 if (chapterData) {
                     contentHtml.querySelector('.heading').innerHTML = chapterData.heading;
                     contentHtml.querySelector('#date').innerHTML = chapterData.publishDate;
@@ -350,6 +368,9 @@ export function loadContent(chapterPath) {
                         contentHtml.querySelector('.video').src = chapterData.videoId;
                         contentHtml.querySelector('.description').innerHTML = chapterData.description;
                     }
+                    thumbsUp.classList.remove('red');
+                    thumbsDown.classList.remove('red');
+
                     if (lastCourseId != courseId) {
                         lastCourseId = courseId;
                         loadContentSidebar(chapterData.courseId, chapterData.courseName, chapterPath, chapterData.type);
@@ -359,6 +380,7 @@ export function loadContent(chapterPath) {
                         if (!activeI.classList.contains('es-ok-circled'))
                             showCompletionButton = true;
                         showMarkCompletion();
+                        updateLikeStatus();
                     }
 
                 } else {
@@ -479,6 +501,7 @@ function loadContentSidebar(courseId, courseName, chapterPath, type) {
 }
 function updateUserLevelsOnEnrolledCourses() {
     showCompletionButton = false;
+
     let uid = getUid();
     if (uid) {
         readDocument("UsersPrivate", uid).then((userData) => {
@@ -500,9 +523,21 @@ function updateUserLevelsOnEnrolledCourses() {
             if (!activeI.classList.contains('es-ok-circled'))
                 showCompletionButton = true;
             showMarkCompletion();
+            likedTutorials = userData.likedTutorials;
+            updateLikeStatus();
         })
+
     }
 
+}
+function updateLikeStatus() {
+    let likedContent = Object.values(likedTutorials).find(chapter => chapter.href === lastChapterPath);
+    if (likedContent) {
+        if (likedContent.status)
+            thumbsUp.classList.add('red');
+        else
+            thumbsDown.classList.add('red');
+    }
 }
 function markParentMenuComplete() {
     const items = document.querySelectorAll('.sub-menu');

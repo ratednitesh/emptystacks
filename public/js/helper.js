@@ -1,3 +1,5 @@
+import { createDocument, deleteDocument, getUid } from './firebase-config.js';
+
 const eventListeners = {};
 
 export function subscribe(eventName, callback) {
@@ -200,4 +202,25 @@ export function sortChapters(chapters) {
 
     console.log(JSON.stringify(sortedData, null, 2));
     return sortedData;
+}
+
+export function enrollUserToCourse(courseId) {
+    createDocument('CourseDetails/' + courseId + "/EnrolledUsers", getUid(), {
+        "uid": getUid(),
+        "name": document.getElementById('user-menu-name').innerHTML,
+        "dateAdded": getFormattedDate(new Date()),
+        "userProfileSrc": document.getElementById('user-menu-photo').src
+    }, false);
+}
+
+export function addUserToChapterLikes(courseId, chapterId, status) {
+    if (status)
+        createDocument("CourseDetails/" + courseId + "/Content/" + chapterId + "/Likes", getUid(), {
+            "uid": getUid(),
+            "name": document.getElementById('user-menu-name').innerHTML,
+            "dateAdded": getFormattedDate(new Date()),
+            "userProfileSrc": document.getElementById('user-menu-photo').src,
+        }, false);
+    else
+        deleteDocument("CourseDetails/" + courseId + "/Content/" + chapterId + "/Likes", getUid());
 }

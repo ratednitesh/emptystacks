@@ -1,5 +1,5 @@
 import { updateEnrolledCourse, getUid, readAllDocuments, readDocument } from "./firebase-config";
-import { createCourseToken, notification, publish, sortChapters } from "./helper";
+import { createCourseToken, enrollUserToCourse, notification, publish, sortChapters } from "./helper";
 
 const textCourse = document.querySelector('.text-course');
 const courseStreams = textCourse.querySelector('.streams');
@@ -35,7 +35,8 @@ export function initCoursePage() {
         let uid = getUid();
         if (uid) {
             saveCourse.classList.add('locked');
-            updateEnrolledCourse(lastCourseId, courseToken, "saved").then(() => {
+            enrollUserToCourse(lastCourseId);
+            updateEnrolledCourse(lastCourseId, courseToken).then(() => {
                 notification(208);
             }).catch((e) => { console.log(e); notification(502); });
         }
@@ -43,7 +44,8 @@ export function initCoursePage() {
     startButton.addEventListener('click', () => {
         if (startButton.innerText == "Start Course" && getUid() ){
             saveCourse.classList.add('locked');
-            updateEnrolledCourse(lastCourseId, courseToken, "saved").then(() => {
+            enrollUserToCourse(lastCourseId);
+            updateEnrolledCourse(lastCourseId, courseToken).then(() => {
                 notification(208);
             }).catch((e) => { console.log(e); notification(502); });
         }
@@ -223,8 +225,8 @@ function getCourseData(courseId) {
                         header.addEventListener('click', function () {
                             var item = this.parentNode;
                             item.classList.toggle('active');
-                            this.children[0].children[1].classList.toggle('es-angle-up');
-                            this.children[0].children[1].classList.toggle('es-angle-down');
+                            this.children[0]?.children[1]?.classList.toggle('es-angle-up');
+                            this.children[0]?.children[1]?.classList.toggle('es-angle-down');
                         });
                     });
                 }
