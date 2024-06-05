@@ -20,6 +20,10 @@ const completionMarker = contentHtml.querySelector('.completion');
 const courseCompletionModal = document.querySelector('.course-completed-modal');
 const thumbsUp = document.querySelector('.chapter-footer .es-thumbs-up');
 const thumbsDown = document.querySelector('.chapter-footer .es-thumbs-down');
+const ratingDiv = document.querySelector('.ratings');
+const ratings = ratingDiv.querySelectorAll('input[name="rate"]');
+const review = document.getElementById('submit-review');
+
 let lastChapterPath;
 let lastCourseId;
 let lastChapterId;
@@ -27,7 +31,7 @@ let showCompletionButton = true;
 let chaptersCompleted;
 let commentCollection;
 let oldComment = {};
-let likedTutorials = {};
+
 export function initContent() {
     document.querySelector('#start-journey-content').addEventListener("click", () => {
         signup_selected();
@@ -119,11 +123,38 @@ export function initContent() {
             }).catch((e) => { console.log(e); notification(500); });
         })
     });
+    ratingDiv.addEventListener('click', () => {
+        let selectedRating = null;
+        ratings.forEach(radio => {
+            if (radio.checked) {
+                selectedRating = radio.value;
+            }
+        });
+        console.log(selectedRating);
+        switch (selectedRating) {
+            case "1":
+                review.placeholder = "I had some difficulties with this course. Despite my challenges, I hope my feedback can contribute to improvements for future learners. Constructive criticism is crucial for growth, and I believe this course has the potential to evolve positively.";
+                break;
+            case "2":
+                review.placeholder = "I found this course somewhat lacking in certain areas. However, I believe there's significant potential for improvement based on my experience. My feedback aims to offer constructive suggestions to enhance the overall learning journey for future participants.";
+                break;
+            case "3":
+                review.placeholder = "I enjoyed aspects of this course, but I also encountered areas where it could be better. Despite its shortcomings, I believe it offers value to learners. My feedback aims to highlight areas for improvement while acknowledging its positive aspects.";
+                break;
+            case "4":
+                review.placeholder = "I really liked this course! It was fantastic overall, with only a few minor issues that didn't detract much from my overall enjoyment. My feedback aims to provide constructive suggestions while acknowledging the course's overall quality and positive impact on my learning experience.";
+                break;
+            case "5":
+                review.placeholder = "I loved this course! It was absolutely fantastic, and I would highly recommend it to others. I couldn't be happier with my experience. My feedback aims to express my genuine appreciation for the course and its positive impact on my learning journey.";
+                break;
+            default:
+                review.placeholder = "Enter your review";
+                break;
+        }
+    });
+
     courseCompletionModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
-
         event.preventDefault();
-
-        const ratings = document.querySelectorAll('.ratings input[name="rate"]');
         let selectedRating = null;
         ratings.forEach(radio => {
             if (radio.checked) {
@@ -132,16 +163,12 @@ export function initContent() {
         });
         if (selectedRating) {
             console.log(`Selected rating: ${selectedRating}`);
-            let review = document.getElementById('submit-review').value;
-            if (review) {
-                console.log(`Review: ${review}`);
-            } else {
-                console.log('No rating selected');
-            }
-
+            let reviewMessage = review.value;
+            if (!reviewMessage)
+                reviewMessage = review.placeholder;
             var reviewObject = {
                 "rating": selectedRating,
-                "review": review,
+                "review": reviewMessage,
                 "user": {
                     "uid": getUid(),
                     "name": document.getElementById('user-menu-name').innerHTML,
@@ -380,9 +407,9 @@ export function loadContent(chapterPath) {
                         if (!activeI.classList.contains('es-ok-circled'))
                             showCompletionButton = true;
                         showMarkCompletion();
-                        updateLikeStatus();
-                    }
 
+                    }
+                    updateLikeStatus();
                 } else {
                     lastChapterPath = 'notFoundRoute';
                     publish('notFoundRoute');
@@ -523,21 +550,23 @@ function updateUserLevelsOnEnrolledCourses() {
             if (!activeI.classList.contains('es-ok-circled'))
                 showCompletionButton = true;
             showMarkCompletion();
-            likedTutorials = userData.likedTutorials;
-            updateLikeStatus();
         })
 
     }
 
 }
 function updateLikeStatus() {
-    let likedContent = Object.values(likedTutorials).find(chapter => chapter.href === lastChapterPath);
-    if (likedContent) {
-        if (likedContent.status)
-            thumbsUp.classList.add('red');
-        else
-            thumbsDown.classList.add('red');
-    }
+    let uid = getUid();
+    if (uid)
+        readDocument("UsersPrivate", uid).then((userData) => {
+            let likedContent = Object.values(userData.likedTutorials).find(chapter => chapter.href === lastChapterPath);
+            if (likedContent) {
+                if (likedContent.status)
+                    thumbsUp.classList.add('red');
+                else
+                    thumbsDown.classList.add('red');
+            }
+        })
 }
 function markParentMenuComplete() {
     const items = document.querySelectorAll('.sub-menu');

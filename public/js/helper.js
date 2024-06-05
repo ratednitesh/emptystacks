@@ -1,4 +1,4 @@
-import { createDocument, deleteDocument, getUid } from './firebase-config.js';
+import { addDocument, createDocument, deleteDocument, getUid } from './firebase-config.js';
 
 const eventListeners = {};
 
@@ -214,13 +214,22 @@ export function enrollUserToCourse(courseId) {
 }
 
 export function addUserToChapterLikes(courseId, chapterId, status) {
-    if (status)
-        createDocument("CourseDetails/" + courseId + "/Content/" + chapterId + "/Likes", getUid(), {
-            "uid": getUid(),
-            "name": document.getElementById('user-menu-name').innerHTML,
-            "dateAdded": getFormattedDate(new Date()),
-            "userProfileSrc": document.getElementById('user-menu-photo').src,
-        }, false);
-    else
-        deleteDocument("CourseDetails/" + courseId + "/Content/" + chapterId + "/Likes", getUid());
+    if(getUid()){
+        if (status)
+            createDocument("CourseDetails/" + courseId + "/Content/" + chapterId + "/Likes", getUid(), {
+                "uid": getUid(),
+                "name": document.getElementById('user-menu-name').innerHTML,
+                "dateAdded": getFormattedDate(new Date()),
+                "userProfileSrc": document.getElementById('user-menu-photo').src,
+            }, false);
+        else
+            deleteDocument("CourseDetails/" + courseId + "/Content/" + chapterId + "/Likes", getUid());
+    }else{
+        if (status)
+            addDocument("CourseDetails/" + courseId + "/Content/" + chapterId + "/Likes",{
+                "uid": "guestUser",
+                "dateAdded": getFormattedDate(new Date()),
+            })
+    }
+   
 }

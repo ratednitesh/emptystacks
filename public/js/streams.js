@@ -8,13 +8,15 @@ const boxContainer = document.querySelector('.stream-courses .flex-container');
 const selectedStreams = new Set();  // Track selected streams
 
 var coursesByStreams = {};
+
 // Initializer and Listeners: Streams
 export async function initStreams() {
     console.log('init streams done');
     return new Promise((resolve, reject) => {
         readAllDocuments("AllStreams").then(
             (streams) => {
-                Object.values(streams).forEach(stream => {
+                Object.keys(streams).forEach(doc => {
+                    let stream = streams[doc];
                     const anchorTag = document.createElement('a');
                     anchorTag.classList.add('toggle-section');
                     anchorTag.id = stream.text;
@@ -22,6 +24,7 @@ export async function initStreams() {
                     const iconElement = document.createElement('i');
                     iconElement.classList.add(stream.icon);
                     const spanElement = document.createElement('span');
+                    spanElement.id = doc;
                     spanElement.textContent = stream.text;
                     anchorTag.appendChild(iconElement);
                     anchorTag.appendChild(spanElement);
@@ -48,13 +51,13 @@ function initAllStreamsListeners() {
             const targetSection = isSelectedSection ? otherSection : selectedSection;
             targetSection.appendChild(this);
             const streamId = this.id;
-
+            let docId = this.querySelector('span').id;
             if (isSelectedSection) {
                 selectedStreams.delete(streamId);
                 removeCoursesByStream(streamId);
             } else {
                 selectedStreams.add(streamId);
-                getCoursesByStreams(streamId);
+                getCoursesByStream(streamId, docId);
             }
             if (!selectedSection.querySelector('a')) {
                 noStreamMessage.classList.remove('disabled');
@@ -70,6 +73,7 @@ export function loadStreams(streamId) {
     resetSelection();
     if (streamId != undefined) {
         const a = document.getElementById(streamId);
+        let docId = a.querySelector('span').id;
         if (a) {
             noStreamMessage.classList.add('disabled');
             selectedSection.appendChild(a);
@@ -77,7 +81,7 @@ export function loadStreams(streamId) {
             while (boxContainer.firstChild) {
                 boxContainer.removeChild(boxContainer.firstChild);
             }
-            getCoursesByStreams(streamId);
+            getCoursesByStream(streamId, docId);
         }
     }
 
@@ -89,8 +93,8 @@ function resetSelection() {
     });
 }
 
-function getCoursesByStreams(streamId) {
-    readDocument("CoursesByStreams", streamId).then(
+function getCoursesByStream(streamId, docId) {
+    readDocument("CoursesByStream", docId).then(
         coursesData => {
             coursesByStreams[streamId] = coursesData.courses;
             coursesByStreams[streamId].forEach(course => {

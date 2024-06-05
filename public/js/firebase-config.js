@@ -259,21 +259,23 @@ export async function updateEnrolledCourse(courseId, courseToken) {
 }
 
 export async function likedTutorial(courseId, chapterId, chapterPath, chapterName, status) {
-    let key = "likedTutorials." + courseId + "+" + chapterId;
-    let updates;
-    if (status == 'deleted')
-        updates = {
-            [key]: deleteField()
-        };
-    else
-        updates = {
-            [key]: {
-                href: chapterPath,
-                title: chapterName,
-                status: status == 'liked' ? true : false
-            },
-        };
-    await updateDocument("UsersPrivate", getUid(), updates);
+    if(getUid()){
+        let key = "likedTutorials." + courseId + "+" + chapterId;
+        let updates;
+        if (status == 'deleted')
+            updates = {
+                [key]: deleteField()
+            };
+        else
+            updates = {
+                [key]: {
+                    href: chapterPath,
+                    title: chapterName,
+                    status: status == 'liked' ? true : false
+                },
+            };
+        await updateDocument("UsersPrivate", getUid(), updates);
+    }
 }
 // DELETE DOC
 export async function deleteDocument(collectionName, docId) {
