@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, orderBy } from 'firebase/firestore/lite';
+import { getFirestore, orderBy, serverTimestamp } from 'firebase/firestore/lite';
 import { doc, setDoc, getDoc, deleteField, updateDoc, query, where, getDocs, increment, arrayUnion, deleteDoc, collection, addDoc, limit } from "firebase/firestore/lite";
 
 import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
@@ -38,99 +38,49 @@ export async function initFirebase() {
 /*** AUTHENTICATION ***/
 
 // Sign Up
-export async function createNewUser(userToken) {
-    try {
-        // Create user with email and password
-        const userCredential = await createUserWithEmailAndPassword(auth, userToken.email, userToken.password);
-        const user = userCredential.user;
+export async function firebaseSignup(userToken) {
+    const userCredential = await createUserWithEmailAndPassword(auth, userToken.email, userToken.password);
+    const user = userCredential.user;
 
-        // Update the user's profile to include the username
-        await updateProfile(user, {
-            displayName: userToken.username,
-            photoURL: "/images/profile/no-photo.svg"
-        });
-        // Send email verification
-        await sendEmailVerification(auth.currentUser);
-        console.log('User created and email verification sent.');
-
-        // Create User Profile / Document
-        if (!await readDocument("UsersPrivate", user.uid)) {
-            await createUserProfile(user);
-        }
-    } catch (error) {
-        console.log(error.code + " " + error.Message);
-        console.error('Error in Registration.');
-        throw error; // Ensure the error is propagated to the caller
-    }
+    await updateProfile(user, {
+        displayName: userToken.displayName,
+        photoURL: userToken.photoURL
+    });
+    await sendEmailVerification(auth.currentUser);
+    return user;
 }
 
 // Google Sign In
-export async function googleSignIn() {
-    try {
-        const userCredential = await signInWithPopup(auth, googleProvider);
-        console.log('User Signed In with Google');
-        const credential = GoogleAuthProvider.credentialFromResult(userCredential);
-        // const token = credential.accessToken;
-        const user = userCredential.user;
-        if (!await readDocument("UsersPrivate", user.uid)) {
-            console.log('user not registered. Create user private / public docs' + user.uid)
-            await createUserProfile(user);
-        }
-    } catch (error) {
-        console.log(error);
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        console.error('Error Sign In with Google' + credential);
-        throw error;
-    }
+export async function firebaseGoogleSignIn() {
+    await signInWithPopup(auth, googleProvider);
 }
 
 // Sign In
-export async function emailPasswordSignIn(userToken) {
-    try {
-        await signInWithEmailAndPassword(auth, userToken.email, userToken.password);
-    } catch (error) {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log('Sigin Failed.');
-        throw error;
-    }
+export async function firebaseEmailPasswordSignIn(email, password) {
+    await signInWithEmailAndPassword(auth, email, password);
 }
 
 // Password Reset
-export async function tryPasswordResetEmail(email) {
-    try {
-        await sendPasswordResetEmail(auth, email);
-    } catch (error) {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log('Your email id is not found in our systems.');
-        throw error;
-    }
+export async function firebasePasswordReset(email) {
+    await sendPasswordResetEmail(auth, email);
 }
 
 // Change Password
-export async function changePassword(currentPassword, newPassword) {
+export async function firebaseChangePassword(currentPassword, newPassword) {
     const user = auth.currentUser;
-
     if (!user) {
         console.error("No user is currently signed in.");
         throw "User not logged In";
     }
-
-    // Get credentials (e.g., email and password)
     const credentials = EmailAuthProvider.credential(user.email, currentPassword);
-    // Reauthenticate the user
     try {
         await reauthenticateWithCredential(user, credentials);
-        console.log("User reauthenticated");
     }
     catch (e) {
         throw "Incorrect Old Password."
     }
     try {
-        // Update the password
         await updatePassword(user, newPassword);
-        console.log("Password updated successfully!");
     }
     catch (e) {
         throw "Something went wrong. Please try again later."
@@ -139,35 +89,27 @@ export async function changePassword(currentPassword, newPassword) {
 
 // Sign Out
 export async function firebaseSignOut() {
-    try {
-        await auth.signOut();
-    } catch (error) {
-        console.error("Error Sign Out" + error);
-        throw error;
-    }
+    await auth.signOut();
 }
 
 /***  Firestore CRUD APIs ****/
 // CREATE 
-export async function createDocument(collectionName, id, data, mergeStatus) {
+export async function createDocument(collectionName, id, data, mergeStatus, flag) {
     try {
+        if (flag == 'addDate')
+            data.createdAt = serverTimestamp();
         // use merge : true if want to create new doc if not already present. Is it? 
         await setDoc(doc(db, collectionName, id), data, { merge: mergeStatus });
-        console.log(`Document: ${collectionName} with id: ${id} added.`);
     } catch (e) {
         console.error("Error adding document: ", e);
     }
 }
 
-export async function addDocument(collectionName, data) {
-    try {
-        console.log(data);
-        const docRef = await addDoc(collection(db, collectionName), data);
-        console.log(`Document: ${collectionName} added with doc Id: ${docRef.id}`);
-        return docRef.id;
-    } catch (e) {
-        console.error("Error adding document: ", e);
-    }
+export async function addDocument(collectionName, data, flag) {
+    if (flag == 'addDate')
+        data.createdAt = serverTimestamp();
+    const docRef = await addDoc(collection(db, collectionName), data);
+    return docRef.id;
 }
 
 // READ
@@ -177,12 +119,18 @@ export async function readDocument(collectionName, id) {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
-            return docSnap.data();
+            let data = docSnap.data();
+            if (data.createdAt) {
+                data.createdAt = docSnap.data().createdAt.toDate();
+            }
+            if (data.updatedAt) {
+                data.updatedAt = docSnap.data().updatedAt.toDate();
+            }
+            return data;
         } else {
             // docSnap.data() will be undefined in this case
-            console.log("No such document!");
-            return false;
+            console.error("No such document!");
+            return {};
         }
     } catch (e) {
         console.error("Error reading document: ", e);
@@ -190,29 +138,23 @@ export async function readDocument(collectionName, id) {
     }
 }
 
-// READ MULTIPLE
-// export async function readDocuments(collectionName, queryString) {
-//     const q = query(collection(db, collectionName), limit());// where("capital", "==", true));
-//     const querySnapshot = await getDocs(q);
-//     querySnapshot.forEach((doc) => {
-//         // doc.data() is never undefined for query doc snapshots
-//         console.log(doc.id, " => ", doc.data());
-//         //  return from here.
-//     });
-// }
 // READ ALL DOCUMENTS
 export async function readAllDocuments(collectionName) {
     try {
         const q = query(collection(db, collectionName));
         const querySnapshot = await getDocs(q);
         const allData = querySnapshot.docs.map(doc => { return { [doc.id]: doc.data() } });
-        console.log('all data');
         let result = {};
         querySnapshot.forEach(doc => {
-            result[doc.id] = doc.data();
+            let data = doc.data();
+            if (data.createdAt) {
+                data.createdAt = doc.data().createdAt.toDate();
+            }
+            if (data.updatedAt) {
+                data.updatedAt = doc.data().updatedAt.toDate();
+            }
+            result[doc.id] = data;
         });
-        console.log(allData);
-        console.log(result);
         return result;
     } catch (e) {
         console.error("Error updating document: ", e);
@@ -224,13 +166,10 @@ export async function readAllDocumentsWithLimit(collectionName, maxLimit) {
     try {
         const q = query(collection(db, collectionName), limit(maxLimit));
         const querySnapshot = await getDocs(q);
-        const allData = querySnapshot.docs.map(doc => { return { [doc.id]: doc.data() } }); //All Data as an array.
         let result = {};
         querySnapshot.forEach(doc => {
             result[doc.id] = doc.data();
         });
-        console.log(allData);
-        console.log(result);
         return result;
     } catch (e) {
         console.error("Error updating document: ", e);
@@ -240,60 +179,29 @@ export async function readAllDocumentsWithLimit(collectionName, maxLimit) {
 
 // UPDATE 
 export async function updateDocument(collectionName, id, data) {
-    try {
-        await updateDoc(doc(db, collectionName, id), data);
-        console.log(`Document: ${collectionName} with id: ${id} updated. ${data}`);
-
-    } catch (e) {
-        console.error("Error updating document: ", e);
-        throw e;
-    }
+    await updateDoc(doc(db, collectionName, id), data);
+}
+export async function updateDocumentWithArray(collectionName, id, data, arrayField, newElement) {
+    data[arrayField] = arrayUnion(newElement);
+    await updateDocument(collectionName, id, data);
 }
 
-export async function updateEnrolledCourse(courseId, courseToken) {
-    let key = "enrolledCourses." + courseId;
-    let updates = {
-        [key]: courseToken,
-    };
-    await updateDocument("UsersPrivate", getUid(), updates);
-}
-
-export async function likedTutorial(courseId, chapterId, chapterPath, chapterName, status) {
-    if(getUid()){
-        let key = "likedTutorials." + courseId + "+" + chapterId;
-        let updates;
-        if (status == 'deleted')
-            updates = {
-                [key]: deleteField()
-            };
-        else
-            updates = {
-                [key]: {
-                    href: chapterPath,
-                    title: chapterName,
-                    status: status == 'liked' ? true : false
-                },
-            };
-        await updateDocument("UsersPrivate", getUid(), updates);
-    }
-}
 // DELETE DOC
 export async function deleteDocument(collectionName, docId) {
     try {
         await deleteDoc(doc(db, collectionName, docId));
-        console.log("Document successfully deleted!");
     } catch (error) {
         console.error("Error removing document: ", error);
+        throw error;
     }
 }
 // DELETE FIELD
 export async function deleteFieldInADocument(collectionName, id, dataField) {
     try {
         await updateDoc(doc(db, collectionName, id), { [dataField]: deleteField() });
-        console.log(`Document: ${collectionName} with id: ${id} deleted.`);
-
     } catch (e) {
         console.error("Error deleting field in the document: ", e);
+        throw e;
     }
 }
 
@@ -305,40 +213,9 @@ export function getUid() {
         return undefined;
 }
 
-function getUserPrivateToken() {
-    if (getUid()) {
-        return {
-            "username": auth.currentUser.displayName, "email": auth.currentUser.email, "userProfileSrc": auth.currentUser.photoURL, "role": "Stack Explorer",
-            "enrolledCourses": []
-        }
-    }
-    else return "";
-}
-
-function getUserPublicToken() {
-    if (getUid()) {
-        return {
-            "username": auth.currentUser.displayName, "email": auth.currentUser.email, "userProfileSrc": auth.currentUser.photoURL, "role": "Stack Explorer",
-            "about-me": "A dedicated emptyStacks explorer.",
-            "work": "",
-            "location": "",
-            "tech-stack": "",
-            "facebook": "",
-            "instagram": "",
-            "linkedin": "",
-            "github": "",
-            "userProfileSrc": "/images/profile/photo_1.png",
-        }
-    }
-    else return "";
-}
-
-async function createUserProfile(user) {
-    try {
-        await createDocument("UsersPrivate", user.uid, getUserPrivateToken(), false);
-        await createDocument("UsersPublic", user.uid, getUserPublicToken(), false);
-    } catch (error) {
-        throw error;
-    }
-
+export function getUserObject() {
+    if (auth.currentUser)
+        return auth.currentUser;
+    else
+        return undefined;
 }

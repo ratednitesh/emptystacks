@@ -1,0 +1,278 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /AllCourses/{courseId} {
+      allow read: if true;
+      allow create, update: if request.auth.token.isAdmin == true && 
+      exists(/databases/$(database)/documents/CourseDetails/$(courseId)) &&
+      validateAllCourses(request.resource.data);
+      allow delete: if request.auth.token.isAdmin == true &&
+      !exists(/databases/$(database)/documents/CourseDetails/$(courseId));
+    }
+
+    match /AllStreams/{streamId} {
+      allow read: if true;
+      allow create, update: if request.auth.token.isAdmin == true &&
+      validateAllStreams(request.resource.data);
+      allow delete: if false;
+    }
+
+    match /CoursesByStream/{streamId} {
+      allow read: if true;
+      allow create, update: if request.auth.token.isAdmin == true &&
+      exists(/databases/$(database)/documents/AllStreams/$(streamId)) &&
+      validateCoursesByStream(request.resource.data);
+      allow delete: if false;
+    }
+
+    match /CourseDetails/{courseId} {
+      // Allow read access to everyone
+      allow get: if true;
+      // Allow write access only to admins and if author.id exists in UsersPublic with role 'Stack Builder'
+      allow write: if request.auth.token.isAdmin == true &&
+      exists(/databases/$(database)/documents/UsersPublic/$(request.resource.data.author.id)) &&
+      get(/databases/$(database)/documents/UsersPublic/$(request.resource.data.author.id)).data.role == 'Stack Builder' &&
+      validateCourseDetails(request.resource.data) &&
+      limitWriteOperations();
+    }
+
+
+    match /CourseDetails/{courseId}/Content/{chapterId} {
+      allow read: if isSuperUserOrAdmin();
+      allow get: if isCourseVisible( courseId , chapterId) &&
+      (isChapterVisible() || isCoursePaidChapterPublic( courseId, chapterId ));
+      allow write: if isAdmin();
+    }
+
+
+    match /CourseDetails/{courseId}/Content/{chapterId}/Comments/{commentId} {
+      allow read: if true;
+      allow write: if isUserAuthenticated() &&
+      isCommentAuthor() &&
+      isCommentLengthValid() &&
+      isNoExtraFieldsAdded();
+    }
+
+
+    match /CourseDetails/{courseId}/Content/{chapterId}/Likes/{likeId} {
+      allow read: if true;
+      allow write: if false;
+      allow create: if isUserAuthenticated() &&
+      isCorrectUserId(likeId) &&
+      isNoExtraFieldsAddedInComment(likeId);
+    }
+
+
+    match /CourseDetails/{courseId}/EnrolledUsers/{uid} {
+      allow read: if isUserAuthenticated() &&
+      (isUserAuthor(courseId) || isUserAdmin());
+      allow create: if isUserAuthenticated() &&
+      isCorrectCourseVisibility(courseId) &&
+      isNoExtraFieldsAdded();
+    }
+
+    match /CourseDetails/{courseId}/Reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isUserLoggedIn() &&
+      isCorrectReviewId(reviewId) &&
+      isUserEnrolled(courseId) ||
+      isUserAdmin() &&
+      isNoExtraFieldsAdded();
+      allow update, delete: if false;
+    }
+
+    match /TutorApplications/{message} {
+      allow read: if isUserAdminOrSuperUser();
+      allow create: if isUserLoggedIn() &&
+      isCorrectDocId(message) &&
+      isNoExtraFieldsAdded() &&
+      isMessageLengthValid();
+      allow update, delete: if false;
+    }
+
+    match /UsersPrivate/{uid} {
+      allow read, create, update: if request.auth.uid == uid &&
+      isNoExtraFieldsAdded() &&
+      isMaxLengthFields() &&
+      !("mailId" in request.resource.data) &&
+      !("role" in request.resource.data);
+      allow delete: if isUserAdmin();
+    }
+
+    match /UsersPublic/{uid} {
+      allow read: if true;
+      allow create, update: if request.auth.uid == uid &&
+      isNoExtraFieldsAdded() &&
+      isMaxLengthFields() &&
+      !("role" in request.resource.data) &&
+      isTutorDetailsAllowed();
+      allow delete: if isUserAdmin();
+    }
+
+
+function isUserLoggedIn() {
+  return request.auth.uid != null;
+}
+
+function isUserAdminOrSuperUser() {
+  return ('Admin' in request.auth.token.roles || 'SuperUser' in request.auth.token.roles);
+}
+
+function isCorrectReviewId(reviewId) {
+  return request.auth.uid == "Review/" + reviewId;
+}
+
+function isUserEnrolled(courseId) {
+  return exists(/databases/$(database)/documents/Course/$(courseId)/EnrolledUsers/$(request.auth.uid));
+}
+
+function isUserAdmin() {
+  return 'Admin' in request.auth.token.roles;
+}
+
+function isNoExtraFieldsAdded() {
+  return request.resource.data.size() == 1; // Only the allowed field
+}
+
+function isCorrectDocId(message) {
+  return request.auth.uid == "TutorApplications/" + message;
+}
+
+
+    // Function to check if user is authenticated
+    function isUserAuthenticated() {
+      return request.auth.uid != null;
+    }
+
+    // Function to check if the correct user ID is used
+    function isCorrectUserId(likeId) {
+      return request.auth.uid == "likes/" + likeId;
+    }
+
+    // Function to check if no extra fields are added other than the allowed ones
+    function isNoExtraFieldsAddedInComment(likeId) {
+      return request.resource.data.size() == 1 && // Ensure there is exactly 1 field: the user ID
+      'likes/' + likeId in request.resource.data;
+    }
+    function validateAllCourses(data) {
+      return data.size() == 3 &&  // Ensure there are exactly 3 fields
+      data.href is string && data.href.size() <= 50 &&
+      data.thumbnail is string && data.thumbnail.size() <= 50 &&
+      data.title is string && data.title.size() <= 50;
+    }
+    function validateAllStreams(data) {
+      return data.size() == 2 &&  // Ensure there are exactly 2 fields
+      data.icon is string && data.icon.size() <= 20 &&
+      data.text is string && data.text.size() <= 20;
+    }
+
+    function validateCoursesByStream(data) {
+      return data.size() == 1 &&  // Ensure there is exactly 1 field
+      data.courses is list;
+    }
+
+    function validateCourseDetails(course) {
+      return course != null &&
+      isString(course.author.id) &&
+      course.author.id.size() > 0 &&
+      course.chapterCount is int && course.chapterCount >= 0 &&
+      course.level in [1, 2, 3] &&
+      isTimestamp(course.createdAt) &&
+      isTimestamp(course.updatedAt) &&
+      isString(course.courseName) && course.courseName.size() <= 50 &&
+      isString(course.description) &&
+      isString(course.href) &&
+      isArray(course.streams) &&
+      isString(course.thumbnail) &&
+      course.type in ['text', 'video'] && 
+      course.visibility in ['Public', 'Paid', 'Private'];
+    }
+
+function isMessageLengthValid() {
+  return request.resource.data.message.size() <= 500; // Adjust the limit as needed
+}
+
+function isMaxLengthFields() {
+  return request.resource.data.size() <= 3 && // Ensure the number of fields is limited
+         request.resource.data.message.size() <= 500 && // Adjust the limit as needed
+         // Check for other fields if any and their lengths
+         !(("field_name" in request.resource.data && request.resource.data.field_name.size() > 50));
+}
+
+function isTutorDetailsAllowed() {
+  return ('role' in request.resource.data && request.resource.data.role == 'Stack Builder') &&
+         ('TutorDetails' in request.resource.data);
+}
+  // Custom function to limit write operations
+    function limitWriteOperations() {
+      // TODO: Implement your rate limiting logic here
+      // For example, allow only 5 write operations per minute per user
+      // Ensure you have a mechanism to track and enforce this limit
+      // For demonstration purposes, return true here
+      return true;
+    }
+    function isString(data){
+      return data is string;
+    }
+
+    function isTimestamp(data){
+      return data is timestamp;
+    }
+    function isArray(data){
+      return data is list;
+    }
+
+    function isSuperUserOrAdmin() {
+      return request.auth != null &&
+      ('Super User' in request.auth.token.roles || 'Admin' in request.auth.token.roles);
+    }
+    function isUserAuthor(courseId) {
+      return request.auth.uid == "course/" + courseId + "/" + get(/databases/$(database)/documents/CourseDetails/$(courseId)).data.author.uid;
+    }
+    // Function to check if course is visible based on visibility setting
+    function isCourseVisible( courseId, chapterId ) {
+      return resource.data.visibility == 'Public' ||
+      (resource.data.visibility == 'Private' && resource.data.author.id == request.auth.uid) ||
+      (resource.data.visibility == 'Paid' && exists(/databases/$(database)/documents/Chapter/$(courseId)/EnrolledUsers/$(request.auth.uid))) ||
+      (resource.data.visibility == 'Paid' && isCoursePaidChapterPublic( courseId, chapterId ));
+    }
+    function isCorrectCourseVisibility(courseId) {
+      return get(/databases/$(database)/documents/CourseDetails/$(courseId)).data.visibility == 'Public';
+    }
+    // Function to check if chapter is visible based on course visibility setting
+    function isChapterVisible() {
+      return resource.data.visibility == 'Public' ||
+      (resource.data.visibility == 'Private' && resource.data.author.id == request.auth.uid);
+    }
+
+    // Function to check if the chapter belongs to a paid course and is set as Public
+    function isCoursePaidChapterPublic(courseId, chapterId) {
+      return resource.data.visibility == 'Paid' &&
+      get(/databases/$(database)/documents/CourseDetails/$(courseId)/Content/$(chapterId)).data.visibility == 'Public';
+    }
+
+    // Function to check if user is Admin
+    function isAdmin() {
+      return request.auth != null && 'Admin' in request.auth.token.roles;
+    }
+  }
+
+  // Function to check if the user is the author of the comment
+  function isCommentAuthor() {
+    return request.auth.uid == resource.data.uid;
+  }
+
+  // Function to check if the comment length is within a decided limit
+  function isCommentLengthValid() {
+    return resource.data.comment.size() <= 500; // Adjust the limit as needed
+  }
+
+
+}

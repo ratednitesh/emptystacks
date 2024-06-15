@@ -72,7 +72,6 @@ const handleLocation = async () => {
             cachedPages[route] = true;
             document.getElementById(route).innerHTML = mainBody;
             await initAddOn(route);
-            console.log('loaded additional js files');
         }
         for (let key in cachedPages) document.getElementById(key).classList.toggle('disabled', key !== route);
         loadMainScripts(path);
@@ -93,8 +92,7 @@ const handleLocation = async () => {
             };
         }
 
-    } else
-        console.log(previousMainBodyPath);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 function loadMainScripts(path) {
@@ -121,7 +119,6 @@ function loadMainScripts(path) {
                 publish('loadHome', 'only-course');
                 break;
             case "/my-courses":
-                console.log("I am here");
                 publish('unloadHome');
                 publish('loadMyCourses');
                 break;

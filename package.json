@@ -18,7 +18,9 @@
   "author": "Nitesh Saxena",
   "license": "ISC",
   "dependencies": {
-    "firebase": "^10.8.0"
+    "firebase": "^10.8.0",
+    "firebase-admin": "^12.1.1",
+    "firebase-functions": "^5.0.1"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^12.0.2",

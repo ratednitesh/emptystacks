@@ -1,6 +1,6 @@
-import { initFirebase } from "./firebase-config";
 import { initStaticContent } from "./setup";
 import { initRouter } from "./router";
+import { initServices } from "./services";
 
 // Importing CSS Files 
 import "../css/index.css"; // Root CSS File
@@ -23,7 +23,7 @@ import "../css/watchvideo.css";
 
 
 window.addEventListener('DOMContentLoaded', function () {
-  initFirebase().then(() => {
+  initServices().then(() => {
     initStaticContent();
     initRouter();
     document.querySelector('.preloader').classList.add('disabled');

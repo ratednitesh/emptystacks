@@ -1,5 +1,3 @@
-import { addDocument, createDocument, deleteDocument, getUid } from './firebase-config.js';
-
 const eventListeners = {};
 
 export function subscribe(eventName, callback) {
@@ -83,15 +81,12 @@ export async function initAddOn(page) {
         try {
             console.log('loading additional js files: ' + page);
             if (page == "home")
-
                 import('./home.js').then(module => {
-                    console.log("import done for home");
                     module.initHome();
                     subscribe('loadHome', module.loadHome);
                     subscribe('unloadHome', module.unloadHome);
                     resolve();
                 });
-
             else if (page == "profile")
                 import('./profile.js').then(module => {
                     module.initProfile();
@@ -99,7 +94,6 @@ export async function initAddOn(page) {
                     subscribe('loadMyCourses', module.loadMyCourses);
                     resolve();
                 });
-
             else if (page == "course")
                 import('./course.js').then(module => {
                     module.initCoursePage();
@@ -108,14 +102,12 @@ export async function initAddOn(page) {
                 });
             else if (page == "content")
                 import('./content.js').then(module => {
-                    console.log("loading content");
                     module.initContent();
                     subscribe('loadContent', module.loadContent);
                     resolve();
                 });
             else if (page == "streams")
                 import('./streams.js').then(module => {
-                    console.log("loading streams");
                     module.initStreams().then(
                         () => {
                             subscribe('loadStreams', module.loadStreams);
@@ -141,95 +133,7 @@ export function getFormattedDate(date) {
     const day = String(date.getDate()).padStart(2, '0'); // Ensure day is two digits
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Ensure month is two digits and add 1 since months are zero-based
     const year = date.getFullYear();
-
     // Format the date as a string in DD-MM-YYYY format
     return `${day}-${month}-${year}`;
 }
 
-export function createCourseToken(courseId, courseData) {
-    return {
-        thumbnail: courseData.thumbnail,
-        title: courseData.courseName,
-        href: "/course/" + courseId,
-        nextChapter: courseData.href,
-        chaptersCompleted: [],
-        totalChapters: courseData.chapterCount,
-        status: "In Progress",
-    };
-}
-
-export function sortChapters(chapters) {
-    // Extract all items into an array with their ids
-    const items = [];
-
-    for (const [key, value] of Object.entries(chapters)) {
-        if (value.href) {
-            items.push({ name: key, ...value });
-        } else {
-            items.push({ name: key, ...value });
-            for (const [subKey, subValue] of Object.entries(value)) {
-                if (subKey !== "id" && typeof subValue === "object") {
-                    items.push({ name: subKey, ...subValue, parent: key });
-                }
-            }
-        }
-    }
-
-    // Sort the array based on ids
-    items.sort((a, b) => a.id - b.id);
-
-    // Construct a new sorted object
-    const sortedData = {};
-    for (const item of items) {
-        if (item.parent) {
-            if (!sortedData[item.parent]) {
-                sortedData[item.parent] = { id: chapters[item.parent].id };
-                // Copy additional fields at the parent level
-                Object.keys(chapters[item.parent]).forEach(field => {
-                    if (field !== 'id' && typeof chapters[item.parent][field] !== 'object') {
-                        sortedData[item.parent][field] = chapters[item.parent][field];
-                    }
-                });
-            }
-            sortedData[item.parent][item.name] = { ...item };
-            delete sortedData[item.parent][item.name].name;
-            delete sortedData[item.parent][item.name].parent;
-        } else {
-            sortedData[item.name] = { ...item };
-            delete sortedData[item.name].name;
-        }
-    }
-
-    console.log(JSON.stringify(sortedData, null, 2));
-    return sortedData;
-}
-
-export function enrollUserToCourse(courseId) {
-    createDocument('CourseDetails/' + courseId + "/EnrolledUsers", getUid(), {
-        "uid": getUid(),
-        "name": document.getElementById('user-menu-name').innerHTML,
-        "dateAdded": getFormattedDate(new Date()),
-        "userProfileSrc": document.getElementById('user-menu-photo').src
-    }, false);
-}
-
-export function addUserToChapterLikes(courseId, chapterId, status) {
-    if(getUid()){
-        if (status)
-            createDocument("CourseDetails/" + courseId + "/Content/" + chapterId + "/Likes", getUid(), {
-                "uid": getUid(),
-                "name": document.getElementById('user-menu-name').innerHTML,
-                "dateAdded": getFormattedDate(new Date()),
-                "userProfileSrc": document.getElementById('user-menu-photo').src,
-            }, false);
-        else
-            deleteDocument("CourseDetails/" + courseId + "/Content/" + chapterId + "/Likes", getUid());
-    }else{
-        if (status)
-            addDocument("CourseDetails/" + courseId + "/Content/" + chapterId + "/Likes",{
-                "uid": "guestUser",
-                "dateAdded": getFormattedDate(new Date()),
-            })
-    }
-   
-}

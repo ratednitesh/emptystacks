@@ -1,8 +1,8 @@
-import { getUid, readDocument, updateDocument } from "./firebase-config";
 import { notification, publish } from "./helper";
+import { getTutorDetails, getUserId, getUserPrivateProfile, getUserPublicProfile, updateMyPublicProfile } from "./services";
 
 var myProfile = {};
-const dataFields = ["username", "about-me", "work", "location", "tech-stack", "facebook", "instagram", "linkedin", "github"];
+const dataFields = ["displayName", "aboutMe", "work", "location", "techStack", "facebook", "instagram", "linkedin", "github"];
 const profileDiv = document.querySelector('#profile');
 const inProgressCourses = {};
 const completedCourses = {};
@@ -12,7 +12,7 @@ export function initProfile() {
     for (const dataField of dataFields) {
         let field = document.getElementById(dataField);
         let dataFieldElement;
-        if (dataField == "username") {
+        if (dataField == "displayName") {
             dataFieldElement = document.createElement("h2");
             dataFieldElement.classList.add("data-field");
         }
@@ -53,13 +53,11 @@ export function initProfile() {
                         notification(202, dataField);
                     } else {
                         myProfile[dataField] = newValue;
-                        updateDocument("UsersPublic", getUid(), { [dataField]: newValue }).then(() => {
+                        updateMyPublicProfile({ [dataField]: newValue }).then(() => {
                             notification(202, dataField);
                         })
                             .catch(() => { notification(502); });
-
                     }
-
                 }
             });
             crossIcon.addEventListener("click", () => {
@@ -78,8 +76,7 @@ export function initProfile() {
 
 // Load profile
 export function loadProfile(uid, type) {
-    console.log(uid + " " + type);
-    let myUid = getUid();
+    let myUid = getUserId();
     if (uid == myUid) {
         if (type == 'only-course') {
             document.querySelector('.my-courses').classList.remove('disabled');
@@ -112,10 +109,10 @@ export function loadProfile(uid, type) {
 }
 // load public profile
 function loadPublicProfile(uid, isMyProfile) {
-    readDocument("UsersPublic", uid).then((data) => {
+    getUserPublicProfile(uid).then((data) => {
         if (isMyProfile)
             myProfile = data;
-        setUserProfilePhoto(data.userProfileSrc);
+        setUserProfilePhoto(data.photoURL);
         setUserRole(data.role);
         for (const dataField of dataFields) {
             let field = document.getElementById(dataField);
@@ -123,29 +120,38 @@ function loadPublicProfile(uid, isMyProfile) {
             dataFieldElement.innerHTML = data[dataField];
         }
         // Read tutor data 
-        if (data.tutorDetails) {
-            for (const property in data.tutorDetails.stats) {
-                initUserActivities(property, data.tutorDetails.stats[property]);
-            }
-            createCoursesSection(Object.values(data.tutorDetails.publishedCourses), '.flex-container.published-courses', 'published');
+        if (data.role == 'Stack Builder') {
             profileDiv.querySelectorAll('.tutor').forEach(function (event) {
                 event.classList.remove("disabled");
             });
+            getTutorDetails(uid).then(
+                (tutorData) => {
+                    if(Object.keys(tutorData).length !=0){
+                        for (const property in tutorData.stats) {
+                            initUserActivities(property, tutorData.stats[property]);
+                        }
+                        createCoursesSection(tutorData.publishedCourses, '.flex-container.published-courses', 'published');
+                    }
+                }
+            ).catch((e) => {
+                console.error(e);
+                notification(501, 'tutor profile');
+            })
         } else {
             profileDiv.querySelectorAll('.tutor').forEach(function (event) {
                 event.classList.add("disabled");
             });
         }
     }).catch((e) => {
-        console.log(e);
+        console.error(e);
         notification(501, 'profile');
     });
 
 }
 
 // load private profile
-function loadPrivateProfile(uid) {
-    readDocument("UsersPrivate", uid).then((data) => {
+function loadPrivateProfile() {
+    getUserPrivateProfile().then((data) => {
 
         for (const [courseKey, courseDetails] of Object.entries(data.enrolledCourses)) {
             if (courseDetails.status === "In Progress") {
@@ -155,7 +161,7 @@ function loadPrivateProfile(uid) {
             }
         }
         for (const [chapterKey, chapterDetails] of Object.entries(data.likedTutorials)) {
-            if (chapterDetails.status)
+            if (chapterDetails.status == 'liked')
                 likedTutorials[chapterKey] = chapterDetails;
         }
         let activities = {
@@ -166,16 +172,17 @@ function loadPrivateProfile(uid) {
         for (const property in activities) {
             initUserActivities(property, activities[property]);
         }
-        createCoursesSection(Object.values(data.enrolledCourses), '.flex-container.enrolled-courses', 'enrolled');
+        createCoursesSection(data.enrolledCourses, '.flex-container.enrolled-courses', 'enrolled');
     }
-    ).catch(() => {
+    ).catch((e) => {
+        console.error(e);
         notification(501, 'user private profile');
     });
 }
 // load my profile
 // load my courses
 export function loadMyCourses() {
-    let uid = getUid();
+    let uid = getUserId();
     if (uid)
         loadProfile(uid, 'only-course');
     else
@@ -199,12 +206,12 @@ function initUserActivities(fieldId, fieldValue) {
     var dataField = field.querySelector('h2');
     dataField.innerHTML = fieldValue;
 }
-function createCoursesSection(courses, rootElement, type) {
+function createCoursesSection(courseObjects, rootElement, type) {
     // Select the flex-container element
     const container = document.querySelector(rootElement);
     container.innerHTML = "";
     // Iterate over the courses array
-    courses.forEach(course => {
+    for (const [href, course] of Object.entries(courseObjects)) {
         // Create a new box div element
         const box = document.createElement('div');
         box.classList.add('box');
@@ -221,7 +228,7 @@ function createCoursesSection(courses, rootElement, type) {
         title.textContent = course.title;
 
         const link = document.createElement('a');
-        link.href = course.href;
+
         link.textContent = 'View Course';
         link.classList.add('inline-btn');
         // Add the onclick event for routing
@@ -233,15 +240,17 @@ function createCoursesSection(courses, rootElement, type) {
             const progressBar = document.createElement('div');
             progressBar.classList.add('progress-bar');
             let percent = (course.chaptersCompleted.length / course.totalChapters) * 100;
-            console.log(percent);
             progressBar.style.width = percent + '%';
             progressDiv.appendChild(progressBar);
             box.appendChild(progressDiv);
+            link.href = course.nextChapter;
+        } else {
+            link.href = '/course/'+href;
         }
         box.appendChild(title);
         box.appendChild(link);
 
         // Append the box div to the container
         container.appendChild(box);
-    });
+    };
 }

@@ -1,6 +1,5 @@
-import { addDocument, changePassword, createDocument, getUid, readAllDocuments, readDocument } from "./firebase-config";
 import { notification } from "./helper";
-import { createNewUser, emailPasswordSignIn, firebaseSignOut, googleSignIn, tryPasswordResetEmail } from "./firebase-config";
+import { applyForTutor, getAllCourses, getUserId, getCurrentUserObject, signUp, signOut, signIn, forgotPassword, changePassword } from "./services";
 
 // Header Button
 const toggleBtn = document.querySelector('#toggle-btn');
@@ -59,21 +58,21 @@ function initHeaders() {
     }
 }
 function initSearchBar() {
-    initSearchCourses();
-    document.getElementById('search_box').addEventListener('input', function (event) {
+    document.getElementById('search_box').addEventListener('input', async function (event) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        await initSearchCourses();
         const query = event.target.value;
         handleInputChange(query);
     });
 
 }
 function initSearchCourses() {
-    readAllDocuments("AllCourses").then(
+    getAllCourses().then(
         (coursesData) => {
             const boxContainer = document.querySelector('.search .flex-container');
             let i = 0;
             // Iterate over coursesData and create HTML elements
-            Object.values(coursesData).forEach(course => {
+            for (const [href, course] of Object.entries(coursesData)) {
                 // Create box element
                 const box = document.createElement('div');
                 box.classList.add('box');
@@ -91,7 +90,7 @@ function initSearchCourses() {
 
                 // Create link
                 const link = document.createElement('a');
-                link.href = course.href;
+                link.href = '/course/' + href;
                 link.textContent = 'View Course';
                 link.classList.add('inline-btn');
                 link.setAttribute('onclick', 'route()');
@@ -106,7 +105,7 @@ function initSearchCourses() {
                 box.id = "search-" + i++;
 
                 boxContainer.appendChild(box);
-            });
+            };
         }
     ).catch((e) => {
         notification(501, 'popular courses');
@@ -114,7 +113,6 @@ function initSearchCourses() {
 
 }
 function handleInputChange(query) {
-    console.log('User is typing:', query);
     if (query) {
         document.querySelector("#search").classList.remove('disabled');
         for (let [key, value] of Object.entries(searchData)) {
@@ -149,12 +147,11 @@ function headerListeners() {
     //trigger events
     signOutBtn.onclick = () => {
         removeMenuOptions();
-        signOut();
+        triggerSignOut();
     };
 
     let privateMenuOptions = document.querySelectorAll(".menu .private");
     privateMenuOptions.forEach(function (link) {
-        console.log('hello');
         link.addEventListener("click", function (e) {
             removeMenuOptions();
         })
@@ -201,7 +198,6 @@ function closeModal(event) {
             fm.classList.remove("is-visible");
         }
     });
-
 }
 function escModal(event) {
     forms_modal.forEach(fm => {
@@ -287,8 +283,7 @@ function modalListeners() {
             else {
                 form_login_pass.classList.add("has-no-error");
                 notification(203);
-                let userToken = createUserToken('', email, password);
-                signIn('emailAddress', userToken);
+                triggerSignIn('Email&Password', { email: email, password: password });
             }
         }
         form_login.querySelector('input[type="email"]').classList.toggle("has-error");
@@ -314,8 +309,14 @@ function modalListeners() {
                     form_signup_pass.classList.add("has-no-error");
                     if (form_signup.querySelector('#accept-terms').checked) {
                         notification(203);
-                        let userToken = createUserToken(username, email, password);
-                        signUp(userToken);
+                        signUp(username, email, password).then(() => {
+                            loginSuccess();
+                            notification(200);
+                            setTimeout(() => { notification(205, email); }, 1000);
+                            setTimeout(() => { location.reload(); }, 5000);
+                        }).catch(() => {
+                            notification(505);
+                        });
                     }
                     else
                         notification(301);
@@ -332,7 +333,11 @@ function modalListeners() {
         else {
             form_forgot_password.querySelector('#reset-email').classList.add("has-no-error");
             notification(203);
-            forgotPassword(email);
+            forgotPassword(email).then(
+                () => { notification(206) }
+            ).catch(() => {
+                notification(500);
+            });
         }
     });
 
@@ -383,15 +388,15 @@ function modalListeners() {
         }
     };
 
-    document.querySelectorAll('.google-btn').forEach((event) => event.addEventListener("click", () => { signIn('Google') }));
+    document.querySelectorAll('.google-btn').forEach((event) => event.addEventListener("click", () => { triggerSignIn('Google') }));
     document.querySelectorAll('.facebook-btn').forEach((event) => event.addEventListener("click", () => { notification(506) }));
     document.querySelectorAll('.apple-btn').forEach((event) => event.addEventListener("click", () => { notification(506) }));
     document.querySelectorAll('.github-btn').forEach((event) => event.addEventListener("click", () => { notification(506) }));
 
-    regTutorModal.querySelector('input[type="submit"]').addEventListener("click", async function (event) {
+    regTutorModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
         // Prevent the default form submission
         event.preventDefault();
-        let uid = getUid();
+        let uid = getUserId();
         if (!uid) {
             notification(315);
             return;
@@ -415,19 +420,18 @@ function modalListeners() {
         }
         let formData = {
             message: msg,
+            status: "new"
         };
-        let hasApplied = await readDocument('TutorApplications', uid);
-        if (!hasApplied) {
-            createDocument('TutorApplications', uid, formData, false).then(
-                () => {
+        applyForTutor(formData).then(
+            (status) => {
+                if (status) {
                     notification(209);
                     forms_modal.forEach(f => f.classList.remove('is-visible'));
+                } else {
+                    notification(317);
                 }
-            )
-        }else{
-            notification(317);
-        }
-
+            }
+        )
     });
 
     accSettModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
@@ -443,12 +447,12 @@ function modalListeners() {
         else if (newp != conf)
             notification(311);
         else if (validatePassword(newp)) {
-            changePassword( old, newp).then(()=>{
+            changePassword(old, newp).then(() => {
                 notification(210);
                 accSettModal.classList.remove('is-visible');
-                setTimeout(() => { signOut() }, 2500);
-            }).catch((e)=>{
-                notification(507,e);
+                setTimeout(() => { triggerSignOut() }, 2500);
+            }).catch((e) => {
+                notification(507, e);
             });
         }
     });
@@ -479,9 +483,9 @@ function loginSuccess() {
 }
 
 // Authentication Functions: 
-function signOut() {
-    firebaseSignOut().then(() => {
-        if (!getUid()) {
+function triggerSignOut() {
+    signOut().then(() => {
+        if (!getUserId()) {
             location.reload();
             notification(204);
         } else {
@@ -489,77 +493,42 @@ function signOut() {
         }
     });
 }
-function signIn(provider, userToken) {
-    if (provider == 'Google') {
-        googleSignIn().then(() => {
+function triggerSignIn(provider, userToken) {
+    signIn(provider, userToken).then(() => {
+        if (getUserId()) {
             loginSuccess();
             notification(201);
             location.reload();
-        }).catch(() => {
-            notification(503);
-        });
-    } else if (provider == 'emailAddress') {
-        emailPasswordSignIn(userToken).then(() => {
-            if (getUid()) {
-                loginSuccess();
-                notification(201);
-                location.reload();
-            }
-        }).catch(() => {
-            notification(503);
-        });
-    }
-}
-
-function signUp(userToken) {
-    createNewUser(userToken).then(() => {
-        if (getUid()) {
-            loginSuccess();
-            notification(200);
-            setTimeout(() => { notification(205, userToken.email); location.reload(); }, 5000);
         }
     }).catch(() => {
-        notification(505);
+        notification(503);
     });
 }
-function forgotPassword(email) {
-    tryPasswordResetEmail(email).then(
-        () => { notification(206) }
-    ).catch(() => {
-        notification(500);
-    });
-}
+
 
 
 // Update user info on auth status change on header and main sidebar.
 function loadUserPrivateData() {
-    console.log('loading private data out');
+    let user = getCurrentUserObject();
+    if (user) {
+        let uid = user.uid;
+        document.getElementById('user-photo-header').src = user.photoURL;
+        document.getElementById('user-menu-photo').src = user.photoURL;
+        document.getElementById('user-menu-name').innerHTML = user.displayName;
+        document.getElementById('user-menu-mail').innerHTML = user.email;
+        profileMenuOnlyPublic.forEach((node) => { node.classList.add('disabled') });
+        profileMenuPrivate.forEach((node) => { node.classList.remove('disabled') });
+        document.getElementById('user-photo-header').classList.remove('disabled');
+        document.getElementById('guest-photo-header').classList.add('disabled');
+        document.getElementById('profile-link').href = "/profile/" + uid;
+        document.getElementById('header-profile-link').href = "/profile/" + uid;
+        document.getElementById('sb-profile-link').href = "/profile/" + uid;
+        sideBar.querySelector('#user-photo-sb').src = user.photoURL;
+        sideBar.querySelector('#user-name-sb').innerHTML = user.displayName;
+        sideBar.querySelector('#user-role-sb').innerHTML = user.email;
+        document.getElementById('acc-sett-name').placeholder = user.displayName;
+        document.getElementById('acc-sett-mail').placeholder = user.email;
 
-    if (getUid()) {
-        let uid = getUid();
-        readDocument("UsersPrivate", uid)
-            .then((userData) => {
-                console.log('loading private data');
-                console.log(userData.userProfileSrc);
-                console.log(userData);
-
-                document.getElementById('user-photo-header').src = userData.userProfileSrc;
-                document.getElementById('user-menu-photo').src = userData.userProfileSrc;
-                document.getElementById('user-menu-name').innerHTML = userData.username;
-                document.getElementById('user-menu-mail').innerHTML = userData.mailId;
-                profileMenuOnlyPublic.forEach((node) => { node.classList.add('disabled') });
-                profileMenuPrivate.forEach((node) => { node.classList.remove('disabled') });
-                document.getElementById('user-photo-header').classList.remove('disabled');
-                document.getElementById('guest-photo-header').classList.add('disabled');
-                document.getElementById('profile-link').href = "/profile/" + uid;
-                document.getElementById('header-profile-link').href = "/profile/" + uid;
-                document.getElementById('sb-profile-link').href = "/profile/" + uid;
-                sideBar.querySelector('#user-photo-sb').src = userData.userProfileSrc;
-                sideBar.querySelector('#user-name-sb').innerHTML = userData.username;
-                sideBar.querySelector('#user-role-sb').innerHTML = userData.role;
-                document.getElementById('acc-sett-name').placeholder = userData.username;
-                document.getElementById('acc-sett-mail').placeholder = userData.mailId;
-            }).catch((e) => { console.log(e); notification(501, 'user profile') })
     } else {
         profileMenuPrivate.forEach((node) => { node.classList.add('disabled') });
         profileMenuOnlyPublic.forEach((node) => { node.classList.remove('disabled') });
@@ -616,16 +585,5 @@ function validatePassword(password) {
         return false;
     }
     return true;
-}
-function createUserToken(username, email, password) {
-    // Create a JSON object to represent the user token
-    var userToken = {
-        username: username,
-        password: password,
-        email: email,
-        userProfileSrc: "/images/profile/no-photo.svg"
-        // Add other relevant information as needed
-    };
-    return userToken;
 }
 

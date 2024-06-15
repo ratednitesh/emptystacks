@@ -1,10 +1,10 @@
-#########################
-**** DESCRIPTION ****
-This is a Web Based project to Host my study material related to Software Engg.
-This is an Open Source Project.
+# DESCRIPTION 
 
-File System:
-    FIRST LOAD: 
+This is a **Web Based project** to Host my study material related to Software Engg.
+> This is an Open Source Project.
+
+## File System:
+    FIRST LOAD:
             HTML - index.html,
             JS -   index.js
                          firebase-config.js
@@ -27,14 +27,12 @@ File System:
                   fetch-data.js
 
 
-#########################
 
-Javascript Files:
-
-Entry Point: 
-        index.js 
-                - Imports all css files
-                - On DomContentLoaded initialize:
+# Javascript Files:
+        Entry Point: 
+                index.js 
+                        - Imports all css files
+                        - On DomContentLoaded initialize:
                         - firebase and then-
                                 - eventbus
                                 - staticContent

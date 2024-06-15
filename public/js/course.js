@@ -1,5 +1,5 @@
-import { updateEnrolledCourse, getUid, readAllDocuments, readDocument } from "./firebase-config";
-import { createCourseToken, enrollUserToCourse, notification, publish, sortChapters } from "./helper";
+import { getFormattedDate, notification, publish } from "./helper";
+import { getCourseDetail, readAllReviews, getUserId, getUserPrivateProfile, enrollToCourse } from "./services";
 
 const textCourse = document.querySelector('.text-course');
 const courseStreams = textCourse.querySelector('.streams');
@@ -13,8 +13,7 @@ const startButton = document.getElementById('content-link');
 const progressContainer = document.getElementById('course-progress-container');
 const progressBar = progressContainer.querySelector('.progress-bar');
 const levelNames = ['Easy', 'Intermediate', 'Expert'];
-let lastCourseId;
-let courseToken;
+let loadedCourseId;
 
 // Initializers and Listeners: Course Page 
 export function initCoursePage() {
@@ -31,94 +30,61 @@ export function initCoursePage() {
         expandButton.textContent = expandButton.textContent === "Minimize All" ? "Expand All" : "Minimize All";
     });
     saveCourse.addEventListener('click', () => {
-        // call save course api if is user logged in
-        let uid = getUid();
-        if (uid) {
-            saveCourse.classList.add('locked');
-            enrollUserToCourse(lastCourseId);
-            updateEnrolledCourse(lastCourseId, courseToken).then(() => {
-                notification(208);
-            }).catch((e) => { console.log(e); notification(502); });
-        }
+        if (getUserId())
+            triggerEnrollCourse();
+        startButton.innerText = "Resume Course";
     });
     startButton.addEventListener('click', () => {
-        if (startButton.innerText == "Start Course" && getUid() ){
-            saveCourse.classList.add('locked');
-            enrollUserToCourse(lastCourseId);
-            updateEnrolledCourse(lastCourseId, courseToken).then(() => {
-                notification(208);
-            }).catch((e) => { console.log(e); notification(502); });
-        }
+        if (startButton.innerText == "Start Course" && getUserId())
+            triggerEnrollCourse();
     });
 }
 
 // Load course page
 export function loadCoursePage(courseId) {
-    saveCourse.classList.add('locked');
-    progressContainer.classList.add('disabled');
-    if (lastCourseId != courseId) {
+    if (loadedCourseId != courseId) {
+        saveCourse.classList.add('locked');
+        progressContainer.classList.add('disabled');
         startButton.innerText = "Start Course";
-        lastCourseId = courseId;
         getCourseData(courseId);
-    } else if (lastCourseId == 'notFoundRoute')
-        publish('notFoundRoute');
-}
-function updateUserLevelsOnEnrolledCourses() {
-    let uid = getUid();
-    if (uid) {
-        readDocument("UsersPrivate", uid).then((userData) => {
-            var coursehref = "/course/" + lastCourseId;
-            console.log(coursehref);
-            let matchingCourse = Object.values(userData.enrolledCourses).find(course => course.href === coursehref);
-            console.log("matching: " + matchingCourse);
-            if (matchingCourse) {
-                saveCourse.classList.add('locked');
-                progressContainer.classList.remove('disabled');
-                let chaptersCompleted = matchingCourse.chaptersCompleted;
-                let percent = (chaptersCompleted.length / matchingCourse.totalChapters) * 100;
-                console.log(percent);
-                progressBar.style.width = percent + '%';
-                startButton.innerText = "Resume Course";
-                startButton.href = matchingCourse.nextChapter;
-                chaptersCompleted.forEach(id => {
-                    let i = document.getElementById(lastCourseId + "-" + id);
-                    i.classList.remove('es-circle-empty');
-                    i.classList.add('es-ok-circled', 'green');
-                });
-                const items = document.querySelectorAll('.accordion-item');
-                items.forEach(item => {
-                    let subI = item.querySelectorAll('.course-list > a > i');
-                    if (subI.length) {
-                        const noneContainOkCircle = Array.from(subI).every(k => !k.classList.contains('es-circle-empty'));
-                        if (noneContainOkCircle) {
-                            let i = item.querySelector('.accordion-header > h2 > i:first-of-type');
-                            i.classList.remove('es-circle-empty');
-                            i.classList.add('es-ok-circled', 'green');
-                        }
-                    }
-                });
-            } else {
-                progressContainer.classList.add('disabled');
-                saveCourse.classList.remove('locked');
-            }
-        })
+    } else {
+        updateUserLevelOnEnrolledCourse();
     }
 }
+
 // Load course Data
 function getCourseData(courseId) {
-    readDocument("CourseDetails", courseId).then(
+    getCourseDetail(courseId).then(
         (courseData) => {
-            if (courseData) {
+            if (Object.keys(courseData).length != 0) {
+                loadedCourseId = courseId;
                 textCourse.querySelectorAll('.chapters').forEach((event) => {
                     event.innerHTML = courseData.chapterCount + " Chapters";
                 });
                 textCourse.querySelector('#thumbnail').src = courseData.thumbnail;
-                textCourse.querySelector('#publishDate').innerHTML = courseData.publishDate;
+                textCourse.querySelector('#publishDate').innerHTML = getFormattedDate(courseData.createdAt);
                 textCourse.querySelector('#courseName').innerHTML = courseData.courseName;
-                courseData.streams.forEach(stream => {
+                textCourse.querySelector('#description').innerHTML = courseData.description;
+                startButton.href = courseData?.href;
+                const level = courseData.level;
+                const n = 4 - level; // Calculate the value of n based on the level
+                textCourse.querySelector('#course-level').innerHTML = levelNames[level - 1];
+                allBars.forEach(bar => {
+                    bar.style.background = '#fff';
+                });
+                const selectedBars = document.querySelectorAll('.signal-bars .bar:nth-last-child(n+' + n + ')');
+                selectedBars.forEach(bar => {
+                    bar.style.background = 'var(--main-color)';
+                });
+                var tutorData = courseData.author;
+                textCourse.querySelector('#tutor-link').href = "/profile/" + tutorData.uid;
+                textCourse.querySelector('#tutor-img').src = tutorData.photoURL;
+                textCourse.querySelector('#tutor-name').innerHTML = tutorData.displayName;
+                textCourse.querySelector('#tutor-role').innerHTML = "Stack Builder";
+                for (const [streamId, stream] of Object.entries(courseData.streams)) {
                     // Create the anchor tag
                     const anchorTag = document.createElement('a');
-                    anchorTag.href = '/streams/' + stream.text;
+                    anchorTag.href = '/streams/' + streamId;
                     anchorTag.setAttribute("onclick", "route()");
                     anchorTag.classList.add('transparent-btn');
 
@@ -135,41 +101,13 @@ function getCourseData(courseId) {
                     anchorTag.appendChild(spanElement);
                     // Append the anchor tag to the flex container
                     courseStreams.appendChild(anchorTag);
-                });
-
-                textCourse.querySelector('#description').innerHTML = courseData.description;
-                startButton.href = courseData.href;
-                const level = courseData.level;
-                const n = 4 - level; // Calculate the value of n based on the level
-                textCourse.querySelector('#course-level').innerHTML = levelNames[level - 1];
-                allBars.forEach(bar => {
-                    bar.style.background = '#fff';
-                });
-                const selectedBars = document.querySelectorAll('.signal-bars .bar:nth-last-child(n+' + n + ')');
-                selectedBars.forEach(bar => {
-                    bar.style.background = 'var(--main-color)';
-                });
-                var tutorData = courseData.author;
-                textCourse.querySelector('#tutor-link').href = "/profile/" + tutorData.id;
-                textCourse.querySelector('#tutor-img').src = tutorData.userProfileSrc;
-                textCourse.querySelector('#tutor-name').innerHTML = tutorData.name;
-                textCourse.querySelector('#tutor-role').innerHTML = tutorData.role;
-                courseToken = createCourseToken(lastCourseId, courseData);
+                };
+                let courseContentData = courseData.chapters;
                 if (courseData.type == "text") {
                     document.querySelector(".course-details").classList.remove('disabled');
                     document.querySelector(".video-container").classList.add('disabled');
-                }
-                else {
-                    document.querySelector(".video-container").classList.remove('disabled');
-                    document.querySelector(".course-details").classList.add('disabled');
-                }
-
-                let courseContentData = sortChapters(courseData.chapters);
-                console.log('chapters')
-                console.log(courseContentData);
-                if (courseData.type == "text") {
                     courseDetails.innerHTML = "";
-                    for (const [course, topics] of Object.entries(courseContentData)) {
+                    courseContentData.forEach(topics => {
                         const accordionItem = document.createElement("div");
                         accordionItem.classList.add("accordion-item");
                         const accordionHeader = document.createElement("div");
@@ -178,10 +116,10 @@ function getCourseData(courseId) {
                         const headerIcon = document.createElement("i");
                         headerIcon.classList.add("es-circle-empty", "bullet");
 
-                        if (topics.href) {
+                        if (topics.type == 'Chapter') {
                             headerIcon.id = courseId + "-" + topics.id;
                             headerTitle.appendChild(headerIcon);
-                            headerTitle.innerHTML += ` ${course}`;
+                            headerTitle.innerHTML += ' ' + topics.title;
                             const headingLink = document.createElement("a");
                             headingLink.href = topics.href;
                             headingLink.setAttribute("onclick", "route()");
@@ -192,7 +130,7 @@ function getCourseData(courseId) {
                         }
                         else {
                             headerTitle.appendChild(headerIcon);
-                            headerTitle.innerHTML += ` ${course}`;
+                            headerTitle.innerHTML += ' ' + topics.title;
                             const expandIcon = document.createElement("i");
                             expandIcon.classList.add("expand", "es-angle-up");
                             headerTitle.appendChild(expandIcon);
@@ -202,25 +140,24 @@ function getCourseData(courseId) {
                             const accordionContent = document.createElement("div");
                             accordionContent.classList.add("accordion-content");
 
-                            for (const [topic, value] of Object.entries(topics)) {
-                                if (topic != "id") {
-                                    const courseList = document.createElement("li");
-                                    courseList.classList.add("course-list");
-                                    const topicLink = document.createElement("a");
-                                    topicLink.href = value.href;
-                                    topicLink.setAttribute("onclick", "route()");
-                                    topicLink.innerHTML = `<i id="${courseId}-${value.id}"class="bullet es-circle-empty"></i>${topic}`;
+                            topics.subChapters.forEach(topic => {
+                                const courseList = document.createElement("li");
+                                courseList.classList.add("course-list");
+                                const topicLink = document.createElement("a");
+                                topicLink.href = topic.href;
+                                topicLink.setAttribute("onclick", "route()");
+                                topicLink.innerHTML = `<i id="${courseId}-${topic.id}"class="bullet es-circle-empty"></i>${topic.title}`;
 
-                                    courseList.appendChild(topicLink);
-                                    accordionContent.appendChild(courseList);
-                                }
-                            }
+                                courseList.appendChild(topicLink);
+                                accordionContent.appendChild(courseList);
+                            });
+
                             accordionItem.appendChild(accordionContent);
                             accordionItem.classList.add("active");
                         }
                         courseDetails.appendChild(accordionItem);
-                    }
-                    // courseDetails.innerHTML = courseData;
+                    });
+
                     document.querySelectorAll('.expandable').forEach(function (header) {
                         header.addEventListener('click', function () {
                             var item = this.parentNode;
@@ -231,37 +168,38 @@ function getCourseData(courseId) {
                     });
                 }
                 else {
+                    document.querySelector(".video-container").classList.remove('disabled');
+                    document.querySelector(".course-details").classList.add('disabled');
                     videoDetails.innerHTML = "";
-                    for (const [title, cvd] of Object.entries(courseContentData)) {
+                    courseContentData.forEach(cvd => {
                         const videoHtml = document.createElement("a");
                         videoHtml.href = cvd.href;
                         videoHtml.setAttribute("onclick", "route()");
                         videoHtml.classList.add("box");
-                        videoHtml.innerHTML = `<i class="es-play-lg"></i><img class="thumb-md" src="${cvd.thumbnail}"alt=""><h2 class="title"><i id="${courseId}-${cvd.id}" class="es-circle-empty"></i> ${title}</h2>`;
+                        videoHtml.innerHTML = `<i class="es-play-lg"></i><img class="thumb-md" src="${cvd.thumbnail}"alt=""><h2 class="title"><i id="${courseId}-${cvd.id}" class="es-circle-empty"></i> ${cvd.title}</h2>`;
                         videoDetails.appendChild(videoHtml);
-                    };
+                    });
                 }
-                updateUserLevelsOnEnrolledCourses();
-                getCourseReviews(courseId);
+                updateUserLevelOnEnrolledCourse();
+                getCourseReviews();
+
             } else {
-                lastCourseId = 'notFoundRoute';
                 publish('notFoundRoute');
             }
         }
     )
         .catch(
             (e) => {
-                console.log(e);
+                console.error(e);
                 notification(501, 'course');
             }
         )
 }
 
 // Load course reviews
-function getCourseReviews(courseId) {
-    readAllDocuments("CourseDetails/" + courseId + "/Reviews").then(
+function getCourseReviews() {
+    readAllReviews(loadedCourseId).then(
         (courseReview) => {
-            console.log(courseReview);
             if (courseReview) {
                 document.querySelector('.reviews').classList.remove('disabled');
                 boxContainer.innerHTML = "";
@@ -278,12 +216,12 @@ function getCourseReviews(courseId) {
                     profileLink.href = `/profile/${userInfo.uid}`;
                     profileLink.setAttribute("onclick", "route()");
                     const userImage = document.createElement('img');
-                    userImage.src = userInfo.userProfileSrc;
-                    userImage.alt = userInfo.name;
+                    userImage.src = userInfo.photoURL;
+                    userImage.alt = userInfo.displayName;
                     userImage.classList.add('user-logo-sm');
                     const userContentDiv = document.createElement('div');
                     const userName = document.createElement('h2');
-                    userName.textContent = userInfo.name;
+                    userName.textContent = userInfo.displayName;
                     userName.classList.add("title");
                     const starsContent = document.createElement('div');
                     starsContent.innerHTML = generateStarRating(r.rating);
@@ -319,4 +257,48 @@ function generateStarRating(rating) {
         '<i class="es-star-empty"></i>'.repeat(5 - Math.ceil(rating)) +
         '</div>';
 
+}
+
+function updateUserLevelOnEnrolledCourse() {
+    getUserPrivateProfile().then((userData) => {
+        if (userData) {
+            if (loadedCourseId in userData.enrolledCourses) {
+                let matchingCourse = userData.enrolledCourses[loadedCourseId];
+                saveCourse.classList.add('locked');
+                progressContainer.classList.remove('disabled');
+                let chaptersCompleted = matchingCourse.chaptersCompleted;
+                let percent = (chaptersCompleted.length / matchingCourse.totalChapters) * 100;
+                progressBar.style.width = percent + '%';
+                startButton.innerText = "Resume Course";
+                startButton.href = matchingCourse.nextChapter;
+                chaptersCompleted.forEach(id => {
+                    let i = document.getElementById(loadedCourseId + "-" + id);
+                    i.classList.remove('es-circle-empty');
+                    i.classList.add('es-ok-circled', 'green');
+                });
+                const items = document.querySelectorAll('.accordion-item');
+                items.forEach(item => {
+                    let subI = item.querySelectorAll('.course-list > a > i');
+                    if (subI.length) {
+                        const noneContainOkCircle = Array.from(subI).every(k => !k.classList.contains('es-circle-empty'));
+                        if (noneContainOkCircle) {
+                            let i = item.querySelector('.accordion-header > h2 > i:first-of-type');
+                            i.classList.remove('es-circle-empty');
+                            i.classList.add('es-ok-circled', 'green');
+                        }
+                    }
+                });
+            } else {
+                progressContainer.classList.add('disabled');
+                saveCourse.classList.remove('locked');
+            }
+        }
+    });
+}
+
+function triggerEnrollCourse() {
+    saveCourse.classList.add('locked');
+    enrollToCourse(loadedCourseId).then(() => {
+        notification(208);
+    }).catch(() => { notification(502); });
 }

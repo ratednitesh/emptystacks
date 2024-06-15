@@ -1,7 +1,7 @@
 
-import { getUid, readAllDocuments, readAllDocumentsWithLimit, readDocument } from "./firebase-config";
 import { signup_selected } from "./setup";
 import { notification } from './helper';
+import { getAllCourses, getAllStreams, getUserId, getUserPrivateProfile } from "./services";
 const highlightSection = document.querySelector('.highlight-section');
 const quickSelect = document.querySelector('.quick-select');
 const bookContainer = document.querySelector('#enrolled-courses-home');
@@ -33,12 +33,13 @@ function initBanner() {
 }
 // Initializer and Listeners: Popular Courses
 function initPopularCourses() {
-    readAllDocuments("AllCourses").then(
+    getAllCourses().then(
         (coursesData) => {
             const boxContainer = document.querySelector('.courses .flex-container');
 
             // Iterate over coursesData and create HTML elements
-            Object.values(coursesData).forEach(course => {
+            for (const [href, course] of Object.entries(coursesData)) {
+
                 // Create box element
                 const box = document.createElement('div');
                 box.classList.add('box');
@@ -56,7 +57,7 @@ function initPopularCourses() {
 
                 // Create link
                 const link = document.createElement('a');
-                link.href = course.href;
+                link.href = '/course/' + href;
                 link.textContent = 'View Course';
                 link.classList.add('inline-btn');
                 link.setAttribute('onclick', 'route()');
@@ -68,9 +69,10 @@ function initPopularCourses() {
 
                 boxContainer.appendChild(box);
 
-            });
+            };
         }
     ).catch((e) => {
+        console.error(e);
         notification(501, 'popular courses');
     });
 
@@ -84,23 +86,23 @@ function initQuickSelect() {
     });
     document.querySelector(".home-reg-tutor").addEventListener('click', () =>
         document.querySelector(".reg-tutor-modal").classList.add('is-visible'));
+    homeOptionPrivate.forEach((node) => { if (!getUserId()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
+    homeOptionOnlyPublic.forEach((node) => { if (getUserId()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
     // Init streams
     initStreams();
-    // Show / Hide  Quick select options based on user login status
-    updateQuickSelectOptions();
     // Prev/ Next Enrolled Courses Listeners
     initQuickCourses();
 }
 // Initializer and Listeners: Streams
 function initStreams() {
     // Get the Stream container
-    readAllDocumentsWithLimit("AllStreams", 12).then(
+    getAllStreams().then(
         (streams) => {
             const streamContainer = document.getElementById('stream-options');
-            Object.values(streams).forEach(stream => {
+            for (const [streamId, stream] of Object.entries(streams)) {
                 // Create the anchor tag
                 const anchorTag = document.createElement('a');
-                anchorTag.href = '/streams/' + stream.text;
+                anchorTag.href = '/streams/' + streamId;
                 anchorTag.setAttribute("onclick", "route()");
                 anchorTag.classList.add('transparent-btn')
 
@@ -118,7 +120,7 @@ function initStreams() {
 
                 // Append the anchor tag to the flex container
                 streamContainer.appendChild(anchorTag);
-            });
+            };
         }
     ).catch(
         () => {
@@ -153,7 +155,7 @@ export function loadHome(args) {
             loadBanner();
             isBannerLoaded = true;
         }
-        updateEnrolledCourses();
+        loadEnrolledCourses();
     }
 }
 // Unload Home / Courses
@@ -171,19 +173,11 @@ function unloadBanner() {
     isBannerLoaded = false;
 }
 
-// On auth state change, call this function to update show/ hide section
-function updateQuickSelectOptions() {
-    homeOptionPrivate.forEach((node) => { if (!getUid()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
-    homeOptionOnlyPublic.forEach((node) => { if (getUid()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
-    updateEnrolledCourses();
-}
-// On auth State change, Update enrolled Courses 
-function updateEnrolledCourses() {
-    let uid = getUid();
-    if (uid)
-        readDocument("UsersPrivate", uid)
-            .then(
-                (data) => {
+function loadEnrolledCourses() {
+    getUserPrivateProfile()
+        .then(
+            (data) => {
+                if (data) {
                     var quickCourses = Object.values(data.enrolledCourses).filter(course => course.status === "In Progress");
                     // Reference to the book container
                     bookContainer.innerHTML = "";
@@ -214,7 +208,6 @@ function updateEnrolledCourses() {
                         const progressBar = document.createElement('div');
                         progressBar.classList.add('progress-bar');
                         let percent = (course.chaptersCompleted.length / course.totalChapters) * 100;
-                        console.log(percent);
                         progressBar.style.width = percent + '%';
                         progressDiv.appendChild(progressBar);
                         anchorTag.appendChild(progressDiv);
@@ -240,16 +233,18 @@ function updateEnrolledCourses() {
                     }
                     disabledTutorMode(data.role == "Stack Builder");
                 }
-            ).catch((e) => {
-                console.log(e);
-                notification(501, 'enrolled courses');
-            })
-    else {
-        bookContainer.innerHTML = "";
-        enrolledCourses = [];
-        enrolledCourseIndex = -1;
-        disabledTutorMode(false);
-    }
+                else {
+                    bookContainer.innerHTML = "";
+                    enrolledCourses = [];
+                    enrolledCourseIndex = -1;
+                    disabledTutorMode(false);
+                }
+            }
+
+        ).catch((e) => {
+            console.error(e);
+            notification(501, 'enrolled courses');
+        })
 }
 
 function disabledTutorMode(isTutor) {
