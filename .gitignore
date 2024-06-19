@@ -10,3 +10,5 @@ node_modules/
 *.env
 .github/*
 firebase-debug*
+ui-debug.log
+firestore-debug.log

@@ -1,0 +1,231 @@
+{
+    "AllItems": {
+        "ReadAll": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": false,
+            "Stack Builder": false,
+            "Stack Explorer": false
+        },
+        "allStreams": {
+            "Guest": true,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": true
+        },
+        "allCourses": {
+            "Guest": true,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": true
+        }
+    },
+    "CourseDetail": {
+        "ReadAll": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": false,
+            "Stack Builder": false,
+            "Stack Explorer": false
+        },
+        "problemSolvingLeetCode": {
+            "Guest": true,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": true
+        }
+    },
+    "CourseDetail/testCourse/EnrolledUsers/": {
+        "ReadAll": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": false
+        },
+        "aQnUacQl2IVL3ZzGNBpPkWCtoDN2": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": false
+        },
+        "nW7X7cyUllazbIjQZYtpVMDu71k2": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": true
+        }
+    },
+    "CourseDetail/problemSolvingLeetCode/EnrolledUsers/": {
+        "ReadAll": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": false,
+            "Stack Explorer": false
+        },
+        "aQnUacQl2IVL3ZzGNBpPkWCtoDN2": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": false,
+            "Stack Explorer": false
+        }
+    },
+    "CourseDetail/problemSolvingLeetCode/Content/": {
+        "ReadAll": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": false,
+            "Stack Builder": false,
+            "Stack Explorer": false
+        },
+        "Basics": {
+            "Guest": true,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": true
+        }
+    },
+    "CourseDetail/problemSolvingLeetCode/Reviews/": {
+        "ReadAll": {
+            "Guest": true,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": true
+        },
+        "aQnUacQl2IVL3ZzGNBpPkWCtoDN2": {
+            "Guest": true,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": true
+        }
+    },
+    "CourseDetail/testCourse/Content/testChapter/Likes": {
+        "ReadAll": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": false
+        },
+        "eDLhJLXv7ChEf6vBCSSbHUphTlV2": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": false
+        }
+    },
+    "CourseDetail/problemSolvingLeetCode/Content/Basics/Comments": {
+        "ReadAll": {
+            "Guest": true,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": true
+        },
+        "O8usBpinSMHeCkIsRSAf": {
+            "Guest": true,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": true
+        }
+    },
+    "CoursesByStreams": {
+        "ReadAll": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": false,
+            "Stack Builder": false,
+            "Stack Explorer": false
+        },
+        "FullStack": {
+            "Guest": true,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": true
+        }
+    },
+    "TutorApplications": {
+        "ReadAll": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": false,
+            "Stack Explorer": false
+        },
+        "aQnUacQl2IVL3ZzGNBpPkWCtoDN2": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": false,
+            "Stack Explorer": false
+        }
+    },
+    "TutorDetails": {
+        "12345": {
+            "Guest": true,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": true
+        },
+        "ReadAll": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": false,
+            "Stack Builder": false,
+            "Stack Explorer": false
+        }
+    },
+    "UserPrivateProfile": {
+        "ReadAll": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": false,
+            "Stack Builder": false,
+            "Stack Explorer": false
+        },
+        "DcOWtPF3Ecdm7RQBk5mNLamUPH62": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": false,
+            "Stack Builder": false,
+            "Stack Explorer": false
+        },
+        "nW7X7cyUllazbIjQZYtpVMDu71k2": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": false,
+            "Stack Builder": false,
+            "Stack Explorer": true
+        }
+    },
+    "UserPublicProfile": {
+        "ReadAll": {
+            "Guest": false,
+            "Admin": true,
+            "Super User": false,
+            "Stack Builder": false,
+            "Stack Explorer": false
+        },
+        "DcOWtPF3Ecdm7RQBk5mNLamUPH62": {
+            "Guest": true,
+            "Admin": true,
+            "Super User": true,
+            "Stack Builder": true,
+            "Stack Explorer": true
+        }
+    }
+}

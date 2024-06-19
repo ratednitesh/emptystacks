@@ -1,9 +1,515 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
+
     match /{document=**} {
-      allow read, write: if true;
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /AllItems/allCourses {
+      allow get: if true;
+      allow update: if isValidAllCoursesUpdateDoc(request.resource.data);
+    }
+    match /AllItems/allStreams {
+      allow get: if true;
+      allow update: if isValidAllStreamsUpdateDoc(request.resource.data);
+    }
+    match /CoursesByStreams/{streamId} {
+      allow get: if true;
+      allow create: if isValidCourseByStreamCreateDoc();
+      allow update: if isValidCoursesByStreamsUpdateDoc();
+    }
+    match /CourseDetail/{courseId} {
+      allow get: if isAdminOrSuperUser() || isCoursePublicOrPaid(courseId);
+      allow create: if isValidCourseDetailCreateDoc(request.resource.data);
+      allow update: if isValidCourseDetailUpdateDoc(request.resource.data, courseId);
+    
+      match /EnrolledUsers/{uid} {
+        allow read: if isAdminOrSuperUser() || isAuthor(courseId);
+        allow get: if matchUserUID(uid);
+        allow create: if isValidEnrolledUserCreateDoc(request.resource.data, uid, courseId);
+      }
+      match /Reviews/{uid} {
+        allow read: if isAdminOrSuperUser() || isCoursePublicOrPaid(courseId);
+        allow create: if isValidReviewCreateDoc(request.resource.data, uid, courseId);
+      }
+      match /Content/{chapterId} {
+        allow get: if isAdminOrSuperUser() || isContentAccessible(courseId, chapterId);
+        allow create: if isValidContentCreateDoc(request.resource.data);
+        allow update: if isValidContentUpdateDoc(request.resource.data);
+        
+        match /Comments/{commentId} {
+          allow read: if isAdminOrSuperUser() || isContentAccessible(courseId, chapterId);
+          allow create: if isValidCommentCreateDoc(request.resource.data, courseId, chapterId);
+          allow update: if isValidCommentUpdateDoc(request.resource.data, courseId, chapterId);
+          allow delete: if canCommentBeDeleted();
+        }
+        match /Likes/{uid} {
+          allow read: if isAdminOrSuperUser() || isAuthor(courseId);
+          allow create: if isValidLikesCreateDoc(request.resource.data, uid);
+        }
+      }
+    }
+    match /TutorApplications/{uid} {
+      allow read: if isAdminOrSuperUser();
+      allow create: if isValidTutorAppCreateDoc(request.resource.data, uid);
+    }
+    match /TutorDetails/{uid} {
+      allow get: if true;
+      allow create: if isValidTutorDetailCreateDoc(request.resource.data, uid);
+      allow update: if isValidTutorDetailUpdateDoc(request.resource.data, uid);
+    }
+    match /UserPublicProfile/{uid} {
+      allow get: if true;
+      allow create: if isValidUsersPublicCreateDoc(request.resource.data, uid);
+      allow update: if isValidUsersPublicUpdateDoc(request.resource.data, uid);
+    }
+    match /UserPrivateProfile/{uid} {
+      allow get:  if matchUserUID(uid);
+      allow create: if isValidUsersPrivateCreateDoc(request.resource.data, uid);
+      allow update: if isValidUsersPrivateUpdateDoc(request.resource.data, uid); 
+    }
+  
+    // Verifying User's UID
+    function isUserLoggedIn(){
+      return request.auth != null;
+    }
+    function matchUserUID(uid){
+      return request.auth.uid == uid;
+    }
+    function userExists(uid){
+      return exists(/databases/$(database)/documents/UserPrivateProfile/$(uid));
+    }
+
+    // Verifying User Role
+    function isAdmin(){
+      return isUserLoggedIn() && isValidUserRole(request.auth.uid, ['Admin'])
+    }
+    function isAdminOrSuperUser(){
+      return isUserLoggedIn() && isValidUserRole(request.auth.uid, ['Admin', 'Super User'])
+    }
+    function isValidUserRole(uid, validRoles){
+      return get(/databases/$(database)/documents/UserPrivateProfile/$(uid)).data.role in validRoles;
+    }
+
+    // Verifying User Object
+    function verifyUserFields(userObject){
+      return verifyFields(userObject.keys(), ['uid', 'displayName', 'photoURL'],[]) && isValidUserName(userObject.displayName) && isValidUserPhoto(userObject.photoURL) ;
+    }
+    function isValidUserName(name){
+        return isString(name) && isValidLength(name, 50);
+    }
+    function isValidUserPhoto(photoURL){
+      return isString(photoURL) && isValidLength(photoURL, 100);
+    }
+
+    // Verifying Prerequisites
+    function isCoursePresent(courseId){
+      return exists(/databases/$(database)/documents/CourseDetail/$(courseId));
+    }
+    function isCoursePublic(courseId){
+      return get(/databases/$(database)/documents/CourseDetail/$(courseId)).data.visibility == 'Public';
+    }
+    function isCoursePaid(courseId){
+      return get(/databases/$(database)/documents/CourseDetail/$(courseId)).data.visibility == 'Paid';
+    }
+    function isCoursePublicOrPaid(courseId){
+      return get(/databases/$(database)/documents/CourseDetail/$(courseId)).data.visibility in ['Public', 'Paid'];
+    }
+    function isChapterPublic(courseId, chapterId){
+      return get(/databases/$(database)/documents/CourseDetail/$(courseId)/Content/$(chapterId)).data.visibility == 'Public';
+    }
+    function isEnrolledUser(courseId, uid) {
+      return exists(/databases/$(database)/documents/CourseDetail/$(courseId)/EnrolledUsers/$(uid));
+    }
+    function isAuthor(courseId){  
+      return isUserLoggedIn() && get(/databases/$(database)/documents/CourseDetail/$(courseId)).data.author.uid == request.auth.uid;
+    }
+    function isContentAccessible(courseId, chapterId){
+      return isCoursePublic(courseId) || ( isCoursePaid(courseId) && ( isEnrolledUser(courseId, request.auth.uid) || isChapterPublic(courseId, chapterId) ) )
+    }
+
+    // Field Validations
+    function verifyFields(keys, required, optional) {
+      let allAllowedFields = required.concat(optional);
+      return keys.hasAll(required) &&
+      keys.hasOnly(allAllowedFields);
+    }
+    function isValidLength(field, size){
+      return field.size() > 0 && field.size() <= size;
+    }
+    function isCurrentTime(field){
+      return field is timestamp && field == request.time;
+    }
+    function isString(fieldName){
+      return fieldName is string;
+    }
+    function isNumber(fieldName){
+      return fieldName is int;
+    }
+    function isArray(fieldName){
+      return fieldName is list;
+    }
+    function isMap(fieldName){
+      return fieldName is map;
+    }
+    function isFloat(fieldName){
+      return fieldName is float;
+    } 
+    function isSmallString(fieldName){
+      return isString(fieldName) && fieldName.size() < 30; 
+    }
+
+    // CREATE VALIDATIONS
+    function isValidCourseDetailCreateDoc(data){
+      let isValidUser = isAdminOrSuperUser();
+
+      let arePrerequisiteMet = true;
+      
+      let hasAllowedFieldsOnly = verifyFields( data.keys(), 
+      ['courseName','author', 'description', 'level',  'type', 'chapterCount','visibility', 'href', 'createdAt', 'version', 'thumbnail', 'chapters', 'streams', 'topReviews'], []) ;
+
+      let isUserInfoCorrect = verifyUserFields(data.author);
+      
+      let areDataFieldsValid = 
+          isString(data.courseName) && isValidLength(data.courseName, 50) &&
+          isString(data.description) && isValidLength(data.description, 200) &&
+          data.level in [1, 2, 3] && 
+          data.type in ['text', 'video'] &&
+          isNumber(data.chapterCount) &&
+          data.visibility in ['Public', 'Private', 'Paid'] &&
+          isString(data.href) && isValidLength(data.href,100) &&
+          isCurrentTime(data.createdAt) &&
+          data.version == 1.0 &&
+          isString(data.thumbnail) && isValidLength(data.thumbnail,50) && 
+          isArray(data.chapters) && data.chapters.size() > 0 && 
+          isArray(data.streams) &&
+          isMap(data.topReviews);
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;
+    }
+    function isValidEnrolledUserCreateDoc(data, uid, courseId){
+      let isValidUser = isUserLoggedIn();
+
+      let arePrerequisiteMet = isCoursePublic(courseId);
+
+      let hasAllowedFieldsOnly = verifyFields(data.keys(), ['createdAt', 'user'],[]);
+
+      let isUserInfoCorrect = matchUserUID(uid) && verifyUserFields(data.user) && matchUserUID(data.user.uid);
+
+      let areDataFieldsValid = 
+          isCurrentTime(data.createdAt);
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;
+    }
+    function isValidLikesCreateDoc(data, uid){
+      let isValidUser = isUserLoggedIn();
+
+      let arePrerequisiteMet = true;
+
+      let hasAllowedFieldsOnly = verifyFields(data.keys(), ['createdAt', 'user'],[]);
+
+      let isUserInfoCorrect = matchUserUID(uid) && verifyUserFields(data.user) && matchUserUID(data.user.uid);
+
+      let areDataFieldsValid = 
+          isCurrentTime(data.createdAt);
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;
+    }
+    function isValidReviewCreateDoc(data, uid, courseId){
+      let isValidUser = isUserLoggedIn();
+
+      let arePrerequisiteMet = isEnrolledUser(courseId, request.auth.uid);
+
+      let hasAllowedFieldsOnly = verifyFields(data.keys(), ['user', 'rating', 'review', 'createdAt'],[]);
+
+      let isUserInfoCorrect = matchUserUID(uid) && verifyUserFields(data.user) && matchUserUID(data.user.uid);
+
+      let areDataFieldsValid = 
+          isFloat(data.rating) && data.rating >= 1.0 && data.rating <= 5.0 && 
+          isString(data.rating) && isValidLength(data.review, 500) &&
+          isCurrentTime(data.createdAt);
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid; 
+    }
+    function isValidCommentCreateDoc(data, courseId, chapterId){
+      let isValidUser = isUserLoggedIn();
+
+      let arePrerequisiteMet = isContentAccessible(courseId, chapterId);
+
+      let hasAllowedFieldsOnly = verifyFields(data.keys(), ['user', 'createdAt', 'comment'],[]);
+
+      let isUserInfoCorrect = verifyUserFields(data.user) && matchUserUID(data.user.uid);
+
+      let areDataFieldsValid = 
+          isString(data.comment) && isValidLength(data.comment,300) &&
+          isCurrentTime(data.createdAt);
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid; 
+    }
+    function isValidTutorAppCreateDoc(data, uid){
+      let isValidUser = isUserLoggedIn();
+
+      let arePrerequisiteMet = true;
+
+      let hasAllowedFieldsOnly = verifyFields(data.keys(), ['message', 'status', 'user', 'createdAt'],[]);
+
+      let isUserInfoCorrect = matchUserUID(uid) && verifyUserFields(data.user) && matchUserUID(data.user.uid);
+
+      let areDataFieldsValid = 
+          isString(data.message) && isValidLength(data.message, 1000) &&
+          data.status == 'new' && 
+          isCurrentTime(data.createdAt);
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;     
+    }
+    function isValidCourseByStreamCreateDoc(){
+      // TODO: Fix this.
+      let isValidUser = isAdminOrSuperUser();
+
+      let arePrerequisiteMet = true;
+
+      let hasAllowedFieldsOnly = true;
+
+      let isUserInfoCorrect = true;
+
+      let areDataFieldsValid = true;
+          
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;    
+    }
+    function isValidContentCreateDoc(data) {
+      let isValidUser = isAdminOrSuperUser();
+
+      let arePrerequisiteMet = true;
+      
+      let hasAllowedFieldsOnly = verifyFields(
+          data.keys(), [ 'heading','likes', 'type', 'version', 'nextChapter','previousChapter', 'createdAt' ],['videoId','videoSource', 'description','content','visibility']);
+
+      let isUserInfoCorrect = true;
+      
+      let areDataFieldsValid = 
+          isString(data.heading) && isValidLength(data.heading, 50) &&
+          data.likes == 0 && 
+          data.type in ['text', 'video'] &&
+          ( (data.type == 'text' && data.keys().hasAll(['content']) && isString(data.content) ) 
+          || ( data.type == 'video' && data.keys().hasAll([ 'videoId', 'videoSource','description' ]) && 
+               isString(data.description) && isValidLength(data.description, 200) &&
+               isString(data.videoId) && isValidLength(data.videoId, 50) &&
+               isString(data.videoSource) && isValidLength(data.videoSource, 20) ) 
+          ) &&
+          data.visibility in ['Public', 'Private', 'Paid'] &&
+          data.version == 1.0 &&
+          isString(data.nextChapter) &&
+          isString(data.previousChapter) &&
+          isCurrentTime(data.createdAt);
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;
+    }
+    function isValidTutorDetailCreateDoc(data, uid){
+      let isValidUser = isAdminOrSuperUser();
+
+      let arePrerequisiteMet = isValidUserRole(uid, ['Stack Builder']);
+
+      let hasAllowedFieldsOnly = verifyFields(data.keys(), ['publishedCourses', 'stats'],[]) && verifyFields(data.stats.keys(),['published-courses','tutor-liked-tutorials','tutor-ratin'],[]);
+
+      let isUserInfoCorrect = true;
+
+      let areDataFieldsValid = 
+          isMap(data.publishedCourses) &&  // data.publishedCourses.size() == 0 &&
+          isMap(data.stats); // validate all stats are 0. 
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;    
+    }
+    function isValidUsersPublicCreateDoc(data, uid) {
+      let isValidUser = isUserLoggedIn();
+
+      let arePrerequisiteMet = userExists(uid);
+
+      let hasAllowedFieldsOnly = verifyFields(data.keys(), ['displayName', 'photoURL', 'role', 'aboutMe', 'work', 'location', 'techStack', 'facebook', 'github', 'instagram', 'linkedIn', 'createdAt' ],[]);
+
+      let isUserInfoCorrect = matchUserUID(uid);
+
+      let areDataFieldsValid = 
+          isValidUserName(data.displayName) &&
+          isValidUserPhoto(data.photoURL) &&
+          data.role == 'Stack Explorer' &&
+          isSmallString(data.aboutMe) &&
+          isSmallString(data.work) &&
+          isSmallString(data.location) &&
+          isSmallString(data.techStack) &&
+          isSmallString(data.facebook) &&
+          isSmallString(data.github) &&
+          isSmallString(data.instagram) &&
+          isSmallString(data.linkedIn) &&
+          isCurrentTime(data.createdAt);
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid; 
+    }
+    function isValidUsersPrivateCreateDoc(data, uid) {
+      let isValidUser = isUserLoggedIn();
+
+      let arePrerequisiteMet = true;
+
+      let hasAllowedFieldsOnly = verifyFields(data.keys(), ['role', 'enrolledCourses', 'likedTutorials', 'createdAt'],[]);
+
+      let isUserInfoCorrect = matchUserUID(uid);
+
+      let areDataFieldsValid = 
+          data.role == 'Stack Explorer' &&
+          isMap(data.enrolledCourses) && data.enrolledCourses.size() == 0 &&
+          isMap(data.likedTutorials) && data.likedTutorials.size() == 0 &&
+          isCurrentTime(data.createdAt);
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;   
+    }
+
+    // UPDATE VALIDATIONS
+    function isValidAllCoursesUpdateDoc(data){
+      // TODO: Fix this.
+      return data.size()>0;
+    }
+    function isValidAllStreamsUpdateDoc(data){
+      // TODO: Fix This
+      return data.size()>0;
+    }
+    function isValidCoursesByStreamsUpdateDoc(){
+      // TODO: Fix this.
+      return true;
+    }
+    function isValidCommentUpdateDoc(data, courseId, chapterId){
+      let isValidUser = isUserLoggedIn();
+
+      let arePrerequisiteMet = isContentAccessible(courseId, chapterId);
+
+      let hasAllowedFieldsOnly = verifyFields(data.diff(resource.data).affectedKeys(), ['updatedAt', 'comment'],[]);
+
+      let isUserInfoCorrect = matchUserUID(resource.data.user.uid);
+
+      let areDataFieldsValid = 
+          isString(data.comment) && isValidLength(data.comment,300) &&
+          isCurrentTime(data.updatedAt);
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid; 
+    }
+    function isValidCourseDetailUpdateDoc(data, courseId){
+      let isValidUser = isAdminOrSuperUser();
+
+      let arePrerequisiteMet = isCoursePresent(courseId);
+      
+      let hasAllowedFieldsOnly = verifyFields( data.diff(resource.data).affectedKeys(), 
+      ['updatedAt', 'version'],['courseName', 'description', 'level', 'chapterCount', 'visibility', 'href', 'thumbnail', 'chapters', 'streams', 'topReviews']) ;
+
+      let isUserInfoCorrect = true;
+      
+      let areDataFieldsValid = 
+          isString(data.courseName) && isValidLength(data.courseName, 50)&&
+          isString(data.description) && isValidLength(data.description, 200) &&
+          data.level in [1, 2, 3] && 
+          isNumber(data.chapterCount) &&
+          data.visibility in ['Public', 'Private', 'Paid'] &&
+          isString(data.href) && isValidLength(data.href,100) &&
+          isCurrentTime(data.updatedAt) &&
+          isFloat(data.version) && data.version > resource.data.version &&
+          isString(data.thumbnail) && isValidLength(data.thumbnail, 50) && 
+          isArray(data.chapters) && data.chapters.size() > 0 && 
+          isArray(data.streams) &&
+          isMap(data.topReviews);
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;  
+    }
+    function isValidContentUpdateDoc(data){
+      let isValidUser = isAdminOrSuperUser();
+
+      let arePrerequisiteMet = true;
+      
+      let hasAllowedFieldsOnly = verifyFields(
+          data.diff(resource.data).affectedKeys(), [ 'version', 'updatedAt' ],
+            [ 'heading', 'nextChapter','previousChapter', 'videoId','videoSource', 'description','content','visibility']) || 
+            verifyFields( data.diff(resource.data).affectedKeys(), ['likes'],[]);
+
+      let isUserInfoCorrect = true;
+      
+      let areDataFieldsValid = 
+          isString(data.heading) && isValidLength(data.heading, 50) &&
+          isNumber(data.likes) &&  data.likes >= resource.data.likes &&
+          ( (data.type == 'text' && data.keys().hasAll(['content']) && isString(data.content) ) 
+          || ( data.type == 'video' && data.keys().hasAll([ 'videoId', 'videoSource','description' ]) && 
+               isString(data.description) && isValidLength(data.description, 200) &&
+               isString(data.videoId) && isValidLength(data.videoId, 50) &&
+               isString(data.videoSource) && isValidLength(data.videoSource, 20) ) 
+          ) &&
+          data.visibility in ['Public', 'Private', 'Paid'] &&
+          isFloat(data.version) && data.version > resource.data.version &&
+          isString(data.nextChapter) &&
+          isString(data.previousChapter) &&
+          isCurrentTime(data.updatedAt);
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;  
+    }
+    function isValidTutorDetailUpdateDoc(data, uid){
+      let isValidUser = isAdminOrSuperUser();
+
+      let arePrerequisiteMet = isValidUserRole(uid, ['Stack Builder']);
+
+      let hasAllowedFieldsOnly = verifyFields(data.diff(resource.data).affectedKeys(),[], ['publishedCourses', 'stats']) && verifyFields(data.stats.diff(resource.data.stats).affectedKeys(),[],['published-courses','tutor-liked-tutorials','tutor-ratin']);
+
+      let isUserInfoCorrect = true;
+
+      let areDataFieldsValid = 
+          isMap(data.publishedCourses) &&  // data.publishedCourses.size() == 0 &&
+          isMap(data.stats); // validate all stats are 0. 
+
+      return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;    
+    }
+    function isValidUsersPrivateUpdateDoc(data, uid){
+      let isValidUser = isUserLoggedIn();
+
+      let arePrerequisiteMet = true;
+
+      let hasAllowedFieldsOnly = verifyFields(data.diff(resource.data).affectedKeys(), ['updatedAt'], [ 'enrolledCourses', 'likedTutorials' ]);
+
+      let isUserInfoCorrect = matchUserUID(uid);
+
+      let areDataFieldsValid = 
+          data.role == resource.data.role &&
+          isMap(data.enrolledCourses) &&
+          isMap(data.likedTutorials) && 
+          isCurrentTime(data.updatedAt);
+
+      let overrideRule = isAdminOrSuperUser() && verifyFields(data.diff(resource.data).affectedKeys(), ['role'], []) && data.role == 'Stack Builder';
+
+      return (isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid ) || overrideRule;   
+    }
+    function isValidUsersPublicUpdateDoc(data, uid){
+      let isValidUser = isUserLoggedIn();
+
+      let arePrerequisiteMet = userExists(uid);
+
+      let hasAllowedFieldsOnly = verifyFields(data.diff(resource.data).affectedKeys(),['updatedAt'], [ 'displayName', 'photoURL', 'aboutMe', 'work', 'location', 'techStack', 'facebook', 'github', 'instagram', 'linkedIn' ]);
+
+      let isUserInfoCorrect = matchUserUID(uid);
+
+      let areDataFieldsValid = 
+          isValidUserName(data.displayName) &&
+          isValidUserPhoto(data.photoURL) &&
+          data.role == resource.data.role &&
+          isSmallString(data.aboutMe) &&
+          isSmallString(data.work) &&
+          isSmallString(data.location) &&
+          isSmallString(data.techStack) &&
+          isSmallString(data.facebook) &&
+          isSmallString(data.github) &&
+          isSmallString(data.instagram) &&
+          isSmallString(data.linkedIn) &&
+          isCurrentTime(data.updatedAt);
+
+      let overrideRule = isAdminOrSuperUser() && verifyFields(data.diff(resource.data).affectedKeys(), ['role'], []) && data.role == 'Stack Builder';
+
+      return (isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid) || overrideRule; 
+    }    
+    // DELETE VALIDATIONS
+    function canCommentBeDeleted(){
+        return isUserLoggedIn() && request.auth.uid == resource.data.user.uid;
     }
   }
 }

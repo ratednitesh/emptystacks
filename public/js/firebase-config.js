@@ -95,14 +95,10 @@ export async function firebaseSignOut() {
 /***  Firestore CRUD APIs ****/
 // CREATE 
 export async function createDocument(collectionName, id, data, mergeStatus, flag) {
-    try {
-        if (flag == 'addDate')
-            data.createdAt = serverTimestamp();
-        // use merge : true if want to create new doc if not already present. Is it? 
-        await setDoc(doc(db, collectionName, id), data, { merge: mergeStatus });
-    } catch (e) {
-        console.error("Error adding document: ", e);
-    }
+    if (flag == 'addDate')
+        data.createdAt = serverTimestamp();
+    // use merge : true if want to create new doc if not already present. Is it? 
+    await setDoc(doc(db, collectionName, id), data, { merge: mergeStatus });
 }
 
 export async function addDocument(collectionName, data, flag) {
@@ -114,67 +110,52 @@ export async function addDocument(collectionName, data, flag) {
 
 // READ
 export async function readDocument(collectionName, id) {
-    try {
-        const docRef = doc(db, collectionName, id);
-        const docSnap = await getDoc(docRef);
+    const docRef = doc(db, collectionName, id);
+    const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-            let data = docSnap.data();
-            if (data.createdAt) {
-                data.createdAt = docSnap.data().createdAt.toDate();
-            }
-            if (data.updatedAt) {
-                data.updatedAt = docSnap.data().updatedAt.toDate();
-            }
-            return data;
-        } else {
-            // docSnap.data() will be undefined in this case
-            console.error("No such document!");
-            return {};
+    if (docSnap.exists()) {
+        let data = docSnap.data();
+        if (data.createdAt) {
+            data.createdAt = docSnap.data().createdAt.toDate();
         }
-    } catch (e) {
-        console.error("Error reading document: ", e);
-        throw e;
+        if (data.updatedAt) {
+            data.updatedAt = docSnap.data().updatedAt.toDate();
+        }
+        return data;
+    } else {
+        // docSnap.data() will be undefined in this case
+        console.error("No such document!");
+        return {};
     }
 }
 
 // READ ALL DOCUMENTS
 export async function readAllDocuments(collectionName) {
-    try {
-        const q = query(collection(db, collectionName));
-        const querySnapshot = await getDocs(q);
-        const allData = querySnapshot.docs.map(doc => { return { [doc.id]: doc.data() } });
-        let result = {};
-        querySnapshot.forEach(doc => {
-            let data = doc.data();
-            if (data.createdAt) {
-                data.createdAt = doc.data().createdAt.toDate();
-            }
-            if (data.updatedAt) {
-                data.updatedAt = doc.data().updatedAt.toDate();
-            }
-            result[doc.id] = data;
-        });
-        return result;
-    } catch (e) {
-        console.error("Error updating document: ", e);
-        throw e;
-    }
+    const q = query(collection(db, collectionName));
+    const querySnapshot = await getDocs(q);
+    const allData = querySnapshot.docs.map(doc => { return { [doc.id]: doc.data() } });
+    let result = {};
+    querySnapshot.forEach(doc => {
+        let data = doc.data();
+        if (data.createdAt) {
+            data.createdAt = doc.data().createdAt.toDate();
+        }
+        if (data.updatedAt) {
+            data.updatedAt = doc.data().updatedAt.toDate();
+        }
+        result[doc.id] = data;
+    });
+    return result;
 }
 // READ LIMITED DOCUMENTS
 export async function readAllDocumentsWithLimit(collectionName, maxLimit) {
-    try {
-        const q = query(collection(db, collectionName), limit(maxLimit));
-        const querySnapshot = await getDocs(q);
-        let result = {};
-        querySnapshot.forEach(doc => {
-            result[doc.id] = doc.data();
-        });
-        return result;
-    } catch (e) {
-        console.error("Error updating document: ", e);
-        throw e;
-    }
+    const q = query(collection(db, collectionName), limit(maxLimit));
+    const querySnapshot = await getDocs(q);
+    let result = {};
+    querySnapshot.forEach(doc => {
+        result[doc.id] = doc.data();
+    });
+    return result;
 }
 
 // UPDATE 
@@ -188,21 +169,11 @@ export async function updateDocumentWithArray(collectionName, id, data, arrayFie
 
 // DELETE DOC
 export async function deleteDocument(collectionName, docId) {
-    try {
-        await deleteDoc(doc(db, collectionName, docId));
-    } catch (error) {
-        console.error("Error removing document: ", error);
-        throw error;
-    }
+    await deleteDoc(doc(db, collectionName, docId));
 }
 // DELETE FIELD
 export async function deleteFieldInADocument(collectionName, id, dataField) {
-    try {
-        await updateDoc(doc(db, collectionName, id), { [dataField]: deleteField() });
-    } catch (e) {
-        console.error("Error deleting field in the document: ", e);
-        throw e;
-    }
+    await updateDoc(doc(db, collectionName, id), { [dataField]: deleteField() });
 }
 
 /*** HELPER  *****/
