@@ -26,6 +26,9 @@ const routes = {
     "/streams": "streams",
     "/streams/": "streams",
     "/streams/*": "streams",
+    "/builder": "builder",
+    "/builder/": "builder",
+    "/builder/*": "builder",
     404: "notFound"
 };
 const sideBar = document.querySelector('#sideBar');

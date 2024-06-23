@@ -1,4 +1,4 @@
-.text-section .chapter-details {
+.chapter-details {
     gap: 1.5rem;
     flex-wrap: wrap;
     background-color: var(--white);
@@ -7,29 +7,29 @@
     text-align: center;
 }
 
-.text-section .chapter-details .info {
+.chapter-details .info {
     display: flex;
     flex-direction: row-reverse;
     gap: 2rem;
     padding-bottom: 1.5rem;
 }
 
-.text-section .chapter-details .info p {
+.chapter-details .info p {
     font-size: 1.5rem;
 
 }
 
-.text-section .chapter-details .info p i {
+.chapter-details .info p i {
     margin-right: 1rem;
     color: var(--main-color);
 
 }
 
-.text-section .chapter-details .info p span {
+.chapter-details .info p span {
     color: var(--light-color);
 }
 
-.text-section .chapter-details .chapter-content {
+.chapter-content {
     padding-top: 3rem;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -40,32 +40,32 @@
     border-bottom: var(--border);
 }
 
-.text-section .chapter-details .chapter-content a {
+.chapter-content a {
     text-decoration: none;
     color: var(--main-color);
 }
 
-.text-section .chapter-details .chapter-content p {
+.chapter-content p {
     padding-bottom: 2rem;
 }
 
-.text-section .chapter-details .chapter-content h4 {
+.chapter-content h4 {
     padding-bottom: .5rem;
     font-size: 2.2rem;
     color: var(--light-color);
 }
 
-.text-section .chapter-details .chapter-content h5 {
+.chapter-content h5 {
     padding-bottom: .5rem;
     font-size: 2rem;
     color: var(--light-color);
 }
 
-.text-section .chapter-details .chapter-content ul {
+.chapter-content ul {
     margin: 1rem 4rem;
 }
 
-.text-section .chapter-details  .chapter-footer {
+.chapter-footer {
     text-align: center;
     padding-top: 2rem;
     color: var(--light-color);
@@ -73,46 +73,47 @@
 
 }
 
-.text-section .chapter-details .chapter-footer p {
+.chapter-details .chapter-footer p {
     padding: 0;
 }
 
-.text-section .chapter-details  .chapter-footer i {
+.chapter-details  .chapter-footer i {
     padding: 0 .5rem;
     padding-bottom: 1rem;
     cursor: pointer;
     font-size: 1.5rem;
 }
 
-.text-section .chapter-details .chapter-footer i:hover {
+.chapter-details .chapter-footer i:hover {
     color: var(--main-color);
 }
 .red{
     color: var(--main-color)
 }
-.text-section .chapter-details .completion{
+.chapter-details .content-end-button{
     margin-top: 2rem;
     text-align: right;
+    margin-bottom: 2rem;
 }
 
-.text-section .chapter-navigation {
+.chapter-navigation {
     display: flex;
     flex-direction: row;
 }
 
-.text-section .chapter-navigation .left-group {
+.chapter-navigation .left-group {
     display: flex;
     flex: 1;
     justify-content: flex-start;
 }
 
-.text-section .chapter-navigation .left-group {
+.chapter-navigation .left-group {
     display: flex;
     flex: 1;
     justify-content: flex-start;
 }
 
-.text-section .chapter-navigation .right-group {
+.chapter-navigation .right-group {
     display: flex;
     flex: 1;
     justify-content: flex-end;

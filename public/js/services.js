@@ -37,7 +37,7 @@ export async function deleteComment(courseId, chapterId, commentId) {
 }
 
 export async function updateComment(courseId, chapterId, commentId, commentObject) {
-    await updateDocument("CourseDetail/" + courseId + "/Content/" + chapterId + "/Comments", commentId, commentObject);
+    await updateDocument("CourseDetail/" + courseId + "/Content/" + chapterId + "/Comments", commentId, commentObject, 'addDate');
 }
 
 export async function addComment(courseId, chapterId, commentObject) {
@@ -60,14 +60,8 @@ export async function readAllReviews(courseId) {
 
 /** TUTOR APPLICATIONS **/
 export async function applyForTutor(formData) {
-    let hasApplied = await readDocument('TutorApplications', getUid());
-    if (!hasApplied.status) {
-        formData.user = getUserTokenObject();
-        await createDocument('TutorApplications', getUid(), formData, false);
-        return true;
-    } else {
-        return false;
-    }
+    formData.user = getUserTokenObject();
+    await createDocument('TutorApplications', getUid(), formData, false, 'addDate');
 }
 
 /** COURSE DETAIL **/
@@ -181,7 +175,7 @@ export async function getUserPublicProfile(uid) {
 }
 
 export async function updateMyPublicProfile(updateObject) {
-    await updateDocument("UserPublicProfile", getUserId(), updateObject);
+    await updateDocument("UserPublicProfile", getUserId(), updateObject, 'addDate');
 }
 
 /** ENROLL USER **/
@@ -204,7 +198,7 @@ async function addCourseToUserProfile(courseId) {
     let updates = {
         [key]: courseToken
     };
-    await updateDocument("UserPrivateProfile", getUid(), updates);
+    await updateDocument("UserPrivateProfile", getUid(), updates, 'addDate');
 }
 
 async function getCourseToken(courseId) {
@@ -235,7 +229,7 @@ async function addToLikedTutorials(courseId, chapterId, status, chapterTitle) {
                 status: status
             },
         };
-        await updateDocument("UserPrivateProfile", getUid(), updates);
+        await updateDocument("UserPrivateProfile", getUid(), updates, 'addDate');
     }
 }
 
@@ -254,9 +248,9 @@ export async function markChapterCompleted(courseId, courseToken) {
     updates[parentKey + ".status"] = courseToken.courseStatus;
     if ('nextChapter' in courseToken)
         updates[parentKey + ".nextChapter"] = courseToken.nextChapter;
-    await updateDocumentWithArray("UserPrivateProfile", getUid(), updates, parentKey + ".chaptersCompleted", courseToken.index)
+    await updateDocumentWithArray("UserPrivateProfile", getUid(), updates, parentKey + ".chaptersCompleted", courseToken.index, 'addDate')
 }
 
-export async function getTutorDetails(uid){
-   return await readDocument("TutorDetails", uid);
+export async function getTutorDetails(uid) {
+    return await readDocument("TutorDetails", uid);
 }

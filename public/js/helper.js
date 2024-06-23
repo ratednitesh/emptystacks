@@ -115,6 +115,11 @@ export async function initAddOn(page) {
                         }
                     )
                 });
+            else if (page == "builder")
+                import('./builder.js').then(module => {
+                    module.initBuilder();
+                    resolve();
+                });
             else
                 resolve();
         } catch (error) {

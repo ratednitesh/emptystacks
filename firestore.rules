@@ -310,7 +310,7 @@ service cloud.firestore {
 
       let arePrerequisiteMet = isValidUserRole(uid, ['Stack Builder']);
 
-      let hasAllowedFieldsOnly = verifyFields(data.keys(), ['publishedCourses', 'stats'],[]) && verifyFields(data.stats.keys(),['published-courses','tutor-liked-tutorials','tutor-ratin'],[]);
+      let hasAllowedFieldsOnly = verifyFields(data.keys(), ['publishedCourses', 'stats'],[]) && verifyFields(data.stats.keys(),['published-courses','tutor-liked-tutorials','tutor-rating'],[]);
 
       let isUserInfoCorrect = true;
 

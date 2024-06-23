@@ -159,12 +159,14 @@ export async function readAllDocumentsWithLimit(collectionName, maxLimit) {
 }
 
 // UPDATE 
-export async function updateDocument(collectionName, id, data) {
+export async function updateDocument(collectionName, id, data, flag) {
+    if (flag == 'addDate')
+        data.updatedAt = serverTimestamp();
     await updateDoc(doc(db, collectionName, id), data);
 }
-export async function updateDocumentWithArray(collectionName, id, data, arrayField, newElement) {
+export async function updateDocumentWithArray(collectionName, id, data, arrayField, newElement, flag) {
     data[arrayField] = arrayUnion(newElement);
-    await updateDocument(collectionName, id, data);
+    await updateDocument(collectionName, id, data, flag);
 }
 
 // DELETE DOC

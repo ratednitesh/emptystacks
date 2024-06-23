@@ -18,6 +18,11 @@
   "author": "Nitesh Saxena",
   "license": "ISC",
   "dependencies": {
+    "@alkhipce/editorjs-aitext": "^1.2.0",
+    "@editorjs/editorjs": "^2.29.1",
+    "@editorjs/header": "^2.8.1",
+    "@google/generative-ai": "^0.13.0",
+    "editorjs-paragraph-with-alignment": "^3.0.0",
     "firebase": "^10.8.0",
     "firebase-admin": "^12.1.1",
     "firebase-functions": "^5.0.1"

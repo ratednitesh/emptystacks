@@ -423,39 +423,37 @@ function modalListeners() {
             status: "new"
         };
         applyForTutor(formData).then(
-            (status) => {
-                if (status) {
-                    notification(209);
-                    forms_modal.forEach(f => f.classList.remove('is-visible'));
-                } else {
-                    notification(317);
-                }
+            () => {
+                notification(209);
+                forms_modal.forEach(f => f.classList.remove('is-visible'));
             }
+        ).catch(
+           ()=> {  notification(317); }
         )
-    });
+});
 
-    accSettModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
-        event.preventDefault();
+accSettModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
+    event.preventDefault();
 
-        var old = document.getElementById("acc-old-pass").value;
-        var newp = document.getElementById("acc-new-pass").value;
-        var conf = document.getElementById("acc-conf-pass").value;
-        if (old === '' || newp === '' || conf === '') {
-            notification(310);
-            return;
-        }
-        else if (newp != conf)
-            notification(311);
-        else if (validatePassword(newp)) {
-            changePassword(old, newp).then(() => {
-                notification(210);
-                accSettModal.classList.remove('is-visible');
-                setTimeout(() => { triggerSignOut() }, 2500);
-            }).catch((e) => {
-                notification(507, e);
-            });
-        }
-    });
+    var old = document.getElementById("acc-old-pass").value;
+    var newp = document.getElementById("acc-new-pass").value;
+    var conf = document.getElementById("acc-conf-pass").value;
+    if (old === '' || newp === '' || conf === '') {
+        notification(310);
+        return;
+    }
+    else if (newp != conf)
+        notification(311);
+    else if (validatePassword(newp)) {
+        changePassword(old, newp).then(() => {
+            notification(210);
+            accSettModal.classList.remove('is-visible');
+            setTimeout(() => { triggerSignOut() }, 2500);
+        }).catch((e) => {
+            notification(507, e);
+        });
+    }
+});
 }
 function login_selected() {
     auth_modal.classList.add("is-visible");

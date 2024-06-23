@@ -20,6 +20,7 @@ import "../css/reviews.css";
 import "../css/comment.css";
 import "../css/textsection.css";
 import "../css/watchvideo.css";
+import "../css/editor.css";
 
 
 window.addEventListener('DOMContentLoaded', function () {

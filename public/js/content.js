@@ -1,7 +1,7 @@
 import { publish, notification, getFormattedDate } from "./helper";
 import { signup_selected } from "./setup";
 import { copyPathToClipboard } from "./router";
-import { addComment, createReview, deleteComment, getAllComments, likeOrUnlikeChapter, updateComment, getUserId, getCourseDetail, getChapterContent, likedTutorial, getUserPrivateProfile, enrollToCourse, markChapterCompleted, likeChapter } from "./services";
+import { addComment, createReview, deleteComment, getAllComments, updateComment, getUserId, getCourseDetail, getChapterContent, getUserPrivateProfile, enrollToCourse, markChapterCompleted, likeChapter } from "./services";
 
 const contentSidebarHtml = document.querySelector('#contentSidebar');
 const ul = contentSidebarHtml.querySelector(".nano-content");
@@ -9,7 +9,7 @@ const contentHtml = document.querySelector('.text-section');
 const showComments = document.getElementById("show-comments");
 const commentHtml = document.querySelector('.comments');
 const watchVideo = contentHtml.querySelector('.watch-video');
-const chapterContent = contentHtml.querySelector('.chapter-content');
+const chapterContent = contentHtml.querySelector('#chapter-content');
 const shareButton = document.getElementById('share');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
