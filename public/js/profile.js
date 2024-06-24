@@ -1,5 +1,6 @@
 import { notification, publish } from "./helper";
-import { getTutorDetails, getUserId, getUserPrivateProfile, getUserPublicProfile, updateMyPublicProfile } from "./services";
+import { getTutorDetails, getUserId, getUserPrivateProfile, getUserPublicProfile, updateMyPublicProfile } from "./db-services";
+import { modifyDisabledClass, showCoursesUI } from "./ui-services";
 
 var myProfile = {};
 const dataFields = ["displayName", "aboutMe", "work", "location", "techStack", "facebook", "instagram", "linkedin", "github"];
@@ -79,17 +80,17 @@ export function loadProfile(uid, type) {
     let myUid = getUserId();
     if (uid == myUid) {
         if (type == 'only-course') {
-            document.querySelector('.my-courses').classList.remove('disabled');
+            modifyDisabledClass(document.querySelector('.my-courses'),0);
             document.querySelectorAll('.not-my-courses').forEach(function (event) {
-                event.classList.add("disabled");
+                modifyDisabledClass(event,1);
             });
         }
         else {
             document.querySelectorAll('.not-my-courses').forEach(function (event) {
-                event.classList.remove("disabled");
+                modifyDisabledClass(event,0);
             });
             profileDiv.querySelectorAll('.private').forEach(function (event) {
-                event.classList.remove("disabled");
+                modifyDisabledClass(event,0);
             });
         }
         loadPublicProfile(uid, 1);
@@ -97,10 +98,10 @@ export function loadProfile(uid, type) {
     }
     else {
         document.querySelectorAll('.not-my-courses').forEach(function (event) {
-            event.classList.remove("disabled");
+            modifyDisabledClass(event,0);
         });
         profileDiv.querySelectorAll('.private').forEach(function (event) {
-            event.classList.add("disabled");
+            modifyDisabledClass(event,1);
         });
         loadPublicProfile(uid, 0);
     }
@@ -122,15 +123,15 @@ function loadPublicProfile(uid, isMyProfile) {
         // Read tutor data 
         if (data.role == 'Stack Builder') {
             profileDiv.querySelectorAll('.tutor').forEach(function (event) {
-                event.classList.remove("disabled");
+                modifyDisabledClass(event,0);
             });
             getTutorDetails(uid).then(
                 (tutorData) => {
-                    if(Object.keys(tutorData).length !=0){
+                    if (Object.keys(tutorData).length != 0) {
                         for (const property in tutorData.stats) {
                             initUserActivities(property, tutorData.stats[property]);
                         }
-                        createCoursesSection(tutorData.publishedCourses, '.flex-container.published-courses', 'published');
+                        createCoursesSection(tutorData.publishedCourses, '.flex-container.published-courses', 'published-');
                     }
                 }
             ).catch((e) => {
@@ -139,7 +140,7 @@ function loadPublicProfile(uid, isMyProfile) {
             })
         } else {
             profileDiv.querySelectorAll('.tutor').forEach(function (event) {
-                event.classList.add("disabled");
+                modifyDisabledClass(event,1);
             });
         }
     }).catch((e) => {
@@ -172,7 +173,7 @@ function loadPrivateProfile() {
         for (const property in activities) {
             initUserActivities(property, activities[property]);
         }
-        createCoursesSection(data.enrolledCourses, '.flex-container.enrolled-courses', 'enrolled');
+        createCoursesSection(data.enrolledCourses, '.flex-container.enrolled-courses', 'enrolled-');
     }
     ).catch((e) => {
         console.error(e);
@@ -207,50 +208,7 @@ function initUserActivities(fieldId, fieldValue) {
     dataField.innerHTML = fieldValue;
 }
 function createCoursesSection(courseObjects, rootElement, type) {
-    // Select the flex-container element
     const container = document.querySelector(rootElement);
     container.innerHTML = "";
-    // Iterate over the courses array
-    for (const [href, course] of Object.entries(courseObjects)) {
-        // Create a new box div element
-        const box = document.createElement('div');
-        box.classList.add('box');
-
-        // Create an img element for the thumbnail
-        const img = document.createElement('img');
-        img.src = course.thumbnail;
-        img.classList.add('thumb-md');
-        img.alt = '';
-
-        // Create an h2 element for the title
-        const title = document.createElement('h2');
-        title.classList.add('title');
-        title.textContent = course.title;
-
-        const link = document.createElement('a');
-
-        link.textContent = 'View Course';
-        link.classList.add('inline-btn');
-        // Add the onclick event for routing
-        link.onclick = route;
-        box.appendChild(img);
-        if (type == 'enrolled') {
-            const progressDiv = document.createElement('div');
-            progressDiv.classList.add('progress-bar-container');
-            const progressBar = document.createElement('div');
-            progressBar.classList.add('progress-bar');
-            let percent = (course.chaptersCompleted.length / course.totalChapters) * 100;
-            progressBar.style.width = percent + '%';
-            progressDiv.appendChild(progressBar);
-            box.appendChild(progressDiv);
-            link.href = course.nextChapter;
-        } else {
-            link.href = '/course/'+href;
-        }
-        box.appendChild(title);
-        box.appendChild(link);
-
-        // Append the box div to the container
-        container.appendChild(box);
-    };
+    showCoursesUI(courseObjects, rootElement, type);
 }

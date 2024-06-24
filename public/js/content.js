@@ -1,7 +1,8 @@
 import { publish, notification, getFormattedDate } from "./helper";
 import { signup_selected } from "./setup";
 import { copyPathToClipboard } from "./router";
-import { addComment, createReview, deleteComment, getAllComments, updateComment, getUserId, getCourseDetail, getChapterContent, getUserPrivateProfile, enrollToCourse, markChapterCompleted, likeChapter } from "./services";
+import { addComment, createReview, deleteComment, getAllComments, updateComment, getUserId, getCourseDetail, getChapterContent, getUserPrivateProfile, enrollToCourse, markChapterCompleted, likeChapter } from "./db-services";
+import { modifyDisabledClass } from "./ui-services";
 
 const contentSidebarHtml = document.querySelector('#contentSidebar');
 const ul = contentSidebarHtml.querySelector(".nano-content");
@@ -44,8 +45,8 @@ export function initContent() {
 
     /* Comment Listeners */
     showComments.addEventListener('click', () => {
-        showComments.classList.add('disabled');
-        commentHtml.classList.remove('disabled');
+        modifyDisabledClass(showComments, 1);
+        modifyDisabledClass(commentHtml, 0);
         getAllComments(loadedCourseId, loadedChapterId).then(
             ((commentData) => {
                 comments.innerHTML = "";
@@ -147,7 +148,7 @@ export function initContent() {
             activeI.classList.add('es-ok-circled', 'green');
             activeI.classList.remove('es-circle-empty');
             markParentMenuComplete();
-            completionMarker.classList.add('disabled');
+            modifyDisabledClass(completionMarker, 1);
 
             /** Enroll Course If not already */
             if (!courseEnrolled)
@@ -232,13 +233,13 @@ export function loadContent(chapterPath) {
 
 
                     if (chapterData.type == "text") {
-                        watchVideo.classList.add('disabled');
-                        chapterContent.classList.remove('disabled');
+                        modifyDisabledClass(watchVideo, 1);
+                        modifyDisabledClass(chapterContent, 0);
                         chapterContent.innerHTML = chapterData.content;
                     }
                     else {
-                        watchVideo.classList.remove('disabled');
-                        chapterContent.classList.add('disabled');
+                        modifyDisabledClass(watchVideo, 0);
+                        modifyDisabledClass(chapterContent, 1);
                         // contentHtml.querySelector('.video').poster = chapterData.thumbnail;
                         contentHtml.querySelector('.video').src = chapterData.videoId;
                         contentHtml.querySelector('.description').innerHTML = chapterData.description;
@@ -292,7 +293,7 @@ function loadContentSidebar(chapterDetails, type) {
                 a.href = "javascript:void(0);";
                 a.innerHTML = `<i class="es-circle-empty"></i><span> ${topics.title}</span><i class="arrow es-angle-double-down pull-right"></i>`;
                 const subUl = document.createElement("ul");
-                subUl.classList.add('disabled');
+                modifyDisabledClass(subUl, 1);
                 topics.subChapters.forEach(topic => {
                     const subLi = document.createElement("li");
                     const subA = document.createElement("a");
@@ -304,7 +305,7 @@ function loadContentSidebar(chapterDetails, type) {
                     subUl.appendChild(subLi);
                     if ("/content/" + loadedChapterPath == topic.href) {
                         subLi.classList.add("active");
-                        subUl.classList.remove('disabled');
+                        modifyDisabledClass(subUl, 0);
                         a.innerHTML = `<i class="es-circle-empty"></i><span> ${topics.title}</span><i class="arrow es-angle-double-up pull-right"></i>`;
                     }
                 });
@@ -349,14 +350,14 @@ function loadContentSideBarListeners() {
             // Close all other sub-menus
             document.querySelectorAll(".sidebar .sub-menu ul").forEach(function (submenu) {
                 if (submenu !== link.nextElementSibling) {
-                    submenu.classList.add('disabled');
+                    modifyDisabledClass(submenu, 1);
                 }
             });
             // Toggle the visibility of the clicked sub-menu
             if (link.nextElementSibling.classList.contains('disabled')) {
-                link.nextElementSibling.classList.remove('disabled');
+                modifyDisabledClass(link.nextElementSibling, 0);
             } else {
-                link.nextElementSibling.classList.add('disabled');
+                modifyDisabledClass(link.nextElementSibling, 1);
             }
             // Prevent the click event from propagating up the DOM hierarchy
             e.stopPropagation();
@@ -420,11 +421,11 @@ function displayComment(commentId, comment) {
         var cancelButton = document.createElement("i");
         cancelButton.classList.add("es-cancel", "disabled");
         editButton.addEventListener("click", () => {
-            editButton.classList.add('disabled');
+            modifyDisabledClass(editButton, 1);
             commentText.contentEditable = true;
             commentText.focus();
-            confirmButton.classList.remove('disabled');
-            cancelButton.classList.remove('disabled');
+            modifyDisabledClass(confirmButton, 0);
+            modifyDisabledClass(cancelButton, 0);
             oldComment[commentId] = commentText.innerText;
         });
         deleteButton.addEventListener("click", () => {
@@ -439,9 +440,9 @@ function displayComment(commentId, comment) {
         confirmButton.addEventListener("click", () => {
             let newComment = commentText.innerText;
             commentText.contentEditable = false;
-            editButton.classList.remove('disabled');
-            confirmButton.classList.add('disabled');
-            cancelButton.classList.add('disabled');
+            modifyDisabledClass(editButton, 0);
+            modifyDisabledClass(confirmButton, 1);
+            modifyDisabledClass(cancelButton, 1);
             if (newComment == oldComment[commentId])
                 notification(202, "comment");
             else {
@@ -454,9 +455,9 @@ function displayComment(commentId, comment) {
         cancelButton.addEventListener("click", () => {
             commentText.contentEditable = false;
             commentText.innerText = oldComment[commentId];
-            editButton.classList.remove('disabled');
-            confirmButton.classList.add('disabled');
-            cancelButton.classList.add('disabled');
+            modifyDisabledClass(editButton, 0);
+            modifyDisabledClass(confirmButton, 1);
+            modifyDisabledClass(cancelButton, 1);
         });
 
         // Append buttons to div
@@ -472,15 +473,15 @@ function displayComment(commentId, comment) {
 }
 
 function hideComments() {
-    commentHtml.classList.add('disabled');
-    showComments.classList.remove('disabled');
+    modifyDisabledClass(commentHtml, 1);
+    modifyDisabledClass(showComments, 0);
     if (getUserId()) {
-        commentHtml.querySelector(".add-comment").classList.remove('disabled');
-        commentHtml.querySelector(".no-comments").classList.add('disabled');
+        modifyDisabledClass(commentHtml.querySelector(".add-comment"),0);
+        modifyDisabledClass(commentHtml.querySelector(".no-comments"),1);
 
     } else {
-        commentHtml.querySelector(".add-comment").classList.add('disabled');
-        commentHtml.querySelector(".no-comments").classList.remove('disabled');
+        modifyDisabledClass(commentHtml.querySelector(".add-comment"),1);
+        modifyDisabledClass(commentHtml.querySelector(".no-comments"),0);
     }
 }
 
@@ -536,9 +537,9 @@ function markParentMenuComplete() {
 
 function showMarkCompleteButton(showCompletionButton) {
     if (showCompletionButton) {
-        completionMarker.classList.remove('disabled');
+        modifyDisabledClass(completionMarker,0);
     } else {
-        completionMarker.classList.add('disabled');
+        modifyDisabledClass(completionMarker,1);
     }
 }
 
@@ -553,7 +554,7 @@ function checkCourseCompletion() {
 
 function changeActiveChapterOnSidebar() {
     document.querySelectorAll(".sidebar .sub-menu ul").forEach(function (submenu) {
-        submenu.classList.add('disabled');
+        modifyDisabledClass(submenu,1);
     });
     let menuOptions = document.querySelectorAll('.chapter-menu');
     menuOptions.forEach(li => {
@@ -562,7 +563,7 @@ function changeActiveChapterOnSidebar() {
             li.classList.add('active');
             let parentUl = li.closest('ul');
             if (parentUl) {
-                parentUl.classList.remove('disabled');
+                modifyDisabledClass(parentUl,0);
             }
         }
         else li.classList.remove('active')

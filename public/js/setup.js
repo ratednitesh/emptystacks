@@ -1,5 +1,6 @@
 import { notification } from "./helper";
-import { applyForTutor, getAllCourses, getUserId, getCurrentUserObject, signUp, signOut, signIn, forgotPassword, changePassword } from "./services";
+import { applyForTutor, getAllCourses, getUserId, getCurrentUserObject, signUp, signOut, signIn, forgotPassword, changePassword } from "./db-services";
+import { modifyDisabledClass, showCoursesUI } from "./ui-services";
 
 // Header Button
 const toggleBtn = document.querySelector('#toggle-btn');
@@ -69,42 +70,9 @@ function initSearchBar() {
 function initSearchCourses() {
     getAllCourses().then(
         (coursesData) => {
-            const boxContainer = document.querySelector('.search .flex-container');
-            let i = 0;
-            // Iterate over coursesData and create HTML elements
+            showCoursesUI(coursesData, '.search .flex-container', 'search-');
             for (const [href, course] of Object.entries(coursesData)) {
-                // Create box element
-                const box = document.createElement('div');
-                box.classList.add('box');
-
-                // Create thumbnail image
-                const thumbnailImg = document.createElement('img');
-                thumbnailImg.src = course.thumbnail;
-                thumbnailImg.alt = 'Course Thumbnail';
-                thumbnailImg.classList.add('thumb-md');
-
-                // Create title
-                const title = document.createElement('p');
-                title.classList.add('title');
-                title.textContent = course.title;
-
-                // Create link
-                const link = document.createElement('a');
-                link.href = '/course/' + href;
-                link.textContent = 'View Course';
-                link.classList.add('inline-btn');
-                link.setAttribute('onclick', 'route()');
-
-                // Append elements to the box
-                box.appendChild(thumbnailImg);
-                box.appendChild(title);
-                box.appendChild(link);
-                box.classList.add('disabled');
-                searchData[i] = course.title;
-
-                box.id = "search-" + i++;
-
-                boxContainer.appendChild(box);
+                searchData['search-' + href] = course.title;
             };
         }
     ).catch((e) => {
@@ -114,17 +82,17 @@ function initSearchCourses() {
 }
 function handleInputChange(query) {
     if (query) {
-        document.querySelector("#search").classList.remove('disabled');
+        modifyDisabledClass(document.querySelector("#search"), 0);
         for (let [key, value] of Object.entries(searchData)) {
             if (value.toLowerCase().includes(query.toLowerCase())) {
-                document.getElementById("search-" + key).classList.remove('disabled');
+                modifyDisabledClass(document.getElementById(key), 0);
             } else {
-                document.getElementById("search-" + key).classList.add('disabled');
+                modifyDisabledClass(document.getElementById(key), 1);
             }
         }
     }
     else
-        document.querySelector("#search").classList.add('disabled');
+        modifyDisabledClass(document.querySelector("#search"), 1);
     // You can add more logic here to handle the input, such as filtering courses
 }
 function headerListeners() {
@@ -366,7 +334,6 @@ function modalListeners() {
         });
 
         var formWithPlaceholders = document.querySelector("[placeholder]").closest("form");
-
         if (formWithPlaceholders) {
             formWithPlaceholders.addEventListener("submit", function () {
                 placeholders.forEach(function (placeholder) {
@@ -428,53 +395,53 @@ function modalListeners() {
                 forms_modal.forEach(f => f.classList.remove('is-visible'));
             }
         ).catch(
-           ()=> {  notification(317); }
+            () => { notification(317); }
         )
-});
+    });
 
-accSettModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
-    event.preventDefault();
+    accSettModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
+        event.preventDefault();
 
-    var old = document.getElementById("acc-old-pass").value;
-    var newp = document.getElementById("acc-new-pass").value;
-    var conf = document.getElementById("acc-conf-pass").value;
-    if (old === '' || newp === '' || conf === '') {
-        notification(310);
-        return;
-    }
-    else if (newp != conf)
-        notification(311);
-    else if (validatePassword(newp)) {
-        changePassword(old, newp).then(() => {
-            notification(210);
-            accSettModal.classList.remove('is-visible');
-            setTimeout(() => { triggerSignOut() }, 2500);
-        }).catch((e) => {
-            notification(507, e);
-        });
-    }
-});
+        var old = document.getElementById("acc-old-pass").value;
+        var newp = document.getElementById("acc-new-pass").value;
+        var conf = document.getElementById("acc-conf-pass").value;
+        if (old === '' || newp === '' || conf === '') {
+            notification(310);
+            return;
+        }
+        else if (newp != conf)
+            notification(311);
+        else if (validatePassword(newp)) {
+            changePassword(old, newp).then(() => {
+                notification(210);
+                accSettModal.classList.remove('is-visible');
+                setTimeout(() => { triggerSignOut() }, 2500);
+            }).catch((e) => {
+                notification(507, e);
+            });
+        }
+    });
 }
 function login_selected() {
     auth_modal.classList.add("is-visible");
-    form_login.classList.remove("disabled");
-    form_signup.classList.add("disabled");
-    form_forgot_password.classList.add("disabled");
+    modifyDisabledClass(form_login,0);
+    modifyDisabledClass(form_signup,1);
+    modifyDisabledClass(form_forgot_password,1);
     tab_login.classList.add("selected");
     tab_signup.classList.remove("selected");
 }
 export function signup_selected() {
     auth_modal.classList.add("is-visible");
-    form_login.classList.add("disabled");
-    form_signup.classList.remove("disabled");
-    form_forgot_password.classList.add("disabled");
+    modifyDisabledClass(form_login,1);
+    modifyDisabledClass(form_signup,0);
+    modifyDisabledClass(form_forgot_password,1);
     tab_login.classList.remove("selected");
     tab_signup.classList.add("selected");
 }
 function forgot_password_selected() {
-    form_login.classList.add("disabled");
-    form_signup.classList.add("disabled");
-    form_forgot_password.classList.remove("disabled");
+    modifyDisabledClass(form_login,1);
+    modifyDisabledClass(form_signup,1);
+    modifyDisabledClass(form_forgot_password,0);
 }
 function loginSuccess() {
     auth_modal.classList.remove("is-visible");
@@ -514,10 +481,10 @@ function loadUserPrivateData() {
         document.getElementById('user-menu-photo').src = user.photoURL;
         document.getElementById('user-menu-name').innerHTML = user.displayName;
         document.getElementById('user-menu-mail').innerHTML = user.email;
-        profileMenuOnlyPublic.forEach((node) => { node.classList.add('disabled') });
-        profileMenuPrivate.forEach((node) => { node.classList.remove('disabled') });
-        document.getElementById('user-photo-header').classList.remove('disabled');
-        document.getElementById('guest-photo-header').classList.add('disabled');
+        profileMenuOnlyPublic.forEach((node) => { modifyDisabledClass(node, 1) });
+        profileMenuPrivate.forEach((node) => { modifyDisabledClass(node, 0) });
+        modifyDisabledClass(document.getElementById('user-photo-header'), 0);
+        modifyDisabledClass(document.getElementById('guest-photo-header'), 1);
         document.getElementById('profile-link').href = "/profile/" + uid;
         document.getElementById('header-profile-link').href = "/profile/" + uid;
         document.getElementById('sb-profile-link').href = "/profile/" + uid;
@@ -528,10 +495,10 @@ function loadUserPrivateData() {
         document.getElementById('acc-sett-mail').placeholder = user.email;
 
     } else {
-        profileMenuPrivate.forEach((node) => { node.classList.add('disabled') });
-        profileMenuOnlyPublic.forEach((node) => { node.classList.remove('disabled') });
-        document.getElementById('user-photo-header').classList.add('disabled');
-        document.getElementById('guest-photo-header').classList.remove('disabled')
+        profileMenuPrivate.forEach((node) => { modifyDisabledClass(node, 1) });
+        profileMenuOnlyPublic.forEach((node) => { modifyDisabledClass(node, 0) });
+        modifyDisabledClass(document.getElementById('user-photo-header'), 1);
+        modifyDisabledClass(document.getElementById('guest-photo-header'), 0)
         document.getElementById('guest-menu-photo').src = "/images/profile/guest-user.svg";
         sideBar.querySelector('#user-photo-sb').src = "/images/profile/guest-user.svg";
         sideBar.querySelector('#user-name-sb').innerHTML = 'Hello Guest!';

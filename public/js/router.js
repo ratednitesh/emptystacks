@@ -1,5 +1,6 @@
 import { initAddOn, subscribe, publish, copyToClipboard } from "./helper";
 import { removeMenuOptions } from "./setup";
+import { modifyDisabledClass } from "./ui-services";
 
 // const variables
 const filePathPrefix = "/pages/";
@@ -82,14 +83,14 @@ const handleLocation = async () => {
         if (previousSideBarPath != currentSidebar) {
             previousSideBarPath = currentSidebar;
             if (currentSidebar == "mainSidebar") {
-                document.getElementById('mainSidebar').classList.remove('disabled');
-                document.getElementById('contentSidebar').classList.add('disabled');
+                modifyDisabledClass(document.getElementById('mainSidebar'),0);
+                modifyDisabledClass(document.getElementById('contentSidebar'),1);
                 sideBar.classList.remove('active');
                 document.body.classList.remove('active');
             }
             else {
-                document.getElementById('mainSidebar').classList.add('disabled');
-                document.getElementById('contentSidebar').classList.remove('disabled');
+                modifyDisabledClass(document.getElementById('mainSidebar'),1);
+                modifyDisabledClass(document.getElementById('contentSidebar'),0);
                 sideBar.classList.add('active');
                 document.body.classList.add('active');
             };

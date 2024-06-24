@@ -55,9 +55,6 @@ export async function readAllReviews(courseId) {
     return await readAllDocuments("CourseDetail/" + courseId + "/Reviews");
 }
 
-
-
-
 /** TUTOR APPLICATIONS **/
 export async function applyForTutor(formData) {
     formData.user = getUserTokenObject();

@@ -1,8 +1,8 @@
 import { getFormattedDate, notification, publish } from "./helper";
-import { getCourseDetail, readAllReviews, getUserId, getUserPrivateProfile, enrollToCourse } from "./services";
+import { getCourseDetail, readAllReviews, getUserId, getUserPrivateProfile, enrollToCourse } from "./db-services";
+import { modifyDisabledClass, showStreamsUI } from "./ui-services";
 
 const textCourse = document.querySelector('.text-course');
-const courseStreams = textCourse.querySelector('.streams');
 const expandButton = document.getElementById("expand-button");
 const saveCourse = document.getElementById("save-course");
 const courseDetails = document.querySelector(".course-details .flex-container .accordion");
@@ -44,7 +44,7 @@ export function initCoursePage() {
 export function loadCoursePage(courseId) {
     if (loadedCourseId != courseId) {
         saveCourse.classList.add('locked');
-        progressContainer.classList.add('disabled');
+        modifyDisabledClass(progressContainer, 1);
         startButton.innerText = "Start Course";
         getCourseData(courseId);
     } else {
@@ -81,31 +81,11 @@ function getCourseData(courseId) {
                 textCourse.querySelector('#tutor-img').src = tutorData.photoURL;
                 textCourse.querySelector('#tutor-name').innerHTML = tutorData.displayName;
                 textCourse.querySelector('#tutor-role').innerHTML = "Stack Builder";
-                for (const [streamId, stream] of Object.entries(courseData.streams)) {
-                    // Create the anchor tag
-                    const anchorTag = document.createElement('a');
-                    anchorTag.href = '/streams/' + streamId;
-                    anchorTag.setAttribute("onclick", "route()");
-                    anchorTag.classList.add('transparent-btn');
-
-                    // Create the icon element
-                    const iconElement = document.createElement('i');
-                    iconElement.classList.add(stream.icon);
-
-                    // Create the span element for the text
-                    const spanElement = document.createElement('span');
-                    spanElement.textContent = stream.text;
-
-                    // Append the icon and span elements to the anchor tag
-                    anchorTag.appendChild(iconElement);
-                    anchorTag.appendChild(spanElement);
-                    // Append the anchor tag to the flex container
-                    courseStreams.appendChild(anchorTag);
-                };
+                showStreamsUI(courseData.streams, '.streams');
                 let courseContentData = courseData.chapters;
                 if (courseData.type == "text") {
-                    document.querySelector(".course-details").classList.remove('disabled');
-                    document.querySelector(".video-container").classList.add('disabled');
+                    modifyDisabledClass(document.querySelector(".course-details"),0);
+                    modifyDisabledClass(document.querySelector(".video-container"), 1);
                     courseDetails.innerHTML = "";
                     courseContentData.forEach(topics => {
                         const accordionItem = document.createElement("div");
@@ -126,7 +106,6 @@ function getCourseData(courseId) {
                             headingLink.appendChild(headerTitle);
                             accordionHeader.appendChild(headingLink);
                             accordionItem.appendChild(accordionHeader);
-
                         }
                         else {
                             headerTitle.appendChild(headerIcon);
@@ -168,8 +147,8 @@ function getCourseData(courseId) {
                     });
                 }
                 else {
-                    document.querySelector(".video-container").classList.remove('disabled');
-                    document.querySelector(".course-details").classList.add('disabled');
+                    modifyDisabledClass(document.querySelector(".video-container"),0);
+                    modifyDisabledClass(document.querySelector(".course-details"), 1);
                     videoDetails.innerHTML = "";
                     courseContentData.forEach(cvd => {
                         const videoHtml = document.createElement("a");
@@ -201,7 +180,7 @@ function getCourseReviews() {
     readAllReviews(loadedCourseId).then(
         (courseReview) => {
             if (courseReview) {
-                document.querySelector('.reviews').classList.remove('disabled');
+                modifyDisabledClass(document.querySelector('.reviews'),0);
                 boxContainer.innerHTML = "";
                 Object.values(courseReview).forEach((r) => {
                     var userInfo = r.user;
@@ -236,7 +215,7 @@ function getCourseReviews() {
                     boxContainer.appendChild(reviewBox);
                 })
             } else
-                document.querySelector('.reviews').classList.add('disabled');
+                modifyDisabledClass(document.querySelector('.reviews'), 1);
 
         }
     ).catch(
@@ -265,7 +244,7 @@ function updateUserLevelOnEnrolledCourse() {
             if (loadedCourseId in userData.enrolledCourses) {
                 let matchingCourse = userData.enrolledCourses[loadedCourseId];
                 saveCourse.classList.add('locked');
-                progressContainer.classList.remove('disabled');
+                modifyDisabledClass(progressContainer,0);
                 let chaptersCompleted = matchingCourse.chaptersCompleted;
                 let percent = (chaptersCompleted.length / matchingCourse.totalChapters) * 100;
                 progressBar.style.width = percent + '%';
@@ -289,9 +268,9 @@ function updateUserLevelOnEnrolledCourse() {
                     }
                 });
             } else {
-                progressContainer.classList.add('disabled');
-                saveCourse.classList.remove('locked');
-            }
+                modifyDisabledClass(progressContainer, 1);
+    saveCourse.classList.remove('locked');
+}
         }
     });
 }

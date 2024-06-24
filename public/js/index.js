@@ -1,6 +1,6 @@
 import { initStaticContent } from "./setup";
 import { initRouter } from "./router";
-import { initServices } from "./services";
+import { initServices } from "./db-services";
 
 // Importing CSS Files 
 import "../css/index.css"; // Root CSS File

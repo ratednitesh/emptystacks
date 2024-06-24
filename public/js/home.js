@@ -1,7 +1,8 @@
 
 import { signup_selected } from "./setup";
 import { notification } from './helper';
-import { getAllCourses, getAllStreams, getUserId, getUserPrivateProfile } from "./services";
+import { getAllCourses, getAllStreams, getUserId, getUserPrivateProfile } from "./db-services";
+import { modifyDisabledClass, showCoursesUI, showStreamsUI } from "./ui-services";
 const highlightSection = document.querySelector('.highlight-section');
 const quickSelect = document.querySelector('.quick-select');
 const bookContainer = document.querySelector('#enrolled-courses-home');
@@ -35,41 +36,7 @@ function initBanner() {
 function initPopularCourses() {
     getAllCourses().then(
         (coursesData) => {
-            const boxContainer = document.querySelector('.courses .flex-container');
-
-            // Iterate over coursesData and create HTML elements
-            for (const [href, course] of Object.entries(coursesData)) {
-
-                // Create box element
-                const box = document.createElement('div');
-                box.classList.add('box');
-
-                // Create thumbnail image
-                const thumbnailImg = document.createElement('img');
-                thumbnailImg.src = course.thumbnail;
-                thumbnailImg.alt = 'Course Thumbnail';
-                thumbnailImg.classList.add('thumb-md');
-
-                // Create title
-                const title = document.createElement('p');
-                title.classList.add('title');
-                title.textContent = course.title;
-
-                // Create link
-                const link = document.createElement('a');
-                link.href = '/course/' + href;
-                link.textContent = 'View Course';
-                link.classList.add('inline-btn');
-                link.setAttribute('onclick', 'route()');
-
-                // Append elements to the box
-                box.appendChild(thumbnailImg);
-                box.appendChild(title);
-                box.appendChild(link);
-
-                boxContainer.appendChild(box);
-
-            };
+            showCoursesUI(coursesData, '.courses .flex-container','home-');
         }
     ).catch((e) => {
         console.error(e);
@@ -86,8 +53,8 @@ function initQuickSelect() {
     });
     document.querySelector(".home-reg-tutor").addEventListener('click', () =>
         document.querySelector(".reg-tutor-modal").classList.add('is-visible'));
-    homeOptionPrivate.forEach((node) => { if (!getUserId()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
-    homeOptionOnlyPublic.forEach((node) => { if (getUserId()) node.classList.add('disabled'); else node.classList.remove('disabled'); });
+    homeOptionPrivate.forEach((node) => { if (!getUserId()) modifyDisabledClass(node,1); else modifyDisabledClass(node,0); });
+    homeOptionOnlyPublic.forEach((node) => { if (getUserId()) modifyDisabledClass(node,1); else modifyDisabledClass(node,0); });
     // Init streams
     initStreams();
     // Prev/ Next Enrolled Courses Listeners
@@ -98,38 +65,13 @@ function initStreams() {
     // Get the Stream container
     getAllStreams().then(
         (streams) => {
-            const streamContainer = document.getElementById('stream-options');
-            for (const [streamId, stream] of Object.entries(streams)) {
-                // Create the anchor tag
-                const anchorTag = document.createElement('a');
-                anchorTag.href = '/streams/' + streamId;
-                anchorTag.setAttribute("onclick", "route()");
-                anchorTag.classList.add('transparent-btn')
-
-                // Create the icon element
-                const iconElement = document.createElement('i');
-                iconElement.classList.add(stream.icon);
-
-                // Create the span element for the text
-                const spanElement = document.createElement('span');
-                spanElement.textContent = stream.text;
-
-                // Append the icon and span elements to the anchor tag
-                anchorTag.appendChild(iconElement);
-                anchorTag.appendChild(spanElement);
-
-                // Append the anchor tag to the flex container
-                streamContainer.appendChild(anchorTag);
-            };
+            showStreamsUI(streams, '#stream-options');
         }
     ).catch(
         () => {
             notification(501, 'streams');
         }
     );
-    // Loop through the streams array and create anchor tags for each item
-
-
 }
 // Initializer and Listeners: Enrolled Courses
 function initQuickCourses() {
@@ -146,11 +88,11 @@ function initQuickCourses() {
 //  Load Home / Courses
 export function loadHome(args) {
     if (args == 'only-course') {
-        quickSelect.classList.add('disabled');
-        highlightSection.classList.add('disabled');
+        modifyDisabledClass(quickSelect,1);
+        modifyDisabledClass(highlightSection,1);
     } else {
-        quickSelect.classList.remove('disabled');
-        highlightSection.classList.remove('disabled');
+        modifyDisabledClass(quickSelect,0);
+        modifyDisabledClass(highlightSection,0);
         if (!isBannerLoaded) {
             loadBanner();
             isBannerLoaded = true;
@@ -223,13 +165,13 @@ function loadEnrolledCourses() {
                     enrolledCourses = document.querySelectorAll(".book .cover");
                     enrolledCourseIndex = 0;
                     if (enrolledCourses.length != 0) {
-                        enrolledCourses[0].classList.remove('disabled');
-                        slideshow.classList.remove('disabled')
-                        noEnroll.classList.add('disabled');
+                        modifyDisabledClass(enrolledCourses[0],0);
+                        modifyDisabledClass(slideshow,0);
+                        modifyDisabledClass(noEnroll,1);
                     }
                     else {
-                        slideshow.classList.add('disabled');
-                        noEnroll.classList.remove('disabled');
+                        modifyDisabledClass(slideshow,1);
+                        modifyDisabledClass(noEnroll,0);
                     }
                     disabledTutorMode(data.role == "Stack Builder");
                 }
@@ -249,27 +191,27 @@ function loadEnrolledCourses() {
 
 function disabledTutorMode(isTutor) {
     if (isTutor) {
-        studentDiv.classList.add('disabled');
-        tutorDiv.classList.remove('disabled');
-        regTutorSideBar.classList.add('disabled');
+        modifyDisabledClass(studentDiv,1);
+        modifyDisabledClass(tutorDiv,0);
+        modifyDisabledClass(regTutorSideBar,1);
     } else {
-        studentDiv.classList.remove('disabled');
-        tutorDiv.classList.add('disabled');
-        regTutorSideBar.classList.remove('disabled');
+        modifyDisabledClass(studentDiv,0);
+        modifyDisabledClass(tutorDiv,1);
+        modifyDisabledClass(regTutorSideBar,0);
     }
 
 }
 // Show hide selected enrolled course
 function showSelectedEnrolledCourse(oldIndex, newIndex) {
     if (oldIndex != -1) {
-        enrolledCourses[oldIndex].classList.add('disabled');
+        modifyDisabledClass(enrolledCourses[oldIndex],1);
         if (newIndex == enrolledCourses.length) {
             newIndex = 0;
         }
         else if (newIndex == -1) {
             newIndex = enrolledCourses.length - 1;
         }
-        enrolledCourses[newIndex].classList.remove('disabled');
+        modifyDisabledClass(enrolledCourses[newIndex],0);
         enrolledCourseIndex = newIndex;
     }
 }
@@ -282,5 +224,5 @@ function showSlide(index) {
     if (index < 1)
         index = slides.length;
     dots.forEach((node, i) => { if (index - 1 == i) node.classList.replace('es-circle-empty', 'es-circle'); else node.classList.replace('es-circle', 'es-circle-empty'); })
-    slides.forEach((node, i) => { if (index - 1 == i) node.classList.remove('disabled'); else node.classList.add('disabled'); })
+    slides.forEach((node, i) => { if (index - 1 == i) modifyDisabledClass(node,0); else modifyDisabledClass(node,1); })
 }

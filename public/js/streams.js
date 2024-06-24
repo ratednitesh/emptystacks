@@ -1,5 +1,6 @@
 import { notification } from './helper';
-import { getAllCoursesByStreamId, getAllStreams } from './services';
+import { getAllCoursesByStreamId, getAllStreams } from './db-services';
+import { modifyDisabledClass, showCoursesUI, showStreamsUI } from './ui-services';
 
 const selectedSection = document.querySelector('.streams-selected .streams');
 const otherSection = document.querySelector('.streams-others .streams');
@@ -14,25 +15,14 @@ export async function initStreams() {
     return new Promise((resolve, reject) => {
         getAllStreams().then(
             (streams) => {
-                for (const [streamId, stream] of Object.entries(streams)) {
-                    const anchorTag = document.createElement('a');
-                    anchorTag.classList.add('toggle-section');
-                    anchorTag.id = streamId;
-                    anchorTag.classList.add('transparent-btn')
-                    const iconElement = document.createElement('i');
-                    iconElement.classList.add(stream.icon);
-                    const spanElement = document.createElement('span');
-                    spanElement.textContent = stream.text;
-                    anchorTag.appendChild(iconElement);
-                    anchorTag.appendChild(spanElement);
-                    otherSection.appendChild(anchorTag);
-                };
+                showStreamsUI(streams, '.streams-others .streams', 'streams');
                 initAllStreamsListeners();
                 resolve();
             }
         ).catch(
             () => {
                 notification(501, 'streams');
+                reject();
             }
         );
     });
@@ -56,9 +46,9 @@ function initAllStreamsListeners() {
                 getCoursesByStream(streamId);
             }
             if (!selectedSection.querySelector('a')) {
-                noStreamMessage.classList.remove('disabled');
+                modifyDisabledClass(noStreamMessage,0);
             } else {
-                noStreamMessage.classList.add('disabled');
+                modifyDisabledClass(noStreamMessage,1);
             }
         });
     });
@@ -69,7 +59,7 @@ export function loadStreams(streamId) {
     if (streamId != undefined) {
         const a = document.getElementById(streamId);
         if (a) {
-            noStreamMessage.classList.add('disabled');
+            modifyDisabledClass(noStreamMessage,1);
             selectedSection.appendChild(a);
             selectedStreams.add(streamId);
             while (boxContainer.firstChild) {
@@ -78,7 +68,6 @@ export function loadStreams(streamId) {
             getCoursesByStream(streamId);
         }
     }
-
 }
 function resetSelection() {
     const selectedAnchors = selectedSection.querySelectorAll('a');
@@ -90,43 +79,11 @@ function resetSelection() {
 async function getCoursesByStream(streamId) {
     if (!coursesByStreams[streamId])
         coursesByStreams[streamId] = await getAllCoursesByStreamId(streamId);
-
-    for (const [href, course] of Object.entries(coursesByStreams[streamId])) {
-        if (!document.getElementById(href)) {
-            // Create box element
-            const box = document.createElement('div');
-            box.classList.add('box');
-            box.id = href;
-            // Create thumbnail image
-            const thumbnailImg = document.createElement('img');
-            thumbnailImg.src = course.thumbnail;
-            thumbnailImg.alt = 'Course Thumbnail';
-            thumbnailImg.classList.add('thumb-md');
-
-            // Create title
-            const title = document.createElement('p');
-            title.classList.add('title');
-            title.textContent = course.title;
-
-            // Create link
-            const link = document.createElement('a');
-            link.href = '/course/' + href;
-            link.textContent = 'View Course';
-            link.classList.add('inline-btn');
-            link.setAttribute('onclick', 'route()');
-
-            // Append elements to the box
-            box.appendChild(thumbnailImg);
-            box.appendChild(title);
-            box.appendChild(link);
-
-            boxContainer.appendChild(box);
-        }
-    };
+    showCoursesUI(coursesByStreams[streamId], '.stream-courses .flex-container', 'stream-');
 }
 function removeCoursesByStream(streamId) {
     for (let href of Object.keys(coursesByStreams[streamId])) {
-        const courseElement = document.getElementById(href);
+        const courseElement = document.getElementById('stream-' + href);
         if (courseElement) {
             let remove = true;
             selectedStreams.forEach(selectedStreamId => {
