@@ -68,6 +68,7 @@ export async function getCourseDetail(courseId) {
     }
     else
         console.log('reading from cache')
+    console.log(JSON.stringify(courseDetail[courseId]));
     return courseDetail[courseId];
 }
 
@@ -250,4 +251,31 @@ export async function markChapterCompleted(courseId, courseToken) {
 
 export async function getTutorDetails(uid) {
     return await readDocument("TutorDetails", uid);
+}
+
+export async function createNewCourse(courseData) {
+    if (getUid()) {
+        courseData.author = getUserTokenObject();
+        return await addDocument("UserPrivateProfile/" + getUid() + "/Courses", courseData, 'addDate');
+    }
+    throw "User not logged in";
+}
+
+export async function getPrivateCourses() {
+    if (getUid()) {
+        return await readAllDocuments("UserPrivateProfile/" + getUid() + "/Courses");
+    }
+    throw "User not logged in";
+}
+
+export async function getPrivateCourseDetail(courseId) {
+    return await readDocument("UserPrivateProfile/" + getUid() + "/Courses", courseId);
+}
+
+export async function deletePrivateCourse(courseId) {
+    await deleteDocument("UserPrivateProfile/" + getUid() + "/Courses", courseId);
+}
+
+export async function updatePrivateCourse(courseId, courseObject ) {
+    await updateDocument("UserPrivateProfile/" + getUid() + "/Courses", courseId, courseObject, 'addDate');
 }

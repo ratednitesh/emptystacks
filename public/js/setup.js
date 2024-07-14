@@ -18,7 +18,7 @@ const signOutBtn = document.getElementById('signOutButton');
 
 // auth modal button 
 const auth_modal = document.querySelector(".cd-user-modal");
-const forms_modal = document.querySelectorAll(".cd-forms-modal");
+
 const form_login = document.querySelector("#cd-login");
 const form_login_email = form_login.querySelector('#signin-email');
 const form_login_pass = form_login.querySelector('#signin-password');
@@ -109,7 +109,7 @@ function headerListeners() {
     };
     menuBtn.onclick = () => {
         sideBar.classList.toggle('active');
-        document.body.classList.toggle('active');
+        document.body.classList.toggle('active'); // TODO: toggles active tag everywhere in the body too 
 
     };
     //trigger events
@@ -161,6 +161,7 @@ function closeMenuOptions(event) {
     }
 }
 function closeModal(event) {
+    const forms_modal = document.querySelectorAll(".cd-forms-modal");
     forms_modal.forEach(fm => {
         if (event.target === fm || event.target.classList.contains("cd-close-form")) {
             fm.classList.remove("is-visible");
@@ -168,6 +169,7 @@ function closeModal(event) {
     });
 }
 function escModal(event) {
+    const forms_modal = document.querySelectorAll(".cd-forms-modal");
     forms_modal.forEach(fm => {
         if (event.which === 27 && fm.classList.contains("is-visible")) {
             fm.classList.remove("is-visible");
@@ -392,7 +394,7 @@ function modalListeners() {
         applyForTutor(formData).then(
             () => {
                 notification(209);
-                forms_modal.forEach(f => f.classList.remove('is-visible'));
+                regTutorModal.classList.remove('is-visible');
             }
         ).catch(
             () => { notification(317); }
@@ -424,24 +426,24 @@ function modalListeners() {
 }
 function login_selected() {
     auth_modal.classList.add("is-visible");
-    modifyDisabledClass(form_login,0);
-    modifyDisabledClass(form_signup,1);
-    modifyDisabledClass(form_forgot_password,1);
+    modifyDisabledClass(form_login, 0);
+    modifyDisabledClass(form_signup, 1);
+    modifyDisabledClass(form_forgot_password, 1);
     tab_login.classList.add("selected");
     tab_signup.classList.remove("selected");
 }
 export function signup_selected() {
     auth_modal.classList.add("is-visible");
-    modifyDisabledClass(form_login,1);
-    modifyDisabledClass(form_signup,0);
-    modifyDisabledClass(form_forgot_password,1);
+    modifyDisabledClass(form_login, 1);
+    modifyDisabledClass(form_signup, 0);
+    modifyDisabledClass(form_forgot_password, 1);
     tab_login.classList.remove("selected");
     tab_signup.classList.add("selected");
 }
 function forgot_password_selected() {
-    modifyDisabledClass(form_login,1);
-    modifyDisabledClass(form_signup,1);
-    modifyDisabledClass(form_forgot_password,0);
+    modifyDisabledClass(form_login, 1);
+    modifyDisabledClass(form_signup, 1);
+    modifyDisabledClass(form_forgot_password, 0);
 }
 function loginSuccess() {
     auth_modal.classList.remove("is-visible");

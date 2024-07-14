@@ -1,0 +1,101 @@
+#builder-new-course {
+    max-width: 40rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#builder-new-course i {
+    font-size: 10rem;
+    color: var(--black);
+    cursor: pointer;
+    transform: scale(0.95);
+}
+
+#builder-new-course i:hover {
+
+    transform: scale(1);
+}
+
+.float-menu {
+    float: right;
+    position: sticky;
+    bottom: 5rem;
+    right: 1rem
+}
+
+.triggerButton {
+ position: sticky;
+ z-index: 9;
+}
+
+.radialMenu {
+ --width: 300px;
+ width: var(--width);
+ height: var(--width);
+ position: absolute;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+}
+
+.radialItem {
+ list-style: none;
+ position: absolute;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+ transition: all 0.3s ease;
+}
+
+.active .radialItem {
+ --angle: 0deg;
+ --star-angle: 0deg;
+ --point-size: 60px;
+ --countItem: 8;
+ /* we subtract the point size to place point inside circle */
+ --radius: calc((var(--width) / 2) - (var(--point-size) / 2));
+ --x: calc(var(--radius) * cos(var(--angle) + var(--star-angle)));
+ --y: calc(var(--radius) * sin(var(--angle) + var(--star-angle)));
+ /* position point at center of circle with radius. We add x and y values to move to edge of circle. */
+ top: calc(var(--radius) + var(--y) + (var(--point-size) / 2));
+ left: calc(var(--radius) + var(--x) + (var(--point-size) / 2));
+}
+
+
+.active .radialItem {
+ --angle: 0deg;
+ --star-angle: 180deg;
+ --point-size: 60px;
+ --countItem: 8;
+}
+.active .radialItem:nth-child(1) {
+ --angle: calc((360deg / var(--countItem)) * 0);
+ transition-delay: 0.05s;
+}
+.active .radialItem:nth-child(2) {
+ --angle: calc((360deg / var(--countItem)) * 1);
+ transition-delay: 0.1s;
+}
+.active .radialItem:nth-child(3) {
+ --angle: calc((360deg / var(--countItem)) * 2);
+ transition-delay: 0.15s;
+}
+.active .radialItem:nth-child(5) {
+    --angle: calc((360deg / var(--countItem)) * 1);
+    transition-delay: 0.1s;
+   }
+.radialItem a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.float-menu .header-icon{
+    color: #fff;
+    background-color: rgb(50, 175, 125);
+}
+
+.float-menu .header-icon:hover{
+    font-size: 2.2rem;
+}

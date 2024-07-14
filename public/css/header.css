@@ -105,7 +105,7 @@
     display: flex;
 }
 
-.header .flex .right-header .icons .header-icon {
+.header-icon {
     font-size: 2rem;
     color: var(--black);
     border-radius: 50%;
@@ -118,11 +118,9 @@
     margin-left: .5rem;
 }
 
-
-
-.header .flex .right-header .icons .header-icon:hover {
-    background-color: var(--black);
-    color: var(--white);
+.header-icon:hover {
+    background-color: var(--black) !important;
+    color: var(--white) !important;
 }
 
 

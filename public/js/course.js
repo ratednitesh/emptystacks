@@ -2,13 +2,13 @@ import { getFormattedDate, notification, publish } from "./helper";
 import { getCourseDetail, readAllReviews, getUserId, getUserPrivateProfile, enrollToCourse } from "./db-services";
 import { modifyDisabledClass, showStreamsUI } from "./ui-services";
 
-const textCourse = document.querySelector('.text-course');
+const textCourse = document.querySelector('#course-header');
 const expandButton = document.getElementById("expand-button");
 const saveCourse = document.getElementById("save-course");
-const courseDetails = document.querySelector(".course-details .flex-container .accordion");
-const videoDetails = document.querySelector(".video-container .flex-container");
+const courseDetails = document.querySelector("#text-course-details .flex-container .accordion");
+const videoDetails = document.querySelector("#video-course-details .flex-container");
 const boxContainer = document.querySelector('.reviews .flex-container');
-const allBars = document.querySelectorAll('.signal-bars .bar');
+const allBars = textCourse.querySelectorAll('.signal-bars .bar');
 const startButton = document.getElementById('content-link');
 const progressContainer = document.getElementById('course-progress-container');
 const progressBar = progressContainer.querySelector('.progress-bar');
@@ -18,16 +18,27 @@ let loadedCourseId;
 // Initializers and Listeners: Course Page 
 export function initCoursePage() {
     expandButton.addEventListener('click', () => {
-        var accordionItems = document.querySelectorAll('.accordion-item');
-        var expandItems = document.querySelectorAll('.expand');
-        accordionItems.forEach(function (item) {
-            item.classList.toggle('active');
-        });
-        expandItems.forEach(function (expandItem) {
-            expandItem.classList.toggle('es-angle-up');
-            expandItem.classList.toggle('es-angle-down');
-        });
-        expandButton.textContent = expandButton.textContent === "Minimize All" ? "Expand All" : "Minimize All";
+        var accordionItems = courseDetails.querySelectorAll('.accordion-item');
+        var expandItems = courseDetails.querySelectorAll('.expand');
+        if (expandButton.textContent === "Minimize All") {
+            accordionItems.forEach(function (item) {
+                item.classList.remove('active');
+            });
+            expandItems.forEach(function (expandItem) {
+                expandItem.classList.remove('es-angle-up');
+                expandItem.classList.add('es-angle-down');
+            });
+            expandButton.textContent = "Expand All";
+        } else {
+            accordionItems.forEach(function (item) {
+                item.classList.add('active');
+            });
+            expandItems.forEach(function (expandItem) {
+                expandItem.classList.add('es-angle-up');
+                expandItem.classList.remove('es-angle-down');
+            });
+            expandButton.textContent = "Minimize All";
+        }
     });
     saveCourse.addEventListener('click', () => {
         if (getUserId())
@@ -72,7 +83,7 @@ function getCourseData(courseId) {
                 allBars.forEach(bar => {
                     bar.style.background = '#fff';
                 });
-                const selectedBars = document.querySelectorAll('.signal-bars .bar:nth-last-child(n+' + n + ')');
+                const selectedBars = textCourse.querySelectorAll('.signal-bars .bar:nth-last-child(n+' + n + ')');
                 selectedBars.forEach(bar => {
                     bar.style.background = 'var(--main-color)';
                 });
@@ -84,8 +95,8 @@ function getCourseData(courseId) {
                 showStreamsUI(courseData.streams, '.streams');
                 let courseContentData = courseData.chapters;
                 if (courseData.type == "text") {
-                    modifyDisabledClass(document.querySelector(".course-details"),0);
-                    modifyDisabledClass(document.querySelector(".video-container"), 1);
+                    modifyDisabledClass(document.querySelector("#text-course-details"), 0);
+                    modifyDisabledClass(document.querySelector("#video-course-details"), 1);
                     courseDetails.innerHTML = "";
                     courseContentData.forEach(topics => {
                         const accordionItem = document.createElement("div");
@@ -137,7 +148,7 @@ function getCourseData(courseId) {
                         courseDetails.appendChild(accordionItem);
                     });
 
-                    document.querySelectorAll('.expandable').forEach(function (header) {
+                    courseDetails.querySelectorAll('.expandable').forEach(function (header) {
                         header.addEventListener('click', function () {
                             var item = this.parentNode;
                             item.classList.toggle('active');
@@ -147,8 +158,8 @@ function getCourseData(courseId) {
                     });
                 }
                 else {
-                    modifyDisabledClass(document.querySelector(".video-container"),0);
-                    modifyDisabledClass(document.querySelector(".course-details"), 1);
+                    modifyDisabledClass(document.querySelector("#video-course-details"), 0);
+                    modifyDisabledClass(document.querySelector("#text-course-details"), 1);
                     videoDetails.innerHTML = "";
                     courseContentData.forEach(cvd => {
                         const videoHtml = document.createElement("a");
@@ -180,7 +191,7 @@ function getCourseReviews() {
     readAllReviews(loadedCourseId).then(
         (courseReview) => {
             if (courseReview) {
-                modifyDisabledClass(document.querySelector('.reviews'),0);
+                modifyDisabledClass(document.querySelector('.reviews'), 0);
                 boxContainer.innerHTML = "";
                 Object.values(courseReview).forEach((r) => {
                     var userInfo = r.user;
@@ -244,7 +255,7 @@ function updateUserLevelOnEnrolledCourse() {
             if (loadedCourseId in userData.enrolledCourses) {
                 let matchingCourse = userData.enrolledCourses[loadedCourseId];
                 saveCourse.classList.add('locked');
-                modifyDisabledClass(progressContainer,0);
+                modifyDisabledClass(progressContainer, 0);
                 let chaptersCompleted = matchingCourse.chaptersCompleted;
                 let percent = (chaptersCompleted.length / matchingCourse.totalChapters) * 100;
                 progressBar.style.width = percent + '%';
@@ -255,7 +266,7 @@ function updateUserLevelOnEnrolledCourse() {
                     i.classList.remove('es-circle-empty');
                     i.classList.add('es-ok-circled', 'green');
                 });
-                const items = document.querySelectorAll('.accordion-item');
+                const items = courseDetails.querySelectorAll('.accordion-item');
                 items.forEach(item => {
                     let subI = item.querySelectorAll('.course-list > a > i');
                     if (subI.length) {
@@ -269,8 +280,8 @@ function updateUserLevelOnEnrolledCourse() {
                 });
             } else {
                 modifyDisabledClass(progressContainer, 1);
-    saveCourse.classList.remove('locked');
-}
+                saveCourse.classList.remove('locked');
+            }
         }
     });
 }

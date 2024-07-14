@@ -10,6 +10,7 @@ export function publish(eventName, data) {
         eventListeners[eventName].forEach(callback => callback(data));
     }
 }
+
 const statusCodes = {
     200: "Registration Successful!",
     201: "Login Successful!",
@@ -27,6 +28,10 @@ const statusCodes = {
     213: "Added to liked tutorials",
     214: "Chapter marked Completed!",
     215: "Comment Deleted",
+    216: "Changes Saved",
+    217: "Course Created",
+    218: "Course Deleted",
+
 
     301: "Please agree to Terms & Conditions!",
     302: "Username is required!",
@@ -118,6 +123,13 @@ export async function initAddOn(page) {
             else if (page == "builder")
                 import('./builder.js').then(module => {
                     module.initBuilder();
+                    subscribe('loadBuilder', module.loadBuilder);
+                    resolve();
+                });
+            else if (page == "privateCourse")
+                import('./privateCourse.js').then(module => {
+                    module.initPrivateCourse();
+                    subscribe('loadPrivateCourse', module.loadPrivateCourse);
                     resolve();
                 });
             else

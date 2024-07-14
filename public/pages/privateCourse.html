@@ -1,0 +1,93 @@
+<div class="cd-forms-modal attach-streams-modal">
+    <div class="cd-forms-modal-container">
+        <section class="form-container">
+            <div class="form">
+                <h2>Attach Streams</h2>
+                <div class="selected-streams-modal streams">
+                </div>
+                <input autocomplete="off" type="text" id="add-stream-search" placeholder="search streams or add new" class="box" maxlength="100">
+                <div id="stream-suggestions" class="search-suggestions disabled">
+                    <li>JAVA</li>
+                    <li>Artifical Intelligence</li>
+                    <li>Javascript</li>
+                </div>
+                <input type="submit" name="submit" value="Save Streams" class="btn">
+            </div>
+        </section>
+        <a href="#0" class="cd-close-form">Close</a>
+    </div>
+</div>
+<section id="private-course-header" class="text-course">
+    <h1 class="heading">Course Overview</h1>
+    <div class="row white-bg">
+        <div class="col">
+            <div class="thumb">
+                <span class="chapters"></span>
+                <img class="thumb-lg" src="../images/thumbnails/sample.jpg" alt="">
+            </div>
+        </div>
+        <div class="col">
+            <div class="details">
+                <h2 class="heading" id="private-courseName"></h2>
+                <div class="tutor flex-item">
+                    <a id="private-tutor-link" onclick="route()" href="">
+                        <img class="user-logo-md" id="private-tutor-img" alt="">
+                    </a>
+                    <div>
+                        <h2 class="title" id="private-tutor-name"></h2>
+                        <span id="private-tutor-role"></span>
+                    </div>
+                </div>
+                <div class="streams private-streams">
+
+                </div>
+                <button id="private-add-streams" class="inline-btn">Attach Streams</button>
+                <p id="private-description"></p>
+                <div class="course-attributes"><i class="es-calendar"></i><span id="private-publishDate"></span></div>
+                <div class="course-attributes"><i class="es-doc-text"></i><span class="chapters"></span></div>
+                <div class="course-attributes">
+                    <div class="signal-bars">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                    <span class="course-level-text" id="private-course-level"></span>
+                </div>
+                <a id="private-content-link" onclick="route()" class="btn">Go to Chapters</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="private-text-course-details" class="course-details disabled">
+    <h1 class="heading">Course Details</h1>
+    <div class="flex-container white-bg">
+        <div class="button-container">
+            <button id="private-expand-button" class="button-container-button">Minimize All</button>
+        </div>
+        <div class="accordion">
+        </div>
+    </div>
+</section>
+<section id="private-video-course-details" class="video-container disabled">
+    <h1 class="heading">Playlist Videos</h1>
+    <div class="flex-container">
+    </div>
+</section>
+
+<section class="radial float-menu">
+    <div class="header-icon es-plus bg-main triggerButton"></div>
+    <ul class="radialMenu">
+        <li id="private-edit" class=" header-icon radialItem es-pencil">
+        </li>
+        <li id="private-trash" class="header-icon radialItem es-trash">
+        </li>
+        <li class="radialItem">
+            <a class="header-icon es-home" href="/builder" onclick="route()"></a>
+        </li>
+        <li id="private-cancel" class=" header-icon radialItem es-cancel disabled">
+        </li>
+        <li id="private-save" class=" header-icon radialItem es-ok disabled">
+        </li>
+
+    </ul>
+</section>

@@ -30,6 +30,9 @@ const routes = {
     "/builder": "builder",
     "/builder/": "builder",
     "/builder/*": "builder",
+    "/private-course": "notFound",
+    "/private-course/": "notFound",
+    "/private-course/*": "privateCourse",
     404: "notFound"
 };
 const sideBar = document.querySelector('#sideBar');
@@ -65,7 +68,10 @@ export function notFoundRoute() {
     window.history.pushState({}, "", "/404");
     handleLocation();
 }
-
+export function routeTo(path, subpath){
+    window.history.pushState({}, "", "/"+path +"/"+subpath);
+    handleLocation();
+}
 const handleLocation = async () => {
     const path = window.location.pathname;
     if (previousMainBodyPath != path) {
@@ -83,14 +89,14 @@ const handleLocation = async () => {
         if (previousSideBarPath != currentSidebar) {
             previousSideBarPath = currentSidebar;
             if (currentSidebar == "mainSidebar") {
-                modifyDisabledClass(document.getElementById('mainSidebar'),0);
-                modifyDisabledClass(document.getElementById('contentSidebar'),1);
+                modifyDisabledClass(document.getElementById('mainSidebar'), 0);
+                modifyDisabledClass(document.getElementById('contentSidebar'), 1);
                 sideBar.classList.remove('active');
                 document.body.classList.remove('active');
             }
             else {
-                modifyDisabledClass(document.getElementById('mainSidebar'),1);
-                modifyDisabledClass(document.getElementById('contentSidebar'),0);
+                modifyDisabledClass(document.getElementById('mainSidebar'), 1);
+                modifyDisabledClass(document.getElementById('contentSidebar'), 0);
                 sideBar.classList.add('active');
                 document.body.classList.add('active');
             };
@@ -104,7 +110,7 @@ function loadMainScripts(path) {
     const matchProfilepath = path.match(/^\/profile\/([\w/-]+)$/);
     const matchContentpath = path.match(/^\/content\/([\w/-]+)$/);
     const matchStreamspath = path.match(/^\/streams\/([\w/-]+)$/);
-
+    const matchPrivateCoursePath = path.match(/^\/private-course\/([\w/-]+)$/);
     if (matchCoursePath) {
         publish('unloadHome');
         publish('loadCoursePage', matchCoursePath[1]);
@@ -117,6 +123,9 @@ function loadMainScripts(path) {
     } else if (matchStreamspath) {
         publish('unloadHome');
         publish('loadStreams', matchStreamspath[1]);
+    }else if (matchPrivateCoursePath) {
+        publish('unloadHome');
+        publish('loadPrivateCourse', matchPrivateCoursePath[1]);
     } else {
         switch (path) {
             case "/courses":
@@ -125,6 +134,10 @@ function loadMainScripts(path) {
             case "/my-courses":
                 publish('unloadHome');
                 publish('loadMyCourses');
+                break;
+            case "/builder":
+                publish('unloadHome');
+                publish('loadBuilder');
                 break;
             case "/":
                 publish('loadHome');

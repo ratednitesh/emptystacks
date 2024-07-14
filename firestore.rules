@@ -69,6 +69,13 @@ service cloud.firestore {
       allow get:  if matchUserUID(uid);
       allow create: if isValidUsersPrivateCreateDoc(request.resource.data, uid);
       allow update: if isValidUsersPrivateUpdateDoc(request.resource.data, uid); 
+
+      match /Courses/{courseId} { // TODO: max courses allowed
+          allow read: if isAdminOrSuperUser() || matchUserUID(uid);
+          allow create: if isValidPrivateCourseCreateDoc(request.resource.data, uid);
+          allow update: if true; // TODO: fix this
+          allow delete: if true; // TODO: fix this
+      }
     }
   
     // Verifying User's UID
@@ -181,10 +188,10 @@ service cloud.firestore {
           data.visibility in ['Public', 'Private', 'Paid'] &&
           isString(data.href) && isValidLength(data.href,100) &&
           isCurrentTime(data.createdAt) &&
-          data.version == 1.0 &&
+          data.version == 0 &&
           isString(data.thumbnail) && isValidLength(data.thumbnail,50) && 
           isArray(data.chapters) && data.chapters.size() > 0 && 
-          isArray(data.streams) &&
+          isMap(data.streams) &&
           isMap(data.topReviews);
 
       return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;
@@ -362,7 +369,31 @@ service cloud.firestore {
 
       return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;   
     }
+    function isValidPrivateCourseCreateDoc(data, uid){
+          let isValidUser = isUserLoggedIn();
 
+          let arePrerequisiteMet = isValidUserRole(uid, ['Stack Builder']);
+          
+          let hasAllowedFieldsOnly = verifyFields( data.keys(), 
+          ['courseName','author', 'description', 'level', 'type', 'createdAt', 'version', 'chapters', 'streams','chapterCount','href','thumbnail'], [ ]) ;
+
+          let isUserInfoCorrect = verifyUserFields(data.author);
+          
+          let areDataFieldsValid = 
+              isString(data.courseName) && isValidLength(data.courseName, 50) &&
+              isString(data.description) && isValidLength(data.description, 200) &&
+              data.level in [1, 2, 3] && 
+              data.type in ['text', 'video'] &&
+              isNumber(data.chapterCount) &&
+              isString(data.href) && isValidLength(data.href,100) &&
+              isCurrentTime(data.createdAt) &&
+              data.version == 1.0 &&
+              isString(data.thumbnail) && isValidLength(data.thumbnail,50) && 
+              isArray(data.chapters) && // data.chapters.size() == 0 && 
+              isMap(data.streams);
+
+          return isValidUser && arePrerequisiteMet && isUserInfoCorrect && hasAllowedFieldsOnly && areDataFieldsValid;
+    }
     // UPDATE VALIDATIONS
     function isValidAllCoursesUpdateDoc(data){
       // TODO: Fix this.

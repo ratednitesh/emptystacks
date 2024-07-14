@@ -21,7 +21,7 @@ import "../css/comment.css";
 import "../css/textsection.css";
 import "../css/watchvideo.css";
 import "../css/editor.css";
-
+import "../css/builder.css";
 
 window.addEventListener('DOMContentLoaded', function () {
   initServices().then(() => {

@@ -65,7 +65,9 @@
 .transparent-btn,.success-btn i {
     margin-right: 1rem;
 }
-
+.transparent-btn{
+    background-color: transparent;
+}
 .success-btn{
     background-color: rgb(62, 205, 62) !important;
     color: white !important;

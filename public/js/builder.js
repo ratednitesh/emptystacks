@@ -1,97 +1,115 @@
-import EditorJS from '@editorjs/editorjs';
-import AIText from '@alkhipce/editorjs-aitext'
-import Header from '@editorjs/header';
+import { createNewCourse, getPrivateCourses, getTutorDetails, getUserId } from "./db-services";
+import { notification, publish } from "./helper";
+import { routeTo } from "./router";
+import { initUserActivities, showCoursesUI } from "./ui-services";
 
-/*
- * Install the Generative AI SDK
- *
- * $ npm install @google/generative-ai
- *
- * See the getting started guide for more information
- * https://ai.google.dev/gemini-api/docs/get-started/node
- */
-const Paragraph = require('editorjs-paragraph-with-alignment');
-const {
-    GoogleGenerativeAI,
-    HarmCategory,
-    HarmBlockThreshold,
-} = require("@google/generative-ai");
-
-const apiKey = process.env.GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(apiKey);
-
-const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-});
-
-const generationConfig = {
-    temperature: 1,
-    topP: 0.95,
-    topK: 64,
-    maxOutputTokens: 8192,
-    responseMimeType: "text/plain",
-};
-
-
-
+const createCourseModal = document.querySelector('.create-course-modal');
 export function initBuilder() {
-    const editor = new EditorJS({
-        /** 
-         * Id of Element that should contain the Editor 
-         */
-        holder: 'builder-chapter',
-        placeholder: 'Let`s write an awesome story!',
-        autofocus: true,
-        /** 
-         * Available Tools list. 
-         * Pass Tool's class or Settings object for each Tool you want to use 
-         */
-        tools: {
-            header: {
-                class: Header,
-                inlineToolbar: true
-            },
-            ai: {
-                // if you do not use TypeScript you need to remove "as unknown as ToolConstructable" construction
-                // type ToolConstructable imported from @editorjs/editorjs package
-                class: AIText,
-                config: {
-                    // here you need to provide your own suggestion provider (e.g., request to your backend)
-                    // this callback function must accept a string and return a Promise<string>
-                    callback: (aiText) => {
-                        return new Promise(resolve => {
-                            const chatSession = model.startChat({
-                                generationConfig,
-                                // safetySettings: Adjust safety settings
-                                // See https://ai.google.dev/gemini-api/docs/safety-settings
-                                history: [
-                                ],
-                            });
-                            chatSession.sendMessage(aiText).then(
-                                (result) => {
-                                    let textResponse = result.response.text();
-                                    console.log(textResponse);
-                                    resolve(textResponse);
-                                }
-                            )
-                        })
-                    },
-                }
-            },
-            paragraph: {
-                class: Paragraph,
-                inlineToolbar: true,
-            },
-            // ...
-        },
-    })
-    editor.isReady
-        .then(() => {
-            console.log('Editor.js is ready to work!')
-            /** Do anything you need after editor initialization */
-        })
-        .catch((reason) => {
-            console.log(`Editor.js initialization failed because of ${reason}`)
+    document.querySelector('#builder-new-course i').addEventListener("click", () => {
+        createCourseModal.classList.add('is-visible');
+    });
+    createCourseModal.querySelector('input[type="submit"]').addEventListener("click", function (event) {
+        event.preventDefault();
+
+        var courseName = document.getElementById("new-course-name").value;
+        var courseDesc = document.getElementById("new-course-desc").value;
+        var courseType = document.getElementById("new-course-type").value;
+        var courseLevel = document.getElementById("new-course-level").value;
+        if (courseName === '' || courseDesc === '' || courseType === '' || courseLevel === '') {
+            notification(310);
+            return;
+        }
+        let courseData = {
+            courseName: courseName,
+            description: courseDesc,
+            type: courseType,
+            level: parseInt(courseLevel),
+            thumbnail: '/images/thumbnails/sample.jpg',
+            version: 1.0,
+            streams: {},
+            chapterCount: 6,
+            chapters: [],
+            href: "private-content/"
+        };
+        if (courseType == 'text')
+            courseData.chapters = dummyTextChapters;
+        else if (courseType == 'video')
+            courseData.chapters = dummyVideoChapters;
+        console.log(courseData);
+        createNewCourse(courseData).then((courseId) => {
+            notification(217);
+            createCourseModal.classList.remove('is-visible');
+            routeTo('private-course', courseId);
+        }).catch((e) => {
+            notification(507, e);
         });
-    console.log('builder loaded');
+    });
 }
+export function loadBuilder() {
+    console.log('on loader');
+    getTutorDetails(getUserId()).then(
+        (tutorData) => {
+            if (Object.keys(tutorData).length != 0) {
+                for (const property in tutorData.stats) {
+                    initUserActivities('builder-' + property, tutorData.stats[property]);
+                }
+                showCoursesUI(tutorData.publishedCourses, '.flex-container.builder-published-courses', 'builder-published-');
+            }
+            else
+                throw 'Not a Stack Builder user';
+        }
+    ).catch(() => {
+        publish('notFoundRoute');
+    })
+
+    getPrivateCourses().then(
+        (coursesData) => {
+            if (Object.keys(coursesData).length != 0) {
+                let courses = {};
+                for (const [href, course] of Object.entries(coursesData)) {
+                    courses[href] = { thumbnail: course.thumbnail, title: course.courseName };
+                };
+                showCoursesUI(courses, '.flex-container.builder-private-courses', 'builder-private-');
+            }
+        }
+    ).catch((e) => {
+        console.log(e);
+        publish('notFoundRoute');
+    })
+}
+
+const dummyTextChapters = [
+    {
+        "href": "dummy-chapter-1",
+        "id": 1,
+        "title": "Dummy Chapter 1",
+        "type": "Chapter"
+    },
+    {
+        "subChapters": [
+            { "href": "dummy-chapter-2", "id": 2, "title": "Dummy Chapter 2" },
+            { "href": "dummy-chapter-3", "id": 3, "title": "Dummy Chapter 3" },
+            { "href": "dummy-chapter-4", "id": 4, "title": "Dummy Chapter 4" },
+
+        ],
+        "title": "Dummy Section 1",
+        "type": "Section"
+    },
+
+    {
+        "subChapters": [
+            { "href": "dummy-chapter-5", "id": 5, "title": "Dummy Chapter 5" },
+            { "href": "dummy-chapter-6", "id": 6, "title": "Dummy Chapter 6" },
+        ],
+        "title": "Dummy Section 2",
+        "type": "Section"
+    }];
+
+const dummyVideoChapters = [
+    { "thumbnail": "/images/thumbnails/sample.jpg", "href": "dummy-chapter-1", "id": 1, "title": "Dummy Chapter 1", "type": "Chapter" },
+    { "thumbnail": "/images/thumbnails/sample.jpg", "href": "dummy-chapter-2", "id": 2, "title": "Dummy Chapter 2", "type": "Chapter" },
+    { "thumbnail": "/images/thumbnails/sample.jpg", "href": "dummy-chapter-3", "id": 3, "title": "Dummy Chapter 3", "type": "Chapter" },
+    { "thumbnail": "/images/thumbnails/sample.jpg", "href": "dummy-chapter-4", "id": 4, "title": "Dummy Chapter 4", "type": "Chapter" },
+    { "thumbnail": "/images/thumbnails/sample.jpg", "href": "dummy-chapter-5", "id": 5, "title": "Dummy Chapter 5", "type": "Chapter" },
+    { "thumbnail": "/images/thumbnails/sample.jpg", "href": "dummy-chapter-6", "id": 6, "title": "Dummy Chapter 6", "type": "Chapter" }
+];

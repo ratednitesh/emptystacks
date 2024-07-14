@@ -90,6 +90,11 @@
 .red{
     color: var(--main-color)
 }
+
+.bg-main{
+    background-color: var(--main-color) !important;
+    color: #fff !important;
+}
 .chapter-details .content-end-button{
     margin-top: 2rem;
     text-align: right;

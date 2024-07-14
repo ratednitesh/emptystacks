@@ -35,9 +35,12 @@ export function showCoursesUI(coursesData, targetPath, idPrefix) {
                 progressDiv.appendChild(progressBar);
                 box.appendChild(progressDiv);
                 link.href = course.nextChapter;
-            } else {
+            }else if(idPrefix == 'builder-private-'){
+                link.href = '/private-course/' + href;
+            } 
+            else {
                 link.href = '/course/' + href;
-            }
+            } 
             // Append elements to the box
             box.appendChild(title);
             box.appendChild(link);
@@ -83,4 +86,10 @@ export function modifyDisabledClass(element, flag) {
         element.classList.add('disabled');
     else
         element.classList.remove('disabled');
+}
+
+export function initUserActivities(fieldId, fieldValue) {
+    var field = document.getElementById(fieldId);
+    var dataField = field.querySelector('h2');
+    dataField.innerHTML = fieldValue;
 }

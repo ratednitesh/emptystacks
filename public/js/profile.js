@@ -1,6 +1,6 @@
 import { notification, publish } from "./helper";
 import { getTutorDetails, getUserId, getUserPrivateProfile, getUserPublicProfile, updateMyPublicProfile } from "./db-services";
-import { modifyDisabledClass, showCoursesUI } from "./ui-services";
+import { initUserActivities, modifyDisabledClass, showCoursesUI } from "./ui-services";
 
 var myProfile = {};
 const dataFields = ["displayName", "aboutMe", "work", "location", "techStack", "facebook", "instagram", "linkedin", "github"];
@@ -202,11 +202,7 @@ function setUserRole(role) {
 }
 
 /* Private Section */
-function initUserActivities(fieldId, fieldValue) {
-    var field = document.getElementById(fieldId);
-    var dataField = field.querySelector('h2');
-    dataField.innerHTML = fieldValue;
-}
+
 function createCoursesSection(courseObjects, rootElement, type) {
     const container = document.querySelector(rootElement);
     container.innerHTML = "";

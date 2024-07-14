@@ -1,17 +1,68 @@
-<section class="builder">
-    <div class="chapter-details">
-        <h2 class="heading">Sample First Chapter</h2>
-        <div class="chapter-content" id="builder-chapter"></div>
-        <div class="save-content-edits content-end-button">
-            <a id="save-editor-changes" class="success-btn ">Save Changes </a>
+<div class="cd-forms-modal create-course-modal">
+    <div class="cd-forms-modal-container">
+        <section class="form-container">
+            <form class="form" action="" method="post" enctype="multipart/form-data">
+                <h2>Create a New Course</h2>
+                <p>Course Type <span>* </span></p>
+                <p><span>[You won't be able to change course type later.]</span></p>
+                <select id="new-course-type" name="course_type" class="box" required>
+                    <option value="" disabled selected>Select Type</option>
+                    <option value="text">Full Course (supports videos/ text/ images/ links)</option>
+                    <option value="video">Video (Only supports links to YouTube videos/ playlists)</option>
+                </select>
+                <p>Course Name <span>*</span></p>
+                <input type="text" id="new-course-name" name="name" placeholder="" class="box" maxlength="100" required>
+                <p>Course Description <span>*</span></p>
+                <input type="text" id="new-course-desc" name="name" placeholder="" class="box" maxlength="100" required>
+                <p>Course Level <span>*</span></p>
+                <select id="new-course-level" name="course_level" class="box" required>
+                    <option value="" disabled selected>Select Level</option>
+                    <option value=1>Easy</option>
+                    <option value=2>Intermediate</option>
+                    <option value=3>Expert</option>
+                </select>
+                <input type="submit" name="submit" value="Create Course" class="btn">
+            </form>
+        </section>
+        <a href="#0" class="cd-close-form">Close</a>
+    </div>
+</div>
+<section class="">
+    <h1 class="heading">Private Courses<i class="es-lock"></i></h1>
+    <div class="flex-container builder-private-courses">
+        <div class="box" id="builder-new-course">
+            <i class="es-plus" title="Create a new Course"></i>
         </div>
-        <div class="chapter-navigation">
-            <div class="left-group">
-                <a class="inline-btn">Previous Chapter</a>
-            </div>
-            <div class="right-group">
-                <a class="inline-btn">Next Chapter</a>
+    </div>
+</section>
+<section class="">
+    <h1 class="heading ">Tutor Stats<i class="es-globe"></i></h1>
+    <div class="flex-container">
+        <div class="flex-item box">
+            <i class="es-bookmark-solid ngtv-i"></i>
+            <div id="builder-published-courses">
+                <h2 class="bold-text-main"></h2>
+                <span>Published Courses</span>
             </div>
         </div>
+        <div class="flex-item box">
+            <i class="es-heart ngtv-i"></i>
+            <div id="builder-tutor-liked-tutorials">
+                <h2 class="bold-text-main"></h2>
+                <span>Liked Tutorials</span>
+            </div>
+        </div>
+        <div class="flex-item box">
+            <i class="es-star ngtv-i"></i>
+            <div id="builder-tutor-rating">
+                <h2 class="bold-text-main"></h2>
+                <span>Tutor Rating</span>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="">
+    <h1 class="heading">Published Courses<i class="es-globe"></i></h1>
+    <div class="flex-container builder-published-courses">
     </div>
 </section>
